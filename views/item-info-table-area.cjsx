@@ -12,7 +12,6 @@ ItemInfoTable = React.createClass
               path = require 'path'
               path.join(ROOT, 'assets', 'img', 'slotitem', "#{@props.itemPngIndex + 33}.png")
             }
-            alt={$slotitems[@props.slotItemType].api_name}
             />
         }
         {$slotitems[@props.slotItemType].api_name}
@@ -188,5 +187,5 @@ ItemInfoTableArea = React.createClass
         </Table>
       </Grid>
     </div>
-    
+
 module.exports = ItemInfoTableArea
