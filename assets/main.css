@@ -31,3 +31,8 @@ body {
 .divider hr {
   margin-bottom: 15.5px;
 }
+
+.filter-button {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
