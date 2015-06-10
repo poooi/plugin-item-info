@@ -47,17 +47,6 @@ ItemInfoTable = React.createClass
 ItemInfoTableArea = React.createClass
   getInitialState: ->
     rows:[]
-  findSlotType: (slotId, st, ed)->
-    {_slotitems} = window
-    mid = Math.floor((st+ed)/2)
-    mid_id = _slotitems[mid].api_id
-    if slotId == mid_id
-      return _slotitems[mid].api_slotitem_id
-    else if slotId < mid_id
-      return @findSlotType slotId, st, mid
-    else if slotId > mid_id
-      return @findSlotType slotId, mid+1, ed
-    -1
   handleResponse:  (e) ->
     {method, path, body, postBody} = e.detail
     {$ships, _ships, _slotitems, $slotitems, _} = window
@@ -65,7 +54,7 @@ ItemInfoTableArea = React.createClass
     switch path
       when '/kcsapi/api_get_member/slot_item' || '/kcsapi/api_req_kousyou/destroyitem2' || '/kcsapi/api_req_kousyou/destroyship' || '/kcsapi/api_req_kousyou/remodel_slot'
         rows = []
-        for slot in _slotitems
+        for _slotId, slot of _slotitems
           slotType = slot.api_slotitem_id
           if rows[slotType]?
             rows[slotType].sumNum++
@@ -110,10 +99,10 @@ ItemInfoTableArea = React.createClass
             if row?
               row.equipList = []
               row.inUseNum = 0
-          for ship in _ships
+          for _shipId, ship of _ships
             for slotId in ship.api_slot
               continue if slotId == -1
-              slotType = @findSlotType slotId, 0, _slotitems.length-1
+              slotType = _slotitems[slotId].api_slotitem_id
               if slotType == -1
                 console.log "Error:Cannot find the slotType by searching slotId from ship.api_slot"
                 continue
