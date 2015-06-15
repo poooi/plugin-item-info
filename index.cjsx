@@ -23,6 +23,7 @@ module.exports =
   displayName: [<FontAwesome name='rocket' key={0} />, ' 装备信息']
   author: 'Yunze'
   link: 'https://github.com/myzwillmake'
+  version: '1.0.1'
   description: '提供装备详细信息查看'
   handleClick: ->
     itemInfoWindow.show()

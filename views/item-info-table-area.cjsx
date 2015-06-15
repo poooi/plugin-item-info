@@ -52,7 +52,7 @@ ItemInfoTableArea = React.createClass
     {$ships, _ships, _slotitems, $slotitems, _} = window
     {rows} = @state
     switch path
-      when '/kcsapi/api_get_member/slot_item' || '/kcsapi/api_req_kousyou/destroyitem2' || '/kcsapi/api_req_kousyou/destroyship' || '/kcsapi/api_req_kousyou/remodel_slot'
+      when '/kcsapi/api_get_member/slot_item' || '/kcsapi/api_req_kousyou/destroyitem2' || '/kcsapi/api_req_kousyou/destroyship' || '/kcsapi/api_req_kousyou/remodel_slot' || '/kcsapi/api_req_kaisou/powerup'
         rows = []
         for _slotId, slot of _slotitems
           slotType = slot.api_slotitem_id
