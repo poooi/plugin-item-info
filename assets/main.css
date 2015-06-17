@@ -23,7 +23,10 @@ body {
 #main-table tbody tr td {
   vertical-align: middle;
 }
-
+#switch-btn {
+  padding: 0 5px;
+  background-color: transparent;
+}
 .divider {
   padding-left: 15px;
   padding-right: 15px;

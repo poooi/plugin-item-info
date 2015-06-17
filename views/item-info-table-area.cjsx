@@ -1,5 +1,5 @@
-{React, ReactBootstrap, jQuery} = window
-{Panel, Row, Grid, Col, Table} = ReactBootstrap
+{React, ReactBootstrap, jQuery, FontAwesome} = window
+{Panel, Row, Grid, Col, Table, Button, OverlayTrigger, Tooltip} = ReactBootstrap
 Divider = require './divider'
 
 ItemInfoTable = React.createClass
@@ -22,21 +22,50 @@ ItemInfoTable = React.createClass
         <Table style={{backgroundColor: 'transparent';verticalAlign: 'middle';marginBottom:0+'px';}}>
           <tbody>
           {
-            trNum = parseInt(@props.equipList.length/5)
-            for tmp in [0..trNum]
-              <tr key={tmp}>
-              {
-                for indexCol in [0..4]
-                  index = tmp*5+indexCol
-                  if @props.equipList[index]?
-                    equipShip = @props.equipList[index]
-                    <td className="slot-item-table-td" key={index}>
-                      {$ships[equipShip.shipNameId].api_name + " × " + equipShip.equipNum}
-                    </td>
-                  else
-                    <td className="slot-item-table-td" key={index}>{" "}</td>
-              }
-              </tr>
+            if @props.switchShow
+              length = 0
+              existLevels = []
+              for index in [10..0]
+                if @props.levelList[index]?
+                  existLevels[length] = index
+                  length++
+              trNum = parseInt(length/5)
+              for tmp in [0..trNum]
+                <tr key={tmp}>
+                {
+                  for indexCol in [0..4]
+                    index = tmp*5+indexCol
+                    if  existLevels[index]?
+                      level = existLevels[index]
+                      count = @props.levelList[level]
+                      <td className="slot-item-table-td" key={index}>
+                        {
+                          if level == 0
+                            " "
+                          else
+                            level + "★" + " × " + count
+                        }
+                      </td>
+                    else
+                      <td className="slot-item-table-td" key={index}>{" "}</td>
+                }
+                </tr>
+            else
+              trNum = parseInt(@props.equipList.length/5)
+              for tmp in [0..trNum]
+                <tr key={tmp}>
+                {
+                  for indexCol in [0..4]
+                    index = tmp*5+indexCol
+                    if @props.equipList[index]?
+                      equipShip = @props.equipList[index]
+                      <td className="slot-item-table-td" key={index}>
+                        {$ships[equipShip.shipNameId].api_name + " × " + equipShip.equipNum}
+                      </td>
+                    else
+                      <td className="slot-item-table-td" key={index}>{" "}</td>
+                }
+                </tr>
           }
           </tbody>
         </Table>
@@ -56,14 +85,21 @@ ItemInfoTableArea = React.createClass
         rows = []
         for _slotId, slot of _slotitems
           slotType = slot.api_slotitem_id
+          level = slot.api_level
           if rows[slotType]?
             rows[slotType].sumNum++
+            if rows[slotType].levelList[level]?
+              rows[slotType].levelList[level]++
+            else
+              rows[slotType].levelList[level] = 1
           else
             row =
               slotItemType: slotType
               sumNum: 1
               inUseNum: 0
               equipList: []
+              levelList: []
+            row.levelList[level] = 1
             rows[slotType] = row
 
       when '/kcsapi/api_req_kousyou/getship'
@@ -71,12 +107,18 @@ ItemInfoTableArea = React.createClass
           slotType = slot.api_slotitem_id
           if rows[slotType]?
             rows[slotType].sumNum++
+            if rows[slotType].levelList[level]?
+              rows[slotType].levelList[level]++
+            else
+              rows[slotType].levelList[level] = 1
           else
             row =
               slotItemType: slotType
               sumNum: 1
               inUseNum: 0
               equipList: []
+              levelList: []
+            row.levelList[level] = 1
             rows[slotType] = row
 
       when '/kcsapi/api_req_kousyou/createitem'
@@ -85,12 +127,18 @@ ItemInfoTableArea = React.createClass
           slotType = slot.api_slotitem_id
           if rows[slotType]?
             rows[slotType].sumNum++
+            if rows[slotType].levelList[level]?
+              rows[slotType].levelList[level]++
+            else
+              rows[slotType].levelList[level] = 1
           else
             row =
               slotItemType: slotType
               sumNum: 1
               inUseNum: 0
               equipList: []
+              levelList: []
+            row.levelList[level] = 1
             rows[slotType] = row
 
       when '/kcsapi/api_port/port' , '/kcsapi/api_req_kaisou/slotset'
@@ -139,10 +187,17 @@ ItemInfoTableArea = React.createClass
         <Table striped condensed hover id="main-table">
           <thead className="slot-item-table-thead">
             <tr>
-              <th className="center">装备名称</th>
-              <th className="center">总数量</th>
-              <th className="center">剩余数</th>
-              <th className="center">装备情况</th>
+              <th className="center" style={{width: '23.40%';}}>装备名称</th>
+              <th className="center" style={{width: '6.17%';}}>总数量</th>
+              <th className="center" style={{width: '6.17%';}}>剩余数</th>
+              <th className="center" style={{width: '64.26%';}}>
+                <span>{if @props.switchShowTable then "改修情况" else "装备情况"}</span>
+                <OverlayTrigger placement='right' overlay={<Tooltip>{if @props.switchShowTable then "切换至装备情况" else "切换至改修情况"}</Tooltip>}>
+                  <Button id='switch-btn' bsStyle='default' bsSize='small' onClick={@props.switchShow}>
+                    <FontAwesome name='retweet' />
+                  </Button>
+                </OverlayTrigger>
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -168,7 +223,9 @@ ItemInfoTableArea = React.createClass
                   slotItemType = {row.slotItemType}
                   sumNum = {row.sumNum}
                   restNum = {row.sumNum - row.inUseNum}
+                  switchShow = {@props.switchShowTable}
                   equipList = {row.equipList}
+                  levelList = {row.levelList}
                   itemPngIndex = {row.itemPngIndex}
                 />
           }
