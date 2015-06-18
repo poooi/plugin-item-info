@@ -43,7 +43,19 @@ ItemInfoTable = React.createClass
                           if level == 0
                             " "
                           else
-                            level + "★" + " × " + count
+                            if @props.levelEquip? and @props.levelEquip[level]? and @props.levelEquip.length > 0
+                              <OverlayTrigger placement='top' overlay={
+                                <Tooltip>
+                                  <span>{"装备情况"}</span>
+                                  {
+                                    for shipNameId in @props.levelEquip[level]
+                                      <span key={shipNameId}><br />{$ships[shipNameId].api_name}</span>
+                                  }
+                                </Tooltip>}>
+                                <span>{level + "★" + " × " + count}</span>
+                              </OverlayTrigger>
+                            else
+                              level + "★" + " × " + count
                         }
                       </td>
                     else
@@ -99,6 +111,7 @@ ItemInfoTableArea = React.createClass
               inUseNum: 0
               equipList: []
               levelList: []
+              levelEquip: []
             row.levelList[level] = 1
             rows[slotType] = row
 
@@ -118,6 +131,7 @@ ItemInfoTableArea = React.createClass
               inUseNum: 0
               equipList: []
               levelList: []
+              levelEquip: []
             row.levelList[level] = 1
             rows[slotType] = row
 
@@ -138,6 +152,7 @@ ItemInfoTableArea = React.createClass
               inUseNum: 0
               equipList: []
               levelList: []
+              levelEquip: []
             row.levelList[level] = 1
             rows[slotType] = row
 
@@ -146,6 +161,7 @@ ItemInfoTableArea = React.createClass
           for row in rows
             if row?
               row.equipList = []
+              row.levelEquip = []
               row.inUseNum = 0
           for _shipId, ship of _ships
             for slotId in ship.api_slot
@@ -170,6 +186,13 @@ ItemInfoTableArea = React.createClass
                     shipNameId: shipNameIdTmp
                     equipNum: 1
                   row.equipList.push equipAdd
+                if  _slotitems[slotId].api_level > 0
+                  level = _slotitems[slotId].api_level
+                  if row.levelEquip[level]?
+                    row.levelEquip[level].push shipNameIdTmp
+                  else
+                    row.levelEquip[level] = []
+                    row.levelEquip[level].push shipNameIdTmp
               else
                 console.log "Error: Not defined row"
 
@@ -226,6 +249,7 @@ ItemInfoTableArea = React.createClass
                   switchShow = {@props.switchShowTable}
                   equipList = {row.equipList}
                   levelList = {row.levelList}
+                  levelEquip = {row.levelEquip}
                   itemPngIndex = {row.itemPngIndex}
                 />
           }
