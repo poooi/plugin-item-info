@@ -48,8 +48,8 @@ ItemInfoTable = React.createClass
                                 <Tooltip>
                                   <span>{"装备情况"}</span>
                                   {
-                                    for shipNameId in @props.levelEquip[level]
-                                      <span key={shipNameId}><br />{$ships[shipNameId].api_name}</span>
+                                    for shipNameId, index in @props.levelEquip[level]
+                                      <span key={index}><br />{$ships[shipNameId].api_name}</span>
                                   }
                                 </Tooltip>}>
                                 <span>{level + "★" + " × " + count}</span>
