@@ -6,20 +6,20 @@ ItemInfoTable = React.createClass
   render: ->
     {$ships, $slotitems} = window
     <tr className="vertical">
-      <td style={{paddingLeft: 10+'px'}}>
+      <td style={paddingLeft: 10}>
         {
           <img key={@props.slotItemType} src={
               path = require 'path'
               path.join(ROOT, 'assets', 'img', 'slotitem', "#{@props.itemPngIndex + 33}.png")
             }
-            />
+          />
         }
         {$slotitems[@props.slotItemType].api_name}
       </td>
       <td className="center">{@props.sumNum}</td>
       <td className="center">{@props.restNum}</td>
       <td>
-        <Table style={{backgroundColor: 'transparent';verticalAlign: 'middle';marginBottom:0+'px';}}>
+        <Table style={backgroundColor: 'transparent', verticalAlign: 'middle', marginBottom: 0}>
           <tbody>
           {
             if @props.switchShow

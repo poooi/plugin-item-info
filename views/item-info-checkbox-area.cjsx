@@ -40,7 +40,7 @@ ItemInfoCheckboxArea = React.createClass
           for itemTypeVal, index in @state.itemTypeChecked
             continue if !index
             <Col key={index} xs={1}>
-              <input type='checkbox' value={index} onChange={@handleClickCheckbox.bind(@, index)} checked={@state.itemTypeChecked[index]} style={{verticalAlign: 'middle';}}/>
+              <input type='checkbox' value={index} onChange={@handleClickCheckbox.bind(@, index)} checked={@state.itemTypeChecked[index]} style={verticalAlign: 'middle'}/>
               <img src={
                   path = require 'path'
                   path.join(ROOT, 'assets', 'img', 'slotitem', "#{index + 33}.png")
