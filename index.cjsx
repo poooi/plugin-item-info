@@ -1,6 +1,7 @@
 {React, ReactBootstrap, FontAwesome} = window
 {Button} = ReactBootstrap
 remote = require 'remote'
+config = remote.require './lib/config'
 windowManager = remote.require './lib/window'
 
 window.itemInfoWindow = null
@@ -15,7 +16,8 @@ initialItemInfoWindow = ->
   if process.env.DEBUG?
     window.itemInfoWindow.openDevTools
       detach: true
-initialItemInfoWindow()
+if config.get('plugin.ItemInfo.enable', true)
+  initialItemInfoWindow()
 
 module.exports =
   name: 'ItemInfo'
