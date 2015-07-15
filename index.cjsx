@@ -22,7 +22,7 @@ if config.get('plugin.ItemInfo.enable', true)
 module.exports =
   name: 'ItemInfo'
   priority: 51
-  displayName: [<FontAwesome name='rocket' key={0} />, ' 装备信息']
+  displayName: <span><FontAwesome name='rocket' key={0} /> 装备信息</span>
   author: 'Yunze'
   link: 'https://github.com/myzwillmake'
   version: '1.0.1'
