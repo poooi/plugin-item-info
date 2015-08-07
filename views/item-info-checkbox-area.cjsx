@@ -1,4 +1,4 @@
-{React, ReactBootstrap, jQuery} = window
+{React, ReactBootstrap, jQuery, __} = window
 {Panel, Button, Col, Input, Grid, Row} = ReactBootstrap
 Divider = require './divider'
 
@@ -33,7 +33,7 @@ ItemInfoCheckboxArea = React.createClass
     @props.filterRules(checkboxes)
   render: ->
     <div id='item-info-settings'>
-      <Divider text="装备过滤" />
+      <Divider text={__ 'Filter Setting'} />
       <Grid id='item-info-filter'>
         <Row>
         {
@@ -51,10 +51,10 @@ ItemInfoCheckboxArea = React.createClass
         </Row>
         <Row>
           <Col xs={2}>
-            <Button className="filter-button" bsStyle='default' bsSize='small' onClick={@handleCilckCheckboxAllButton} block>全选</Button>
+            <Button className="filter-button" bsStyle='default' bsSize='small' onClick={@handleCilckCheckboxAllButton} block>{__ 'Select All'}</Button>
           </Col>
           <Col xs={2}>
-            <Button className="filter-button" bsStyle='default' bsSize='small' onClick={@handleCilckCheckboxNoneButton} block>全不选</Button>
+            <Button className="filter-button" bsStyle='default' bsSize='small' onClick={@handleCilckCheckboxNoneButton} block>{__ 'Deselect All'}</Button>
           </Col>
         </Row>
       </Grid>
