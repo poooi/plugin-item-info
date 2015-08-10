@@ -10,7 +10,7 @@ ItemInfoTable = React.createClass
         {
           <img key={@props.slotItemType} src={
               path = require 'path'
-              path.join(ROOT, 'assets', 'img', 'slotitem', "#{@props.itemPngIndex + 33}.png")
+              path.join(ROOT, 'assets', 'img', 'slotitem', "#{@props.itemPngIndex + 100}.png")
             }
           />
         }
