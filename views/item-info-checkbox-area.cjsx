@@ -43,7 +43,7 @@ ItemInfoCheckboxArea = React.createClass
               <input type='checkbox' value={index} onChange={@handleClickCheckbox.bind(@, index)} checked={@state.itemTypeChecked[index]} style={verticalAlign: 'middle'}/>
               <img src={
                   path = require 'path'
-                  path.join(ROOT, 'assets', 'img', 'slotitem', "#{index + 33}.png")
+                  path.join(ROOT, 'assets', 'img', 'slotitem', "#{index + 100}.png")
                 }
                 />
             </Col>
