@@ -122,6 +122,7 @@ ItemInfoTableArea = React.createClass
           for _shipId, ship of _ships
             for slotId in ship.api_slot
               continue if slotId == -1
+              continue if !_slotitems[slotId]?
               slotType = _slotitems[slotId].api_slotitem_id
               if slotType == -1
                 console.log "Error:Cannot find the slotType by searching slotId from ship.api_slot"
