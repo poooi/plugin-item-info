@@ -1,4 +1,4 @@
-{React, ReactBootstrap, jQuery, FontAwesome} = window
+{React, ReactBootstrap, jQuery, FontAwesome, __} = window
 {Panel, Row, Grid, Col, Table, Button, OverlayTrigger, Tooltip} = ReactBootstrap
 Divider = require './divider'
 
@@ -10,7 +10,7 @@ ItemInfoTable = React.createClass
         {
           <img key={@props.slotItemType} src={
               path = require 'path'
-              path.join(ROOT, 'assets', 'img', 'slotitem', "#{@props.itemPngIndex + 33}.png")
+              path.join(ROOT, 'assets', 'img', 'slotitem', "#{@props.itemPngIndex + 100}.png")
             }
           />
         }
@@ -157,14 +157,14 @@ ItemInfoTableArea = React.createClass
     window.removeEventListener 'game.response', @handleResponse
   render: ->
     <div id='item-info-show'>
-      <Divider text="装备信息" />
+      <Divider text={__ 'Equipment Info'} />
       <Grid id="item-info-area">
         <Table striped condensed hover id="main-table">
           <thead className="slot-item-table-thead">
             <tr>
-              <th className="center" style={width: '25%'}>装备名称</th>
-              <th className="center" style={width: '9%'}>总数<span style={fontSize: '11px'}>(剩余)</span></th>
-              <th className="center" style={width: '66%'}>装备情况</th>
+              <th className="center" style={width: '25%'}>{__ 'Name'}</th>
+              <th className="center" style={width: '9%'}>{__ 'Total'}<span style={fontSize: '11px'}>{'(' + __('rest') + ')'}</span></th>
+              <th className="center" style={width: '66%'}>{__ 'State'}</th>
             </tr>
           </thead>
           <tbody>

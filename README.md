@@ -3,6 +3,9 @@ Show detailed information of all owned equipment
 ### Usage
 Put the folder into /path/to/poi/resources/app/plugins
 ### Change Log
+
+#### V1.3.0
+Add i18n support
 #### V1.2.0
 Combine the information into one table.
 

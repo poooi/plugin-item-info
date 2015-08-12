@@ -1,8 +1,20 @@
 {React, ReactBootstrap, FontAwesome} = window
 {Button} = ReactBootstrap
 remote = require 'remote'
-config = remote.require './lib/config'
 windowManager = remote.require './lib/window'
+
+i18n = require './node_modules/i18n'
+path = require 'path-extra'
+{__} = i18n
+
+i18n.configure
+  locales: ['en_US', 'ja_JP', 'zh_CN', 'zh_TW']
+  defaultLocale: 'zh_CN'
+  directory: path.join(__dirname, 'i18n')
+  updateFiles: false
+  indent: '\t'
+  extension: '.json'
+i18n.setLocale(window.language)
 
 window.itemInfoWindow = null
 initialItemInfoWindow = ->
@@ -22,10 +34,10 @@ if config.get('plugin.ItemInfo.enable', true)
 module.exports =
   name: 'ItemInfo'
   priority: 51
-  displayName: <span><FontAwesome name='rocket' key={0} /> 装备信息</span>
+  displayName: <span><FontAwesome name='rocket' key={0} />{' ' + __('Equipment Info')}</span>
   author: 'Yunze'
   link: 'https://github.com/myzwillmake'
-  version: '1.2.0'
-  description: '提供装备详细信息查看'
+  version: '1.3.0'
+  description: __ 'Show detailed information of all owned equipment'
   handleClick: ->
     window.itemInfoWindow.show()
