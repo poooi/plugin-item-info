@@ -25,6 +25,10 @@ body {
   display: inline-block;
 }
 
+.item-level-span {
+  color: #6cf;
+}
+
 .equip-list-div-span {
   font-size: 10px;
   margin-right: 2px;
