@@ -23,16 +23,26 @@ ItemInfoTable = React.createClass
           {
             for level in [0..10]
               if @props.levelList[level]?
+                number = ' × ' + @props.levelList[level]
                 <tr key={level}>
                   {
-                    if !@props.isAlv
-                      <td style={width: '13%'}>{level + '★' + ' × ' + @props.levelList[level]}</td>
+                    if level is 0 and @props.levelList[level] is @props.sumNum
+                      <td style={width: '13%'}></td>
+                    else if !@props.isAlv
+                      if level is 10
+                        prefix = '★max'
+                      else
+                        prefix = '★+' + level
+                      <td style={width: '13%'}><span className='item-level-span'>{prefix}</span>{number}</td>
+                    else if level is 0
+                      <td style={width: '13%'}>0{number}</td>
                     else if level >= 1 and level <= 3
                       <td style={width: '13%'}>
                         {
                           for j in [1..level]
                             <strong key={j} style={color: '#3EAEFF'}>|</strong>
                         }
+                        {number}
                       </td>
                     else if level >= 4 and level <= 6
                       <td style={width: '13%'}>
@@ -40,24 +50,25 @@ ItemInfoTable = React.createClass
                           for j in [1..level - 3]
                             <strong key={j} style={color: '#F9C62F'}>\</strong>
                         }
+                        {number}
                       </td>
                     else if level >= 7 and level <= 9
                       <td style={width: '13%'}>
-                        <strong key={j} style={color: '#F9C62F'}><FontAwesome key={0} name='angle-double-right'/></strong>
+                        <strong key={j} style={color: '#F9C62F'}><FontAwesome key={0} name='angle-double-right'/></strong>{number}
                       </td>
                     else if level >= 9
                       <td style={width: '13%'}>
-                        <strong key={j} style={color: '#F94D2F'}>★</strong>
+                        <strong key={j} style={color: '#F94D2F'}>★</strong>{number}
                       </td>
                     else
-                      ''
+                      <td></td>
                   }
                   <td>
                   {
                     if @props.equipList[level]?
                       for ship, index in @props.equipList[level]
                         <div key={index} className='equip-list-div'>
-                          <span className='equip-list-div-span' >{'Lv.' + ship.shipLv}</span>
+                          <span className='equip-list-div-span'>{'Lv.' + ship.shipLv}</span>
                           {_ships[ship.shipId].api_name}
                         </div>
                   }
