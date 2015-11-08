@@ -134,8 +134,8 @@ ItemInfoTableArea = React.createClass
               row.equipList = []
               row.useNum = 0
           for _shipId, ship of _ships
-            for slotId in ship.api_slot
-              continue if slotId == -1
+            for slotId in ship.api_slot.concat ship.api_slot_ex
+              continue if slotId <= 0
               continue if !_slotitems[slotId]?
               slotType = _slotitems[slotId].api_slotitem_id
               if slotType == -1
