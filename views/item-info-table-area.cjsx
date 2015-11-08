@@ -24,7 +24,34 @@ ItemInfoTable = React.createClass
             for level in [0..10]
               if @props.levelList[level]?
                 <tr key={level}>
-                  <td style={width: '13%'}>{level + '★' + ' × ' + @props.levelList[level]}</td>
+                  {
+                    if !@props.isAlv
+                      <td style={width: '13%'}>{level + '★' + ' × ' + @props.levelList[level]}</td>
+                    else if level >= 1 and level <= 3
+                      <td style={width: '13%'}>
+                        {
+                          for j in [1..level]
+                            <strong key={j} style={color: '#3EAEFF'}>|</strong>
+                        }
+                      </td>
+                    else if level >= 4 and level <= 6
+                      <td style={width: '13%'}>
+                        {
+                          for j in [1..level - 3]
+                            <strong key={j} style={color: '#F9C62F'}>\</strong>
+                        }
+                      </td>
+                    else if level >= 7 and level <= 9
+                      <td style={width: '13%'}>
+                        <strong key={j} style={color: '#F9C62F'}><FontAwesome key={0} name='angle-double-right'/></strong>
+                      </td>
+                    else if level >= 9
+                      <td style={width: '13%'}>
+                        <strong key={j} style={color: '#F94D2F'}>★</strong>
+                      </td>
+                    else
+                      ''
+                  }
                   <td>
                   {
                     if @props.equipList[level]?
@@ -45,77 +72,53 @@ ItemInfoTable = React.createClass
 
 ItemInfoTableArea = React.createClass
   getInitialState: ->
-    rows:[]
+    rows: []
+  updateSlot: (slot) ->
+    slotType = slot.api_slotitem_id
+    isAlv = slot.api_alv
+    level = isAlv || slot.api_level
+    if @rows[slotType]?
+      row = @rows[slotType]
+      row.sumNum++
+      if isAlv
+        row.isAlv  = true
+      if row.levelList[level]?
+        row.levelList[level]++
+      else
+        row.levelList[level] = 1
+    else
+      row =
+        slotItemType: slotType
+        sumNum: 1
+        useNum: 0
+        equipList: []
+        levelList: []
+        isAlv: isAlv
+      row.levelList[level] = 1
+      @rows[slotType] = row
+
   handleResponse:  (e) ->
     {method, path, body, postBody} = e.detail
     {$ships, _ships, _slotitems, $slotitems, _} = window
-    {rows} = @state
+    @rows = @state.rows
     switch path
       when '/kcsapi/api_get_member/slot_item' , '/kcsapi/api_req_kousyou/destroyitem2' , '/kcsapi/api_req_kousyou/destroyship' , '/kcsapi/api_req_kousyou/remodel_slot' , '/kcsapi/api_req_kaisou/powerup'
-        rows = []
+        @rows = []
         for _slotId, slot of _slotitems
-          slotType = slot.api_slotitem_id
-          level = slot.api_level
-          if rows[slotType]?
-            rows[slotType].sumNum++
-            if rows[slotType].levelList[level]?
-              rows[slotType].levelList[level]++
-            else
-              rows[slotType].levelList[level] = 1
-          else
-            row =
-              slotItemType: slotType
-              sumNum: 1
-              useNum: 0
-              equipList: []
-              levelList: []
-            row.levelList[level] = 1
-            rows[slotType] = row
+          @updateSlot slot
 
       when '/kcsapi/api_req_kousyou/getship'
         for slot in body.api_slotitem
-          slotType = slot.api_slotitem_id
-          level = slot.api_level
-          if rows[slotType]?
-            rows[slotType].sumNum++
-            if rows[slotType].levelList[level]?
-              rows[slotType].levelList[level]++
-            else
-              rows[slotType].levelList[level] = 1
-          else
-            row =
-              slotItemType: slotType
-              sumNum: 1
-              useNum: 0
-              equipList: []
-              levelList: []
-            row.levelList[level] = 1
-            rows[slotType] = row
+          @updateSlot slot
 
       when '/kcsapi/api_req_kousyou/createitem'
         if body.api_create_flag == 1
           slot = body.api_slot_item
-          slotType = slot.api_slotitem_id
-          level = slot.api_level
-          if rows[slotType]?
-            rows[slotType].sumNum++
-            if rows[slotType].levelList[level]?
-              rows[slotType].levelList[level]++
-            else
-              rows[slotType].levelList[level] = 1
-          else
-            row =
-              slotItemType: slotType
-              sumNum: 1
-              useNum: 0
-              equipList: []
-              levelList: []
-            row.levelList[level] = 1
-            rows[slotType] = row
+          @updateSlot slot
 
       when '/kcsapi/api_port/port' , '/kcsapi/api_req_kaisou/slotset'
-        if rows.length > 0
-          for row in rows
+        if @rows.length > 0
+          for row in @rows
             if row?
               row.equipList = []
               row.useNum = 0
@@ -128,11 +131,11 @@ ItemInfoTableArea = React.createClass
                 console.log "Error:Cannot find the slotType by searching slotId from ship.api_slot"
                 continue
               shipIdTmp = ship.api_id
-              if rows[slotType]?
-                row = rows[slotType]
+              if @rows[slotType]?
+                row = @rows[slotType]
                 row.useNum++
-                level = _slotitems[slotId].api_level
                 findShip = false
+                level = _slotitems[slotId].api_alv || _slotitems[slotId].api_level
                 if row.equipList[level]?
                   for equip in row.equipList[level]
                     if equip.shipId == shipIdTmp
@@ -146,11 +149,11 @@ ItemInfoTableArea = React.createClass
                     shipId: shipIdTmp
                     shipLv: ship.api_lv
                   row.equipList[level].push equipAdd
-                  rows[slotType] = row
+                  @rows[slotType] = row
               else
                 console.log "Error: Not defined row"
     @setState
-      rows: rows
+      rows: @rows
   componentDidMount: ->
     window.addEventListener 'game.response', @handleResponse
   componentWillUnmount: ->
@@ -193,6 +196,7 @@ ItemInfoTableArea = React.createClass
                   restNum = {row.sumNum - row.useNum}
                   equipList = {row.equipList}
                   levelList = {row.levelList}
+                  isAlv = {row.isAlv}
                   itemPngIndex = {row.itemPngIndex}
                 />
           }
