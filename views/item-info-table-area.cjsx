@@ -88,7 +88,6 @@ ItemInfoTable = React.createClass
 ItemInfoTableArea = React.createClass
   getInitialState: ->
     rows: []
-    prevSlotitems: null
   updateSlot: (slot) ->
     slotType = slot.api_slotitem_id
     isAlv = slot.api_alv
@@ -161,7 +160,6 @@ ItemInfoTableArea = React.createClass
     if shouldUpdate
       @setState
         rows: @rows
-        prevSlotitems: Object.assign {}, _slotitems
   componentDidMount: ->
     window.addEventListener 'game.response', @handleResponse
   componentWillUnmount: ->
