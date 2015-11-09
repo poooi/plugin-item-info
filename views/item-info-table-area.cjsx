@@ -111,60 +111,55 @@ ItemInfoTableArea = React.createClass
         isAlv: isAlv
       row.levelList[level] = 1
       @rows[slotType] = row
-
+  updateEquipList: ->
+    return if !window._ships? or @rows.length == 0
+    for row in @rows
+      if row?
+        row.equipList = []
+        row.useNum = 0
+    @addShip ship for _shipId, ship of _ships
+  addShip: (ship) ->
+    shipId = ship.api_id
+    for slotId in ship.api_slot.concat ship.api_slot_ex
+      continue if slotId <= 0 or !_slotitems[slotId]?
+      slotType = _slotitems[slotId].api_slotitem_id
+      continue if slotType == -1
+      row = @rows[slotType]
+      continue if !row?
+      row.useNum++
+      level = _slotitems[slotId].api_alv || _slotitems[slotId].api_level
+      row.equipList[level] ?= []
+      equip = row.equipList[level].find (equip) -> equip.shipId == shipId
+      if equip
+        equip.count++
+      else
+        equipAdd =
+          shipId: shipId
+          shipLv: ship.api_lv
+          count: 1
+        row.equipList[level].push equipAdd
   handleResponse: (e) ->
     {method, path, body, postBody} = e.detail
     {$ships, _ships, _slotitems, $slotitems, _} = window
     @rows = @state.rows
     shouldUpdate = false
     switch path
-      when '/kcsapi/api_get_member/slot_item' , '/kcsapi/api_req_kousyou/destroyitem2' , '/kcsapi/api_req_kousyou/destroyship' , '/kcsapi/api_req_kousyou/remodel_slot' , '/kcsapi/api_req_kaisou/powerup'
+      when '/kcsapi/api_get_member/slot_item', '/kcsapi/api_req_kousyou/destroyitem2', '/kcsapi/api_req_kousyou/destroyship', '/kcsapi/api_req_kousyou/remodel_slot' , '/kcsapi/api_req_kaisou/powerup'
         shouldUpdate = true
-        @rows = @rows.map (row) ->
-          equipList: row.equipList
-          useNum: row.useNum
+        @rows = []
         @updateSlot slot for _slotId, slot of _slotitems
-
+        @updateEquipList()
       when '/kcsapi/api_req_kousyou/getship'
         shouldUpdate = true
         @updateSlot slot for slot in body.api_slotitem
-
+        @addShip body.api_ship
       when '/kcsapi/api_req_kousyou/createitem'
         if body.api_create_flag == 1
           shouldUpdate = true
           @updateSlot body.api_slot_item
-
-      when '/kcsapi/api_port/port' , '/kcsapi/api_req_kaisou/slotset'
+      when '/kcsapi/api_port/port' , '/kcsapi/api_req_kaisou/slotset', '/kcsapi/api_get_member/ship3'
         shouldUpdate = true
-        if @rows.length > 0
-          for row in @rows
-            if row?
-              row.equipList = []
-              row.useNum = 0
-          for shipId, ship of _ships
-            for slotId in ship.api_slot.concat ship.api_slot_ex
-              continue if slotId <= 0
-              continue if !_slotitems[slotId]?
-              slotType = _slotitems[slotId].api_slotitem_id
-              if slotType == -1
-                console.log "Error:Cannot find the slotType by searching slotId from ship.api_slot"
-                continue
-              if @rows[slotType]?
-                row = @rows[slotType]
-                row.useNum++
-                level = _slotitems[slotId].api_alv || _slotitems[slotId].api_level
-                row.equipList[level] ?= []
-                equip = row.equipList[level].find (equip) -> equip.shipId == shipId
-                if equip
-                  equip.count++
-                else
-                  equipAdd =
-                    shipId: shipId
-                    shipLv: ship.api_lv
-                    count: 1
-                  row.equipList[level].push equipAdd
-              else
-                console.log "Error: Not defined row"
+        @updateEquipList()
     if shouldUpdate
       @setState
         rows: @rows
