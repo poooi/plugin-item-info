@@ -70,6 +70,10 @@ ItemInfoTable = React.createClass
                         <div key={index} className='equip-list-div'>
                           <span className='equip-list-div-span'>{'Lv.' + ship.shipLv}</span>
                           {_ships[ship.shipId].api_name}
+                          {
+                            if ship.count > 1
+                              '×' + ship.count
+                          }
                         </div>
                   }
                   </td>
@@ -92,7 +96,7 @@ ItemInfoTableArea = React.createClass
       row = @rows[slotType]
       row.sumNum++
       if isAlv
-        row.isAlv  = true
+        row.isAlv = true
       if row.levelList[level]?
         row.levelList[level]++
       else
@@ -108,32 +112,36 @@ ItemInfoTableArea = React.createClass
       row.levelList[level] = 1
       @rows[slotType] = row
 
-  handleResponse:  (e) ->
+  handleResponse: (e) ->
     {method, path, body, postBody} = e.detail
     {$ships, _ships, _slotitems, $slotitems, _} = window
     @rows = @state.rows
+    shouldUpdate = false
     switch path
       when '/kcsapi/api_get_member/slot_item' , '/kcsapi/api_req_kousyou/destroyitem2' , '/kcsapi/api_req_kousyou/destroyship' , '/kcsapi/api_req_kousyou/remodel_slot' , '/kcsapi/api_req_kaisou/powerup'
-        @rows = []
-        for _slotId, slot of _slotitems
-          @updateSlot slot
+        shouldUpdate = true
+        @rows = @rows.map (row) ->
+          equipList: row.equipList
+          useNum: row.useNum
+        @updateSlot slot for _slotId, slot of _slotitems
 
       when '/kcsapi/api_req_kousyou/getship'
-        for slot in body.api_slotitem
-          @updateSlot slot
+        shouldUpdate = true
+        @updateSlot slot for slot in body.api_slotitem
 
       when '/kcsapi/api_req_kousyou/createitem'
         if body.api_create_flag == 1
-          slot = body.api_slot_item
-          @updateSlot slot
+          shouldUpdate = true
+          @updateSlot body.api_slot_item
 
       when '/kcsapi/api_port/port' , '/kcsapi/api_req_kaisou/slotset'
+        shouldUpdate = true
         if @rows.length > 0
           for row in @rows
             if row?
               row.equipList = []
               row.useNum = 0
-          for _shipId, ship of _ships
+          for shipId, ship of _ships
             for slotId in ship.api_slot.concat ship.api_slot_ex
               continue if slotId <= 0
               continue if !_slotitems[slotId]?
@@ -141,30 +149,25 @@ ItemInfoTableArea = React.createClass
               if slotType == -1
                 console.log "Error:Cannot find the slotType by searching slotId from ship.api_slot"
                 continue
-              shipIdTmp = ship.api_id
               if @rows[slotType]?
                 row = @rows[slotType]
                 row.useNum++
-                findShip = false
                 level = _slotitems[slotId].api_alv || _slotitems[slotId].api_level
-                if row.equipList[level]?
-                  for equip in row.equipList[level]
-                    if equip.shipId == shipIdTmp
-                      findShip = true
-                      break
+                row.equipList[level] ?= []
+                equip = row.equipList[level].find (equip) -> equip.shipId == shipId
+                if equip
+                  equip.count++
                 else
-                  row.equipList[level] = []
-                equipAdd = null
-                if !findShip
                   equipAdd =
-                    shipId: shipIdTmp
+                    shipId: shipId
                     shipLv: ship.api_lv
+                    count: 1
                   row.equipList[level].push equipAdd
-                  @rows[slotType] = row
               else
                 console.log "Error: Not defined row"
-    @setState
-      rows: @rows
+    if shouldUpdate
+      @setState
+        rows: @rows
   componentDidMount: ->
     window.addEventListener 'game.response', @handleResponse
   componentWillUnmount: ->
