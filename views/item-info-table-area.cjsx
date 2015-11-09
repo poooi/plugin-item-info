@@ -88,6 +88,7 @@ ItemInfoTable = React.createClass
 ItemInfoTableArea = React.createClass
   getInitialState: ->
     rows: []
+    prevSlotitems: null
   updateSlot: (slot) ->
     slotType = slot.api_slotitem_id
     isAlv = slot.api_alv
@@ -142,9 +143,16 @@ ItemInfoTableArea = React.createClass
     {method, path, body, postBody} = e.detail
     {$ships, _ships, _slotitems, $slotitems, _} = window
     @rows = @state.rows
+    prevSlotitems = @state.prevSlotitems
     shouldUpdate = false
     switch path
-      when '/kcsapi/api_get_member/slot_item', '/kcsapi/api_req_kousyou/destroyitem2', '/kcsapi/api_req_kousyou/destroyship', '/kcsapi/api_req_kousyou/remodel_slot' , '/kcsapi/api_req_kaisou/powerup'
+      when '/kcsapi/api_port/port', '/kcsapi/api_get_member/slot_item', '/kcsapi/api_get_member/ship3'
+        shouldUpdate = true
+        if !_.isEqual _slotitems, prevSlotitems
+          @rows = []
+          @updateSlot slot for _slotId, slot of _slotitems
+        @updateEquipList()
+      when '/kcsapi/api_req_kousyou/destroyitem2', '/kcsapi/api_req_kousyou/destroyship', '/kcsapi/api_req_kousyou/remodel_slot', '/kcsapi/api_req_kaisou/powerup'
         shouldUpdate = true
         @rows = []
         @updateSlot slot for _slotId, slot of _slotitems
@@ -157,12 +165,10 @@ ItemInfoTableArea = React.createClass
         if body.api_create_flag == 1
           shouldUpdate = true
           @updateSlot body.api_slot_item
-      when '/kcsapi/api_port/port' , '/kcsapi/api_req_kaisou/slotset', '/kcsapi/api_get_member/ship3'
-        shouldUpdate = true
-        @updateEquipList()
     if shouldUpdate
       @setState
         rows: @rows
+        prevSlotitems: Object.assign {}, _slotitems
   componentDidMount: ->
     window.addEventListener 'game.response', @handleResponse
   componentWillUnmount: ->
