@@ -70,6 +70,10 @@ ItemInfoTable = React.createClass
                         <div key={index} className='equip-list-div'>
                           <span className='equip-list-div-span'>{'Lv.' + ship.shipLv}</span>
                           {_ships[ship.shipId].api_name}
+                          {
+                            if ship.count > 1
+                              '×' + ship.count
+                          }
                         </div>
                   }
                   </td>
@@ -92,7 +96,7 @@ ItemInfoTableArea = React.createClass
       row = @rows[slotType]
       row.sumNum++
       if isAlv
-        row.isAlv  = true
+        row.isAlv = true
       if row.levelList[level]?
         row.levelList[level]++
       else
@@ -107,64 +111,55 @@ ItemInfoTableArea = React.createClass
         isAlv: isAlv
       row.levelList[level] = 1
       @rows[slotType] = row
-
-  handleResponse:  (e) ->
+  updateEquipList: ->
+    return if !window._ships? or @rows.length == 0
+    for row in @rows
+      if row?
+        row.equipList = []
+        row.useNum = 0
+    @addShip ship for _shipId, ship of _ships
+  addShip: (ship) ->
+    shipId = ship.api_id
+    for slotId in ship.api_slot.concat ship.api_slot_ex
+      continue if slotId <= 0 or !_slotitems[slotId]?
+      slotType = _slotitems[slotId].api_slotitem_id
+      continue if slotType == -1
+      row = @rows[slotType]
+      continue if !row?
+      row.useNum++
+      level = _slotitems[slotId].api_alv || _slotitems[slotId].api_level
+      row.equipList[level] ?= []
+      equip = row.equipList[level].find (equip) -> equip.shipId == shipId
+      if equip
+        equip.count++
+      else
+        equipAdd =
+          shipId: shipId
+          shipLv: ship.api_lv
+          count: 1
+        row.equipList[level].push equipAdd
+  handleResponse: (e) ->
     {method, path, body, postBody} = e.detail
     {$ships, _ships, _slotitems, $slotitems, _} = window
     @rows = @state.rows
+    shouldUpdate = false
     switch path
-      when '/kcsapi/api_get_member/slot_item' , '/kcsapi/api_req_kousyou/destroyitem2' , '/kcsapi/api_req_kousyou/destroyship' , '/kcsapi/api_req_kousyou/remodel_slot' , '/kcsapi/api_req_kaisou/powerup'
+      when '/kcsapi/api_port/port', '/kcsapi/api_get_member/slot_item', '/kcsapi/api_get_member/ship3', '/kcsapi/api_req_kousyou/destroyitem2', '/kcsapi/api_req_kousyou/destroyship', '/kcsapi/api_req_kousyou/remodel_slot', '/kcsapi/api_req_kaisou/powerup'
+        shouldUpdate = true
         @rows = []
-        for _slotId, slot of _slotitems
-          @updateSlot slot
-
+        @updateSlot slot for _slotId, slot of _slotitems
+        @updateEquipList()
       when '/kcsapi/api_req_kousyou/getship'
-        for slot in body.api_slotitem
-          @updateSlot slot
-
+        shouldUpdate = true
+        @updateSlot slot for slot in body.api_slotitem
+        @addShip body.api_ship
       when '/kcsapi/api_req_kousyou/createitem'
         if body.api_create_flag == 1
-          slot = body.api_slot_item
-          @updateSlot slot
-
-      when '/kcsapi/api_port/port' , '/kcsapi/api_req_kaisou/slotset'
-        if @rows.length > 0
-          for row in @rows
-            if row?
-              row.equipList = []
-              row.useNum = 0
-          for _shipId, ship of _ships
-            for slotId in ship.api_slot.concat ship.api_slot_ex
-              continue if slotId <= 0
-              continue if !_slotitems[slotId]?
-              slotType = _slotitems[slotId].api_slotitem_id
-              if slotType == -1
-                console.log "Error:Cannot find the slotType by searching slotId from ship.api_slot"
-                continue
-              shipIdTmp = ship.api_id
-              if @rows[slotType]?
-                row = @rows[slotType]
-                row.useNum++
-                findShip = false
-                level = _slotitems[slotId].api_alv || _slotitems[slotId].api_level
-                if row.equipList[level]?
-                  for equip in row.equipList[level]
-                    if equip.shipId == shipIdTmp
-                      findShip = true
-                      break
-                else
-                  row.equipList[level] = []
-                equipAdd = null
-                if !findShip
-                  equipAdd =
-                    shipId: shipIdTmp
-                    shipLv: ship.api_lv
-                  row.equipList[level].push equipAdd
-                  @rows[slotType] = row
-              else
-                console.log "Error: Not defined row"
-    @setState
-      rows: @rows
+          shouldUpdate = true
+          @updateSlot body.api_slot_item
+    if shouldUpdate
+      @setState
+        rows: @rows
   componentDidMount: ->
     window.addEventListener 'game.response', @handleResponse
   componentWillUnmount: ->
