@@ -19,15 +19,12 @@ i18n.setLocale(window.language)
 window.itemInfoWindow = null
 initialItemInfoWindow = ->
   window.itemInfoWindow = windowManager.createWindow
-    #Use config
     x: config.get 'poi.window.x', 0
     y: config.get 'poi.window.y', 0
     width: 1020
     height: 650
   window.itemInfoWindow.loadUrl "file://#{__dirname}/index.html"
-  if process.env.DEBUG?
-    window.itemInfoWindow.openDevTools
-      detach: true
+
 if config.get('plugin.ItemInfo.enable', true)
   initialItemInfoWindow()
 
@@ -37,7 +34,10 @@ module.exports =
   displayName: <span><FontAwesome name='rocket' key={0} />{' ' + __('Equipment Info')}</span>
   author: 'Yunze'
   link: 'https://github.com/myzwillmake'
-  version: '1.3.0'
+  version: '1.4.0'
   description: __ 'Show detailed information of all owned equipment'
   handleClick: ->
+    if process.env.DEBUG?
+      window.itemInfoWindow.openDevTools
+        detach: true
     window.itemInfoWindow.show()
