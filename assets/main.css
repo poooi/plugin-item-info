@@ -26,12 +26,24 @@ body {
 }
 
 .item-level-span {
+  display: inline-block;
   color: #6cf;
+  min-width: 11px;
+  text-align: center;
 }
 
 .equip-list-div-span {
   font-size: 10px;
   margin-right: 2px;
+}
+
+.item-alv-0 {
+  color: #888;
+  font-size: 80%;
+}
+
+.equip-list-number {
+  font-size: 80%;
 }
 
 #equip-table {

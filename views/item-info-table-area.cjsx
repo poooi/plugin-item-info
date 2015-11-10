@@ -32,33 +32,39 @@ ItemInfoTable = React.createClass
                       if level is 10
                         prefix = '★max'
                       else
-                        prefix = '★+' + level
+                        prefix = '★' + level
                       <td style={width: '13%'}><span className='item-level-span'>{prefix}</span>{number}</td>
                     else if level is 0
-                      <td style={width: '13%'}>0{number}</td>
-                    else if level >= 1 and level <= 3
+                      <td style={width: '13%'}><span className='item-alv-0 item-level-span'>O</span>{number}</td>
+                    else if 1 <= level <= 3
                       <td style={width: '13%'}>
-                        {
-                          for j in [1..level]
-                            <strong key={j} style={color: '#3EAEFF'}>|</strong>
-                        }
+                        <span className='item-level-span'>
+                          {
+                            for j in [1..level]
+                              <strong key={j} style={color: '#3EAEFF'}>|</strong>
+                          }
+                        </span>
                         {number}
                       </td>
-                    else if level >= 4 and level <= 6
+                    else if 4 <= level <= 6
                       <td style={width: '13%'}>
-                        {
-                          for j in [1..level - 3]
-                            <strong key={j} style={color: '#F9C62F'}>\</strong>
-                        }
+                        <span className='item-level-span'>
+                          {
+                            for j in [1..level - 3]
+                              <strong key={j} style={color: '#F9C62F'}>\</strong>
+                          }
+                        </span>
                         {number}
                       </td>
-                    else if level >= 7 and level <= 9
+
+                    else if level >= 7
                       <td style={width: '13%'}>
-                        <strong key={j} style={color: '#F9C62F'}><FontAwesome key={0} name='angle-double-right'/></strong>{number}
-                      </td>
-                    else if level >= 9
-                      <td style={width: '13%'}>
-                        <strong key={j} style={color: '#F94D2F'}>★</strong>{number}
+                        <span className='item-level-span'>
+                          <strong key={j} style={color: '#F9C62F'}>
+                            <FontAwesome key={0} name='angle-double-right'/>
+                          </strong>
+                        </span>
+                        {number}
                       </td>
                     else
                       <td></td>
@@ -72,7 +78,7 @@ ItemInfoTable = React.createClass
                           {_ships[ship.shipId].api_name}
                           {
                             if ship.count > 1
-                              '×' + ship.count
+                              <span className='equip-list-number'>{'×' + ship.count}</span>
                           }
                         </div>
                   }
