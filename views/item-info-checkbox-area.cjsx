@@ -6,7 +6,7 @@ ItemInfoCheckboxArea = React.createClass
   getInitialState: ->
     itemTypeChecked: [false, true, true, true, true, true, true, true, true, true, true, true,
                       true, true, true, true, true, true, true, true, true, true, true,
-                      true, true, true, true, true, true, true, true, true, true, true]
+                      true, true, true, true, true, true, true, true, true, true, true, true, true]
   handleClickCheckbox: (index) ->
     checkboxes = []
     {itemTypeChecked} = @state
