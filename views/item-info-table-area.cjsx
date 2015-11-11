@@ -56,7 +56,6 @@ ItemInfoTable = React.createClass
                         </span>
                         {number}
                       </td>
-
                     else if level >= 7
                       <td style={width: '13%'}>
                         <span className='item-level-span'>
