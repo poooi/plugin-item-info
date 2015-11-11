@@ -3,11 +3,11 @@
 ItemInfoTableArea = require './item-info-table-area'
 ItemInfoCheckboxArea = require './item-info-checkbox-area'
 
-max_type = 35
+maxSlotType = 35
 
 ItemInfoArea = React.createClass
   getInitialState: ->
-    itemTypeChecked = new Array(max_type + 1)
+    itemTypeChecked = new Array(maxSlotType + 1)
     itemTypeChecked.fill true
     itemTypeChecked: itemTypeChecked
 
