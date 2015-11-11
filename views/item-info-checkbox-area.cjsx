@@ -3,8 +3,6 @@
 Divider = require './divider'
 
 ItemInfoCheckboxArea = React.createClass
-  getInitialState: ->
-    {}
   handleClickCheckbox: (index) ->
     {itemTypeChecked} = @props
     itemTypeChecked[index] = !itemTypeChecked[index]
