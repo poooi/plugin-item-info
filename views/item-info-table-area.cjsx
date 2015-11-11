@@ -196,9 +196,8 @@ ItemInfoTableArea = React.createClass
               printRows = _.sortBy printRows, 'itemPngIndex'
               for row, index in printRows
                 for level in [0..10]
-                  if row.equipList[level]?
-                    row.equipList[level] = _.sortBy row.equipList[level], 'shipLv'
-                    row.equipList[level]  .reverse()
+                  row.equipList[level]?.sort (a, b) ->
+                    b.shipLv - a.shipLv || a.shipId - b.shipId
                 <ItemInfoTable
                   key = {index}
                   slotItemType = {row.slotItemType}
