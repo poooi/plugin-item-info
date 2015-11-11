@@ -4,43 +4,29 @@ Divider = require './divider'
 
 ItemInfoCheckboxArea = React.createClass
   getInitialState: ->
-    itemTypeChecked: [false, true, true, true, true, true, true, true, true, true, true, true,
-                      true, true, true, true, true, true, true, true, true, true, true,
-                      true, true, true, true, true, true, true, true, true, true, true, true, true]
+    {}
   handleClickCheckbox: (index) ->
-    checkboxes = []
-    {itemTypeChecked} = @state
+    {itemTypeChecked} = @props
     itemTypeChecked[index] = !itemTypeChecked[index]
-    for itemTypeVal, i in itemTypeChecked
-      checkboxes.push i if itemTypeChecked[i]
-    @setState {itemTypeChecked}
-    @props.filterRules(checkboxes)
+    @props.filterRules(itemTypeChecked)
   handleCilckCheckboxAllButton: ->
-    checkboxes = []
-    {itemTypeChecked} = @state
-    for itemTypeVal, i in itemTypeChecked
-      if i
-        itemTypeChecked[i] = true
-        checkboxes.push i
-    @setState {itemTypeChecked}
-    @props.filterRules(checkboxes)
+    {itemTypeChecked} = @props
+    itemTypeChecked.fill true
+    @props.filterRules(itemTypeChecked)
   handleCilckCheckboxNoneButton: ->
-    checkboxes = []
-    {itemTypeChecked} = @state
-    for itemTypeVal, i in itemTypeChecked
-     itemTypeChecked[i] = false
-    @setState {itemTypeChecked}
-    @props.filterRules(checkboxes)
+    {itemTypeChecked} = @props
+    itemTypeChecked.fill false
+    @props.filterRules(itemTypeChecked)
   render: ->
     <div id='item-info-settings'>
       <Divider text={__ 'Filter Setting'} />
       <Grid id='item-info-filter'>
         <Row>
         {
-          for itemTypeVal, index in @state.itemTypeChecked
-            continue if !index
+          for itemTypeVal, index in @props.itemTypeChecked
+            continue if index is 0
             <Col key={index} xs={1}>
-              <input type='checkbox' value={index} onChange={@handleClickCheckbox.bind(@, index)} checked={@state.itemTypeChecked[index]} style={verticalAlign: 'middle'}/>
+              <input type='checkbox' value={index} onChange={@handleClickCheckbox.bind(@, index)} checked={@props.itemTypeChecked[index]} style={verticalAlign: 'middle'}/>
               <img src={
                   path = require 'path'
                   path.join(ROOT, 'assets', 'img', 'slotitem', "#{index + 100}.png")

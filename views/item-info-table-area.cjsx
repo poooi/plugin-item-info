@@ -193,8 +193,7 @@ ItemInfoTableArea = React.createClass
                   itemInfo = $slotitems[row.slotItemType]
                   itemPngIndex = itemInfo.api_type[3]
                   row.itemPngIndex = itemPngIndex
-                  if row.itemPngIndex in @props.itemTypeBoxes
-                    printRows.push row
+                  printRows.push row if @props.itemTypeChecked[row.itemPngIndex]
               printRows = _.sortBy printRows, 'itemPngIndex'
               for row, index in printRows
                 for level in [0..10]
