@@ -1,32 +1,32 @@
 {React, ReactBootstrap, jQuery, FontAwesome, __} = window
-{Panel, Row, Grid, Col, Table, Button, OverlayTrigger, Tooltip} = ReactBootstrap
+{Panel, Row, Grid, Col, Table, Button, OverlayTrigger, Tooltip, Input} = ReactBootstrap
 Divider = require './divider'
 
 ItemInfoTable = React.createClass
   render: ->
-    {$ships, $slotitems, _ships} = window
+    {$_ships} = window
     <tr className="vertical">
       <td style={paddingLeft: 10}>
         {
-          <img key={@props.slotItemType} src={
+          <img key={@props.slotItemId} src={
               path = require 'path'
-              path.join(ROOT, 'assets', 'img', 'slotitem', "#{@props.itemPngIndex + 100}.png")
+              path.join(ROOT, 'assets', 'img', 'slotitem', "#{@props.iconIndex + 100}.png")
             }
           />
         }
-        {$slotitems[@props.slotItemType].api_name}
+        {@props.name}
       </td>
-      <td className='center'>{@props.sumNum + ' '}<span style={fontSize: '12px'}>{'(' + @props.restNum + ')'}</span></td>
+      <td className='center'>{@props.total + ' '}<span style={fontSize: '12px'}>{'(' + @props.rest + ')'}</span></td>
       <td>
         <Table id='equip-table'>
           <tbody>
           {
             for level in [0..10]
-              if @props.levelList[level]?
-                number = ' × ' + @props.levelList[level]
+              if @props.levelCount[level]?
+                number = ' × ' + @props.levelCount[level]
                 <tr key={level}>
                   {
-                    if level is 0 and @props.levelList[level] is @props.sumNum
+                    if level is 0 and @props.levelCount[0] is @props.total
                       <td style={width: '13%'}></td>
                     else if !@props.isAlv
                       if level is 10
@@ -70,11 +70,11 @@ ItemInfoTable = React.createClass
                   }
                   <td>
                   {
-                    if @props.equipList[level]?
-                      for ship, index in @props.equipList[level]
+                    if @props.ships[level]?
+                      for ship, index in @props.ships[level]
                         <div key={index} className='equip-list-div'>
-                          <span className='equip-list-div-span'>{'Lv.' + ship.shipLv}</span>
-                          {_ships[ship.shipId].api_name}
+                          <span className='equip-list-div-span'>{'Lv.' + ship.level}</span>
+                          {ship.name}
                           {
                             if ship.count > 1
                               <span className='equip-list-number'>{'×' + ship.count}</span>
@@ -89,40 +89,43 @@ ItemInfoTable = React.createClass
       </td>
     </tr>
 
-
 ItemInfoTableArea = React.createClass
   getInitialState: ->
     rows: []
+    filterName: @alwaysTrue
   updateSlot: (slot) ->
-    slotType = slot.api_slotitem_id
+    slotItemId = slot.api_slotitem_id
     isAlv = slot.api_alv
     level = isAlv || slot.api_level
-    if @rows[slotType]?
-      row = @rows[slotType]
-      row.sumNum++
+    if @rows[slotItemId]?
+      row = @rows[slotItemId]
+      row.total++
       if isAlv
         row.isAlv = true
-      if row.levelList[level]?
-        row.levelList[level]++
+      if row.levelCount[level]?
+        row.levelCount[level]++
       else
-        row.levelList[level] = 1
+        row.levelCount[level] = 1
     else
+      itemInfo = $slotitems[slotItemId]
       row =
-        slotItemType: slotType
-        sumNum: 1
-        useNum: 0
-        equipList: []
-        levelList: []
+        slotItemId: slotItemId
+        iconIndex: itemInfo.api_type[3]
+        name: itemInfo.api_name
+        total: 1
+        used: 0
+        ships: []
+        levelCount: []
         isAlv: isAlv
-      row.levelList[level] = 1
-      @rows[slotType] = row
-  updateEquipList: ->
+      row.levelCount[level] = 1
+      @rows[slotItemId] = row
+  updateShips: ->
     return if !window._ships? or @rows.length == 0
     for row in @rows
       if row?
-        row.equipList = []
-        row.useNum = 0
-    @addShip ship for _shipId, ship of _ships
+        row.ships = []
+        row.used = 0
+    @addShip ship for _id, ship of _ships
   addShip: (ship) ->
     shipId = ship.api_id
     for slotId in ship.api_slot.concat ship.api_slot_ex
@@ -131,18 +134,44 @@ ItemInfoTableArea = React.createClass
       continue if slotType == -1
       row = @rows[slotType]
       continue if !row?
-      row.useNum++
+      row.used++
       level = _slotitems[slotId].api_alv || _slotitems[slotId].api_level
-      row.equipList[level] ?= []
-      equip = row.equipList[level].find (equip) -> equip.shipId == shipId
-      if equip
-        equip.count++
+      row.ships[level] ?= []
+      shipInfo = row.ships[level].find (shipInfo) -> shipInfo.id is shipId
+      if shipInfo
+        shipInfo.count++
       else
-        equipAdd =
-          shipId: shipId
-          shipLv: ship.api_lv
+        shipInfo =
+          id: shipId
+          level: ship.api_lv
+          name: ship.api_name
           count: 1
-        row.equipList[level].push equipAdd
+        row.ships[level].push shipInfo
+  displayedRows: ->
+    {rows, filterName} = @state
+    rows = rows.filter (row) =>
+      row? and filterName(row.name) and @props.itemTypeChecked[row.iconIndex]
+    rows.sort (a, b) -> a.iconIndex - b.iconIndex
+    for row in rows
+      for shipsInLevel in row.ships
+        shipsInLevel?.sort (a, b) ->
+          b.level - a.level || a.id - b.id
+    rows
+  handleFilterNameChange: ->
+    key = @refs.input.getValue()
+    if key
+      filterName = null
+      match = key.match /^\/(.+)\/([gim]*)$/
+      if match?
+        try
+          re = new RegExp match[1], match[2]
+          filterName = re.test.bind(re)
+      filterName ?= (name) -> name.indexOf(key) >= 0
+    else
+      filterName = @alwaysTrue
+    @setState
+      filterName: filterName
+  alwaysTrue: () -> true
   handleResponse: (e) ->
     {method, path, body, postBody} = e.detail
     {$ships, _ships, _slotitems, $slotitems, _} = window
@@ -153,7 +182,7 @@ ItemInfoTableArea = React.createClass
         shouldUpdate = true
         @rows = []
         @updateSlot slot for _slotId, slot of _slotitems
-        @updateEquipList()
+        @updateShips()
       when '/kcsapi/api_req_kousyou/getship'
         shouldUpdate = true
         @updateSlot slot for slot in body.api_slotitem
@@ -176,38 +205,27 @@ ItemInfoTableArea = React.createClass
         <Table striped condensed hover id="main-table">
           <thead className="slot-item-table-thead">
             <tr>
-              <th className="center" style={width: '25%'}>{__ 'Name'}</th>
+              <th className="center" style={width: '25%'}>
+                <Input className='name-filter' type='text' ref='input' placeholder={__ 'Name'} onChange={@handleFilterNameChange}/>
+              </th>
               <th className="center" style={width: '9%'}>{__ 'Total'}<span style={fontSize: '11px'}>{'(' + __('rest') + ')'}</span></th>
               <th className="center" style={width: '66%'}>{__ 'State'}</th>
             </tr>
           </thead>
           <tbody>
           {
-            {_, $slotitems} = window
-            if @state.rows?
-              itemPngIndex = null
-              printRows = []
-              for row in @state.rows
-                if row?
-                  itemInfo = $slotitems[row.slotItemType]
-                  itemPngIndex = itemInfo.api_type[3]
-                  row.itemPngIndex = itemPngIndex
-                  printRows.push row if @props.itemTypeChecked[row.itemPngIndex]
-              printRows = _.sortBy printRows, 'itemPngIndex'
-              for row, index in printRows
-                for level in [0..10]
-                  row.equipList[level]?.sort (a, b) ->
-                    b.shipLv - a.shipLv || a.shipId - b.shipId
-                <ItemInfoTable
-                  key = {index}
-                  slotItemType = {row.slotItemType}
-                  sumNum = {row.sumNum}
-                  restNum = {row.sumNum - row.useNum}
-                  equipList = {row.equipList}
-                  levelList = {row.levelList}
-                  isAlv = {row.isAlv}
-                  itemPngIndex = {row.itemPngIndex}
-                />
+            for row, index in @displayedRows()
+              <ItemInfoTable
+                key = {index}
+                slotItemId = {row.slotItemId}
+                name = {row.name}
+                total = {row.total}
+                rest = {row.total - row.used}
+                ships = {row.ships}
+                levelCount = {row.levelCount}
+                isAlv = {row.isAlv}
+                iconIndex = {row.iconIndex}
+              />
           }
           </tbody>
         </Table>

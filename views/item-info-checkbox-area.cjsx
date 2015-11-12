@@ -4,17 +4,11 @@ Divider = require './divider'
 
 ItemInfoCheckboxArea = React.createClass
   handleClickCheckbox: (index) ->
-    {itemTypeChecked} = @props
-    itemTypeChecked[index] = !itemTypeChecked[index]
-    @props.filterRules(itemTypeChecked)
-  handleCilckCheckboxAllButton: ->
-    {itemTypeChecked} = @props
-    itemTypeChecked.fill true
-    @props.filterRules(itemTypeChecked)
-  handleCilckCheckboxNoneButton: ->
-    {itemTypeChecked} = @props
-    itemTypeChecked.fill false
-    @props.filterRules(itemTypeChecked)
+    @props.changeCheckbox (box) -> box[index] = !box[index]
+  handleClickCheckboxAllButton: ->
+    @props.changeCheckbox (box) -> box.fill true
+  handleClickCheckboxNoneButton: ->
+    @props.changeCheckbox (box) -> box.fill false
   render: ->
     <div id='item-info-settings'>
       <Divider text={__ 'Filter Setting'} />
@@ -35,10 +29,10 @@ ItemInfoCheckboxArea = React.createClass
         </Row>
         <Row>
           <Col xs={2}>
-            <Button className="filter-button" bsStyle='default' bsSize='small' onClick={@handleCilckCheckboxAllButton} block>{__ 'Select All'}</Button>
+            <Button className="filter-button" bsStyle='default' bsSize='small' onClick={@handleClickCheckboxAllButton} block>{__ 'Select All'}</Button>
           </Col>
           <Col xs={2}>
-            <Button className="filter-button" bsStyle='default' bsSize='small' onClick={@handleCilckCheckboxNoneButton} block>{__ 'Deselect All'}</Button>
+            <Button className="filter-button" bsStyle='default' bsSize='small' onClick={@handleClickCheckboxNoneButton} block>{__ 'Deselect All'}</Button>
           </Col>
         </Row>
       </Grid>

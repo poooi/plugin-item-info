@@ -9,6 +9,14 @@ body {
   text-align: center;
 }
 
+.slot-item-table-thead .form-group {
+  margin-bottom: 0;
+}
+
+.slot-item-table-thead input.name-filter {
+  font-size: inherit;
+}
+
 .slot-item-table-td {
   background-color: transparent;
   width: 20%;
@@ -54,6 +62,7 @@ body {
 
 #main-table tbody tr td {
   vertical-align: middle;
+  padding: 1px;
 }
 #switch-btn {
   padding: 0 5px;
@@ -65,6 +74,8 @@ body {
 }
 .divider hr {
   margin-bottom: 15.5px;
+  margin-top: 11px;
+  border-top: 1px solid #aaa;
 }
 
 .filter-button {
