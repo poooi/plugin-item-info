@@ -54,6 +54,7 @@ body {
 
 #main-table tbody tr td {
   vertical-align: middle;
+  padding: 1px;
 }
 #switch-btn {
   padding: 0 5px;
