@@ -89,11 +89,10 @@ ItemInfoTable = React.createClass
       </td>
     </tr>
 
-
 ItemInfoTableArea = React.createClass
   getInitialState: ->
     rows: []
-    filterName: ''
+    filterName: @alwaysTrue
   updateSlot: (slot) ->
     slotItemId = slot.api_slotitem_id
     isAlv = slot.api_alv
@@ -149,19 +148,30 @@ ItemInfoTableArea = React.createClass
           count: 1
         row.ships[level].push shipInfo
   displayedRows: ->
-    rows = @state.rows.filter (row) =>
-      return false if !row?
-      return false if @state.filterName and row.name.indexOf(@state.filterName) < 0
-      @props.itemTypeChecked[row.iconIndex]
+    {rows, filterName} = @state
+    rows = rows.filter (row) =>
+      row? and filterName(row.name) and @props.itemTypeChecked[row.iconIndex]
     rows.sort (a, b) -> a.iconIndex - b.iconIndex
     for row in rows
-      for level in [0..10]
-        row.ships[level]?.sort (a, b) ->
+      for shipsInLevel in row.ships
+        shipsInLevel?.sort (a, b) ->
           b.level - a.level || a.id - b.id
     rows
   handleFilterNameChange: ->
+    key = @refs.input.getValue()
+    if key
+      filterName = null
+      match = key.match /^\/(.+)\/([gim]*)$/
+      if match?
+        try
+          re = new RegExp match[1], match[2]
+          filterName = re.test.bind(re)
+      filterName ?= (name) -> name.indexOf(key) >= 0
+    else
+      filterName = @alwaysTrue
     @setState
-      filterName: @refs.input.getValue()
+      filterName: filterName
+  alwaysTrue: () -> true
   handleResponse: (e) ->
     {method, path, body, postBody} = e.detail
     {$ships, _ships, _slotitems, $slotitems, _} = window
