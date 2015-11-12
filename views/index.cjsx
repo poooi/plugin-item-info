@@ -11,13 +11,13 @@ ItemInfoArea = React.createClass
     itemTypeChecked.fill true
     itemTypeChecked: itemTypeChecked
 
-  filterRules: (itemTypeChecked) ->
-    @setState
-      itemTypeChecked: itemTypeChecked
+  changeCheckbox: (callback) ->
+    callback @state.itemTypeChecked
+    @setState()
 
   render: ->
     <div>
-      <ItemInfoCheckboxArea filterRules={@filterRules} itemTypeChecked={@state.itemTypeChecked} />
+      <ItemInfoCheckboxArea changeCheckbox={@changeCheckbox} itemTypeChecked={@state.itemTypeChecked} />
       <ItemInfoTableArea itemTypeChecked={@state.itemTypeChecked} />
     </div>
 
