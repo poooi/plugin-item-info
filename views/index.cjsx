@@ -13,7 +13,7 @@ ItemInfoArea = React.createClass
 
   changeCheckbox: (callback) ->
     callback @state.itemTypeChecked
-    @setState()
+    @forceUpdate()
 
   render: ->
     <div>

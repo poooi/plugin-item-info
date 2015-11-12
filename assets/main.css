@@ -9,6 +9,14 @@ body {
   text-align: center;
 }
 
+.slot-item-table-thead .form-group {
+  margin-bottom: 0;
+}
+
+.slot-item-table-thead input.name-filter {
+  font-size: inherit;
+}
+
 .slot-item-table-td {
   background-color: transparent;
   width: 20%;
