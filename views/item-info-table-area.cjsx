@@ -36,11 +36,10 @@ ItemInfoTable = React.createClass
                       <td style={width: '13%'}><span className='item-level-span'>{prefix}</span>{number}</td>
                     else if level is 0
                       <td style={width: '13%'}><span className='item-alv-0 item-level-span'>O</span>{number}</td>
-                    else if 1 <= level
-                      level = 7 if level > 7
+                    else if 1 <= level <= 7
                       <td style={width: '13%'}>
                         <span className='item-level-span'>
-                          <img style={height: '16px'} src={
+                          <img className='item-alv-img' src={
                               path = require 'path'
                               path.join(ROOT, 'assets', 'img', 'airplane', "alv#{level}.png")
                             }

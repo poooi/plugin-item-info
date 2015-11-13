@@ -36,8 +36,12 @@ body {
 .item-level-span {
   display: inline-block;
   color: #6cf;
-  min-width: 11px;
+  min-width: 12px;
   text-align: center;
+}
+.item-alv-img {
+  height: 14px;
+  margin-bottom: 3px;
 }
 
 .equip-list-div-span {
