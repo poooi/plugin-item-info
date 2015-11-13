@@ -6,7 +6,7 @@ ItemInfoTable = React.createClass
   render: ->
     {$_ships} = window
     <tr className="vertical">
-      <td style={paddingLeft: 10}>
+      <td className='item-name-td'>
         {
           <img key={@props.slotItemId} src={
               path = require 'path'

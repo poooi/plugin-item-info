@@ -13,8 +13,12 @@ body {
   margin-bottom: 0;
 }
 
-.slot-item-table-thead input.name-filter {
+.slot-item-table-thead .name-filter {
   font-size: inherit;
+}
+
+.item-name-td {
+  padding: 0 0 0 10px;
 }
 
 .slot-item-table-td {
@@ -68,6 +72,7 @@ body {
   vertical-align: middle;
   padding: 1px;
 }
+
 #switch-btn {
   padding: 0 5px;
   background-color: transparent;
