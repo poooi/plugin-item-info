@@ -6,7 +6,7 @@ ItemInfoTable = React.createClass
   render: ->
     {$_ships} = window
     <tr className="vertical">
-      <td style={paddingLeft: 10}>
+      <td className='item-name-td'>
         {
           <img key={@props.slotItemId} src={
               path = require 'path'
@@ -36,32 +36,14 @@ ItemInfoTable = React.createClass
                       <td style={width: '13%'}><span className='item-level-span'>{prefix}</span>{number}</td>
                     else if level is 0
                       <td style={width: '13%'}><span className='item-alv-0 item-level-span'>O</span>{number}</td>
-                    else if 1 <= level <= 3
+                    else if 1 <= level <= 7
                       <td style={width: '13%'}>
                         <span className='item-level-span'>
-                          {
-                            for j in [1..level]
-                              <strong key={j} style={color: '#3EAEFF'}>|</strong>
-                          }
-                        </span>
-                        {number}
-                      </td>
-                    else if 4 <= level <= 6
-                      <td style={width: '13%'}>
-                        <span className='item-level-span'>
-                          {
-                            for j in [1..level - 3]
-                              <strong key={j} style={color: '#F9C62F'}>\</strong>
-                          }
-                        </span>
-                        {number}
-                      </td>
-                    else if level >= 7
-                      <td style={width: '13%'}>
-                        <span className='item-level-span'>
-                          <strong key={j} style={color: '#F9C62F'}>
-                            <FontAwesome key={0} name='angle-double-right'/>
-                          </strong>
+                          <img className='item-alv-img' src={
+                              path = require 'path'
+                              path.join(ROOT, 'assets', 'img', 'airplane', "alv#{level}.png")
+                            }
+                          />
                         </span>
                         {number}
                       </td>
