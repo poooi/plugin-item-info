@@ -47,8 +47,8 @@ ItemInfoTable = React.createClass
                         </span>
                         {number}
                       </td>
-                    else
-                      <td></td>
+                    else # unreachable
+                      <td style={width: '13%'}></td>
                   }
                   <td>
                   {
