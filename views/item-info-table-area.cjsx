@@ -1,5 +1,5 @@
-{React, ReactBootstrap, jQuery, FontAwesome, __} = window
-{Panel, Row, Grid, Col, Table, Button, OverlayTrigger, Tooltip, Input} = ReactBootstrap
+{React, ReactBootstrap} = window
+{Grid, Table, Input} = ReactBootstrap
 Divider = require './divider'
 
 ItemInfoTable = React.createClass

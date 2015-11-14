@@ -1,5 +1,5 @@
-{React, ReactBootstrap, jQuery, __} = window
-{Panel, Button, Col, Input, Grid, Row} = ReactBootstrap
+{React, ReactBootstrap} = window
+{Button, Col, Grid, Row} = ReactBootstrap
 Divider = require './divider'
 
 ItemInfoCheckboxArea = React.createClass
