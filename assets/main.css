@@ -16,6 +16,12 @@ input.checkbox {
   margin: 0;
 }
 
+.checkbox-right-click-hint {
+  margin-top: 17px;
+  font-size: 80%;
+  color: #aaa;
+}
+
 .slot-item-table-thead .form-group {
   margin-bottom: 0;
 }
