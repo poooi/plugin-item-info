@@ -7,7 +7,7 @@ ItemInfoTable = React.createClass
     <tr className="vertical">
       <td className='item-name-td'>
         {
-          <img key={@props.slotItemId} src={
+          <img src={
               path = require 'path'
               path.join(ROOT, 'assets', 'img', 'slotitem', "#{@props.iconIndex + 100}.png")
             }
@@ -52,8 +52,8 @@ ItemInfoTable = React.createClass
                   <td>
                   {
                     if @props.ships[level]?
-                      for ship, index in @props.ships[level]
-                        <div key={index} className='equip-list-div'>
+                      for ship in @props.ships[level]
+                        <div key={ship.id} className='equip-list-div'>
                           <span className='equip-list-div-span'>{'Lv.' + ship.level}</span>
                           {ship.name}
                           {
@@ -195,9 +195,9 @@ ItemInfoTableArea = React.createClass
           </thead>
           <tbody>
           {
-            for row, index in @displayedRows()
+            for row in @displayedRows()
               <ItemInfoTable
-                key = {index}
+                key = {row.slotItemId}
                 slotItemId = {row.slotItemId}
                 name = {row.name}
                 total = {row.total}
