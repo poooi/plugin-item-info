@@ -5,6 +5,10 @@ Divider = require './divider'
 ItemInfoCheckboxArea = React.createClass
   handleClickCheckbox: (index) ->
     @props.changeCheckbox (box) -> box[index] = !box[index]
+  handleClickCheckboxRightClick: (index) ->
+    @props.changeCheckbox (box) ->
+      box.fill false
+      box[index] = true
   handleClickCheckboxAllButton: ->
     @props.changeCheckbox (box) -> box.fill true
   handleClickCheckboxNoneButton: ->
@@ -15,10 +19,17 @@ ItemInfoCheckboxArea = React.createClass
       <Grid id='item-info-filter'>
         <Row>
         {
-          for itemTypeVal, index in @props.itemTypeChecked
+          for isChecked, index in @props.itemTypeChecked
             continue if index is 0
             <Col key={index} xs={1}>
-              <input type='checkbox' value={index} onChange={@handleClickCheckbox.bind(@, index)} checked={@props.itemTypeChecked[index]} style={verticalAlign: 'middle'}/>
+              <input
+                className='checkbox'
+                type='checkbox'
+                value={index}
+                onChange={@handleClickCheckbox.bind(@, index)}
+                onContextMenu={@handleClickCheckboxRightClick.bind(@, index)}
+                checked={isChecked}
+                />
               <img src={
                   path = require 'path'
                   path.join(ROOT, 'assets', 'img', 'slotitem', "#{index + 100}.png")
