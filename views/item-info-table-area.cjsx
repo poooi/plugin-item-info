@@ -4,7 +4,6 @@ Divider = require './divider'
 
 ItemInfoTable = React.createClass
   render: ->
-    {$_ships} = window
     <tr className="vertical">
       <td className='item-name-td'>
         {
@@ -21,12 +20,12 @@ ItemInfoTable = React.createClass
         <Table id='equip-table'>
           <tbody>
           {
-            for level in [0..10]
-              if @props.levelCount[level]?
-                number = ' × ' + @props.levelCount[level]
+            for count, level in @props.levelCount
+              if count?
+                number = ' × ' + count
                 <tr key={level}>
                   {
-                    if level is 0 and @props.levelCount[0] is @props.total
+                    if level is 0 and count is @props.total
                       <td style={width: '13%'}></td>
                     else if !@props.isAlv
                       if level is 10
@@ -36,7 +35,7 @@ ItemInfoTable = React.createClass
                       <td style={width: '13%'}><span className='item-level-span'>{prefix}</span>{number}</td>
                     else if level is 0
                       <td style={width: '13%'}><span className='item-alv-0 item-level-span'>O</span>{number}</td>
-                    else if 1 <= level <= 7
+                    else if level <= 7
                       <td style={width: '13%'}>
                         <span className='item-level-span'>
                           <img className='item-alv-img' src={
