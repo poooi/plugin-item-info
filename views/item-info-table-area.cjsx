@@ -152,7 +152,7 @@ ItemInfoTableArea = React.createClass
       filterName = @alwaysTrue
     @setState
       filterName: filterName
-  alwaysTrue: () -> true
+  alwaysTrue: -> true
   handleResponse: (e) ->
     {method, path, body, postBody} = e.detail
     {$ships, _ships, _slotitems, $slotitems, _} = window
