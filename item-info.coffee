@@ -1,4 +1,3 @@
-require 'coffee-react/register'
 require '../../views/env'
 
 i18n = require 'i18n'
