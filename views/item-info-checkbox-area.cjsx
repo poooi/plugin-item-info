@@ -45,6 +45,10 @@ ItemInfoCheckboxArea = React.createClass
           <Col xs={2}>
             <Button className="filter-button" bsStyle='default' bsSize='small' onClick={@handleClickCheckboxNoneButton} block>{__ 'Deselect All'}</Button>
           </Col>
+          {
+            if not config.get('plugin.ItemInfo.hideCheckboxHint', false)
+              <Col xs={8} className='checkbox-right-click-hint'>{__ 'Right click a checkbox to select it only'}</Col>
+          }
         </Row>
       </Grid>
     </div>
