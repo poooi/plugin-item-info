@@ -29,12 +29,12 @@ ItemInfoCheckboxArea = React.createClass
                 onChange={@handleClickCheckbox.bind(@, index)}
                 onContextMenu={@handleClickCheckboxRightClick.bind(@, index)}
                 checked={isChecked}
-                />
+              />
               <img src={
                   path = require 'path'
                   path.join(ROOT, 'assets', 'img', 'slotitem', "#{index + 100}.png")
                 }
-                />
+              />
             </Col>
         }
         </Row>

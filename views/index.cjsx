@@ -9,7 +9,7 @@ ItemInfoArea = React.createClass
   getInitialState: ->
     itemTypeChecked = new Array(maxSlotType + 1)
     itemTypeChecked.fill true
-    itemTypeChecked: itemTypeChecked
+    {itemTypeChecked}
 
   changeCheckbox: (callback) ->
     callback @state.itemTypeChecked

@@ -135,8 +135,7 @@ ItemInfoTableArea = React.createClass
     rows.sort (a, b) -> a.iconIndex - b.iconIndex
     for row in rows
       for shipsInLevel in row.ships
-        shipsInLevel?.sort (a, b) ->
-          b.level - a.level || a.id - b.id
+        shipsInLevel?.sort (a, b) -> b.level - a.level || a.id - b.id
     rows
   handleFilterNameChange: ->
     key = @refs.input.getValue()
@@ -150,8 +149,7 @@ ItemInfoTableArea = React.createClass
       filterName ?= (name) -> name.indexOf(key) >= 0
     else
       filterName = @alwaysTrue
-    @setState
-      filterName: filterName
+    @setState {filterName}
   alwaysTrue: -> true
   handleResponse: (e) ->
     {method, path, body, postBody} = e.detail
