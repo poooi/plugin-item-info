@@ -3,11 +3,8 @@ Show detailed information of all owned equipment
 
 ### Changelog
 
-#### V1.4.0
-* Add support for aircraft proficiency
-* Improve UI
-* Refactor the code
-* Fix bugs
+#### V1.4.0 and later
+Please refer to [the release page](https://github.com/poooi/plugin-item-info/releases).
 
 #### V1.3.0
 * Add i18n support
