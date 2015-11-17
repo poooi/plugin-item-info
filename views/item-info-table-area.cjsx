@@ -77,7 +77,7 @@ ItemInfoTableArea = React.createClass
   updateSlot: (slot) ->
     slotItemId = slot.api_slotitem_id
     isAlv = slot.api_alv
-    level = isAlv || slot.api_level
+    level = isAlv || slot.api_level || 0
     if @rows[slotItemId]?
       row = @rows[slotItemId]
       row.total++
