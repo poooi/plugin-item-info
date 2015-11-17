@@ -3,6 +3,8 @@
 Divider = require './divider'
 
 ItemInfoTable = React.createClass
+  shouldComponentUpdate: (nextProps) ->
+    !_.isEqual(@props, nextProps)
   render: ->
     <tr className="vertical">
       <td className='item-name-td'>
