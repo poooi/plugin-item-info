@@ -1,6 +1,6 @@
 {
   "name": "item-info",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "Show detailed information of all owned equipment ### Usage Put the folder into /path/to/poi/resources/app/plugins ### Change Log",
   "main": "index.cjsx",
   "scripts": {
