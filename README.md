@@ -1,5 +1,5 @@
 # Plugin-Item-Info
-Show detailed information of all owned equipment.
+Show detailed information of all owned equipment.  
 Created by [Yunze](https://github.com/myzwillmake), maintained by [taroxd](https://github.com/taroxd).
 
 ### Changelog
