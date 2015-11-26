@@ -1,5 +1,7 @@
 {React} = window
 
+$('#font-awesome')?.setAttribute 'href', "#{ROOT}/components/font-awesome/css/font-awesome.min.css"
+
 ItemInfoTableArea = require './item-info-table-area'
 ItemInfoCheckboxArea = require './item-info-checkbox-area'
 

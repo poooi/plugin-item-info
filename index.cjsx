@@ -34,7 +34,7 @@ module.exports =
   displayName: <span><FontAwesome name='rocket' key={0} />{' ' + __('Equipment Info')}</span>
   author: 'Yunze'
   link: 'https://github.com/myzwillmake'
-  version: '1.5.1'
+  version: '1.6.0'
   description: __ 'Show detailed information of all owned equipment'
   handleClick: ->
     if process.env.DEBUG?
