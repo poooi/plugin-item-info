@@ -4,7 +4,7 @@ remote = require 'remote'
 windowManager = remote.require './lib/window'
 
 i18n = require 'i18n'
-path = require 'path-extra'
+path = require 'path'
 {__} = i18n
 
 i18n.configure
@@ -14,7 +14,7 @@ i18n.configure
   updateFiles: false
   indent: '\t'
   extension: '.json'
-i18n.setLocale(window.language)
+i18n.setLocale window.language
 
 window.itemInfoWindow = null
 initialItemInfoWindow = ->
@@ -34,7 +34,7 @@ module.exports =
   displayName: <span><FontAwesome name='rocket' key={0} />{' ' + __('Equipment Info')}</span>
   author: 'Yunze'
   link: 'https://github.com/myzwillmake'
-  version: '1.6.0'
+  version: '1.6.1'
   description: __ 'Show detailed information of all owned equipment'
   handleClick: ->
     if process.env.DEBUG?

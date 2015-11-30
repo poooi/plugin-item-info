@@ -1,6 +1,6 @@
 {
   "name": "poi-plugin-item-info",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "Show detailed information of all owned equipment.",
   "main": "index.cjsx",
   "scripts": {
@@ -8,14 +8,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/poooi/plugin-item-info.git"
+    "url": "https://github.com/poooi/plugin-item-info.git"
   },
   "author": "Yunze",
+  "contributors": ["taroxd"],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/poooi/plugin-item-info/issues"
   },
-  "homepage": "https://github.com/poooi/plugin-item-info#readme",
+  "homepage": "https://github.com/poooi/plugin-item-info",
   "dependencies": {
     "i18n": "^0.5.0"
   }
