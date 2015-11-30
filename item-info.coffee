@@ -14,6 +14,8 @@ i18n.configure
 i18n.setLocale(window.language)
 window.__ = i18n.__
 
+document.title = __ 'Equipment Info'
+
 window.theme = config.get 'poi.theme', '__default__'
 if theme == '__default__'
   $('#bootstrap-css')?.setAttribute 'href', "file://#{ROOT}/components/bootstrap/dist/css/bootstrap.css"
