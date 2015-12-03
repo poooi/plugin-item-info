@@ -1,4 +1,4 @@
-{React} = window
+{React, ReactDOM} = window
 
 $('#font-awesome')?.setAttribute 'href', "#{ROOT}/components/font-awesome/css/font-awesome.min.css"
 
@@ -23,4 +23,4 @@ ItemInfoArea = React.createClass
       <ItemInfoTableArea itemTypeChecked={@state.itemTypeChecked} />
     </div>
 
-React.render <ItemInfoArea />, $('item-info')
+ReactDOM.render <ItemInfoArea />, $('item-info')
