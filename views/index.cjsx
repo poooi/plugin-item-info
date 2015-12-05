@@ -11,6 +11,7 @@ ItemInfoArea = React.createClass
   getInitialState: ->
     itemTypeChecked = new Array(maxSlotType + 1)
     itemTypeChecked.fill true
+    @lockFilter = config.get 'poi.plugin.ItemInfo.lockFilter', false
 
     itemTypeChecked: itemTypeChecked
     rows: []
@@ -19,7 +20,15 @@ ItemInfoArea = React.createClass
     callback @state.itemTypeChecked
     @forceUpdate()
 
+  changeLockFilter: ->
+    @lockFilter = !@lockFilter
+    config.set 'poi.plugin.ItemInfo.lockFilter', @lockFilter
+    @updateAll()
+    @setState
+      rows: @rows
+
   updateSlot: (slot) ->
+    return if !slot.api_locked && @lockFilter
     slotItemId = slot.api_slotitem_id
     isAlv = slot.api_alv
     level = isAlv || slot.api_level || 0
@@ -55,11 +64,13 @@ ItemInfoArea = React.createClass
   addShip: (ship) ->
     shipId = ship.api_id
     for slotId in ship.api_slot.concat ship.api_slot_ex
-      continue if slotId <= 0 or !_slotitems[slotId]?
+      continue if slotId <= 0
+      slot = _slotitems[slotId]
+      continue unless slot?
+      continue if !slot.api_locked && @lockFilter
       slotType = _slotitems[slotId].api_slotitem_id
-      continue if slotType == -1
       row = @rows[slotType]
-      continue if !row?
+      continue unless row?
       row.used++
       level = _slotitems[slotId].api_alv || _slotitems[slotId].api_level
       row.ships[level] ?= []
@@ -73,7 +84,10 @@ ItemInfoArea = React.createClass
           name: ship.api_name
           count: 1
         row.ships[level].push shipInfo
-
+  updateAll: ->
+    @rows = []
+    @updateSlot slot for _slotId, slot of _slotitems
+    @updateShips()
 
   handleResponse: (e) ->
     {method, path, body, postBody} = e.detail
@@ -83,9 +97,7 @@ ItemInfoArea = React.createClass
     switch path
       when '/kcsapi/api_port/port', '/kcsapi/api_get_member/slot_item', '/kcsapi/api_get_member/ship3', '/kcsapi/api_req_kousyou/destroyitem2', '/kcsapi/api_req_kousyou/destroyship', '/kcsapi/api_req_kousyou/remodel_slot', '/kcsapi/api_req_kaisou/powerup'
         shouldUpdate = true
-        @rows = []
-        @updateSlot slot for _slotId, slot of _slotitems
-        @updateShips()
+        @updateAll()
       when '/kcsapi/api_req_kousyou/getship'
         shouldUpdate = true
         @updateSlot slot for slot in body.api_slotitem
@@ -104,7 +116,12 @@ ItemInfoArea = React.createClass
 
   render: ->
     <div>
-      <ItemInfoCheckboxArea changeCheckbox={@changeCheckbox} itemTypeChecked={@state.itemTypeChecked} />
+      <ItemInfoCheckboxArea
+        changeCheckbox={@changeCheckbox}
+        changeLockFilter={@changeLockFilter}
+        itemTypeChecked={@state.itemTypeChecked}
+        lockFilter={@lockFilter}
+      />
       <ItemInfoTableArea itemTypeChecked={@state.itemTypeChecked} rows={@state.rows} />
     </div>
 

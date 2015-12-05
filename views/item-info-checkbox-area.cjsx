@@ -50,6 +50,17 @@ ItemInfoCheckboxArea = React.createClass
               <Col xs={8} className='checkbox-right-click-hint'>{__ 'Right click a checkbox to select it only'}</Col>
           }
         </Row>
+        <Row className='lock-filter'>
+          <Col xs={4}>
+            <input
+              className='checkbox'
+              type='checkbox'
+              onChange={@props.changeLockFilter}
+              checked={@props.lockFilter}
+            />
+            <span className='lock-filter-hint'>{__ 'Display only locked equipment'}</span>
+          </Col>
+        </Row>
       </Grid>
     </div>
 
