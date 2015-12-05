@@ -11,7 +11,7 @@ ItemInfoArea = React.createClass
   getInitialState: ->
     itemTypeChecked = new Array(maxSlotType + 1)
     itemTypeChecked.fill true
-    @lockFilter = config.get 'poi.plugin.ItemInfo.lockFilter', false
+    @lockFilter = config.get 'plugin.ItemInfo.lockFilter', false
 
     itemTypeChecked: itemTypeChecked
     rows: []
@@ -21,7 +21,7 @@ ItemInfoArea = React.createClass
     @forceUpdate()
   changeLockFilter: ->
     @lockFilter = !@lockFilter
-    config.set 'poi.plugin.ItemInfo.lockFilter', @lockFilter
+    config.set 'plugin.ItemInfo.lockFilter', @lockFilter
     @updateAll()
     @setState
       rows: @rows
