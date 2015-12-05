@@ -19,7 +19,6 @@ ItemInfoArea = React.createClass
   changeCheckbox: (callback) ->
     callback @state.itemTypeChecked
     @forceUpdate()
-
   changeLockFilter: ->
     @lockFilter = !@lockFilter
     config.set 'poi.plugin.ItemInfo.lockFilter', @lockFilter
@@ -122,7 +121,10 @@ ItemInfoArea = React.createClass
         itemTypeChecked={@state.itemTypeChecked}
         lockFilter={@lockFilter}
       />
-      <ItemInfoTableArea itemTypeChecked={@state.itemTypeChecked} rows={@state.rows} />
+      <ItemInfoTableArea
+        itemTypeChecked={@state.itemTypeChecked}
+        rows={@state.rows}
+      />
     </div>
 
 ReactDOM.render <ItemInfoArea />, $('item-info')
