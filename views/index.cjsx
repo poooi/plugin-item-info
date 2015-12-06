@@ -67,11 +67,10 @@ ItemInfoArea = React.createClass
       slot = _slotitems[slotId]
       continue unless slot?
       continue if !slot.api_locked && @lockFilter
-      slotType = _slotitems[slotId].api_slotitem_id
-      row = @rows[slotType]
+      row = @rows[slot.api_slotitem_id]
       continue unless row?
       row.used++
-      level = _slotitems[slotId].api_alv || _slotitems[slotId].api_level
+      level = slot.api_alv || slot.api_level || 0
       row.ships[level] ?= []
       shipInfo = row.ships[level].find (shipInfo) -> shipInfo.id is shipId
       if shipInfo
@@ -105,6 +104,10 @@ ItemInfoArea = React.createClass
         if body.api_create_flag == 1
           shouldUpdate = true
           @updateSlot body.api_slot_item
+      when '/kcsapi/api_req_kaisou/lock'
+        if @lockFilter
+          shouldUpdate = true
+          @updateAll()
     if shouldUpdate
       @setState
         rows: @rows
