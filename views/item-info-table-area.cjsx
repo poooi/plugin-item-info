@@ -73,11 +73,11 @@ ItemInfoTable = React.createClass
     </tr>
 
 
+alwaysTrue = -> true
 ItemInfoTableArea = React.createClass
-  alwaysTrue: -> true
   getInitialState: ->
     rows: []
-    filterName: @alwaysTrue
+    filterName: alwaysTrue
   handleFilterNameChange: ->
     key = @refs.input.getValue()
     if key
@@ -89,12 +89,12 @@ ItemInfoTableArea = React.createClass
           filterName = re.test.bind(re)
       filterName ?= (name) -> name.indexOf(key) >= 0
     else
-      filterName = @alwaysTrue
+      filterName = alwaysTrue
     @setState {filterName}
   displayedRows: ->
     {filterName} = @state
     {rows, itemTypeChecked} = @props
-    rows = rows.filter (row) =>
+    rows = rows.filter (row) ->
       row? and filterName(row.name) and itemTypeChecked[row.iconIndex]
     rows.sort (a, b) -> a.iconIndex - b.iconIndex || a.slotItemId - b.slotItemId
     for row in rows
