@@ -55,6 +55,7 @@ ItemInfoCheckboxArea = React.createClass
             <input
               className='checkbox'
               type='checkbox'
+              value='lock'
               onChange={@props.changeLockFilter}
               checked={@props.lockFilter}
             />
