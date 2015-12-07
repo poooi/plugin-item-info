@@ -9,6 +9,12 @@ body {
   text-align: center;
 }
 
+#item-info-settings .checkbox,
+#item-info-settings .form-group {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
 input.checkbox {
   vertical-align: middle;
   display: inline-block;
