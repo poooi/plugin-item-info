@@ -84,8 +84,12 @@ ItemInfoArea = React.createClass
         row.ships[level].push shipInfo
   updateAll: ->
     @rows = []
-    @updateSlot slot for _slotId, slot of _slotitems
-    @updateShips()
+    if _slotitems?
+      @updateSlot slot for _slotId, slot of _slotitems
+      @updateShips()
+      true
+    else
+      false
 
   handleResponse: (e) ->
     {method, path, body, postBody} = e.detail
@@ -94,8 +98,7 @@ ItemInfoArea = React.createClass
     shouldUpdate = false
     switch path
       when '/kcsapi/api_port/port', '/kcsapi/api_get_member/slot_item', '/kcsapi/api_get_member/ship3', '/kcsapi/api_req_kousyou/destroyitem2', '/kcsapi/api_req_kousyou/destroyship', '/kcsapi/api_req_kousyou/remodel_slot', '/kcsapi/api_req_kaisou/powerup'
-        shouldUpdate = true
-        @updateAll()
+        shouldUpdate = @updateAll()
       when '/kcsapi/api_req_kousyou/getship'
         shouldUpdate = true
         @updateSlot slot for slot in body.api_slotitem
@@ -106,8 +109,7 @@ ItemInfoArea = React.createClass
           @updateSlot body.api_slot_item
       when '/kcsapi/api_req_kaisou/lock'
         if @lockFilter
-          shouldUpdate = true
-          @updateAll()
+          shouldUpdate = @updateAll()
     if shouldUpdate
       @setState
         rows: @rows
