@@ -1,6 +1,7 @@
 {React, ReactBootstrap} = window
-{Button, Col, Grid, Row} = ReactBootstrap
+{Button, Col, Grid, Row, Input} = ReactBootstrap
 Divider = require './divider'
+path = require 'path'
 
 ItemInfoCheckboxArea = React.createClass
   handleClickCheckbox: (index) ->
@@ -22,18 +23,16 @@ ItemInfoCheckboxArea = React.createClass
           for isChecked, index in @props.itemTypeChecked
             continue if index is 0
             <Col key={index} xs={1}>
-              <input
+              <Input
                 className='checkbox'
                 type='checkbox'
                 value={index}
+                label={
+                  <img src={path.join(ROOT, 'assets', 'img', 'slotitem', "#{index + 100}.png")} />
+                }
                 onChange={@handleClickCheckbox.bind(@, index)}
                 onContextMenu={@handleClickCheckboxRightClick.bind(@, index)}
                 checked={isChecked}
-              />
-              <img src={
-                  path = require 'path'
-                  path.join(ROOT, 'assets', 'img', 'slotitem', "#{index + 100}.png")
-                }
               />
             </Col>
         }
@@ -52,14 +51,14 @@ ItemInfoCheckboxArea = React.createClass
         </Row>
         <Row className='lock-filter'>
           <Col xs={4}>
-            <input
+            <Input
               className='checkbox'
               type='checkbox'
               value='lock'
+              label={__ 'Display only locked equipment'}
               onChange={@props.changeLockFilter}
               checked={@props.lockFilter}
             />
-            <span className='lock-filter-hint'>{__ 'Display only locked equipment'}</span>
           </Col>
         </Row>
       </Grid>
