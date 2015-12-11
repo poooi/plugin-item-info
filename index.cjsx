@@ -23,7 +23,7 @@ initialItemInfoWindow = ->
     y: config.get 'poi.window.y', 0
     width: 1020
     height: 650
-  window.itemInfoWindow.loadURL "file://#{__dirname}/index.html"
+  window.itemInfoWindow.loadUrl "file://#{__dirname}/index.html"
 
 if config.get('plugin.ItemInfo.enable', true)
   initialItemInfoWindow()
