@@ -1,4 +1,3 @@
-{React, ReactDOM} = window
 
 $('#font-awesome')?.setAttribute 'href', "#{ROOT}/components/font-awesome/css/font-awesome.min.css"
 
@@ -45,7 +44,7 @@ ItemInfoArea = React.createClass
       row =
         slotItemId: slotItemId
         iconIndex: itemInfo.api_type[3]
-        name: itemInfo.api_name
+        name: window.i18n.resources.__(itemInfo.api_name)
         total: 1
         used: 0
         ships: []
@@ -79,7 +78,7 @@ ItemInfoArea = React.createClass
         shipInfo =
           id: shipId
           level: ship.api_lv
-          name: ship.api_name
+          name: window.i18n.resources.__(ship.api_name)
           count: 1
         row.ships[level].push shipInfo
   updateAll: ->

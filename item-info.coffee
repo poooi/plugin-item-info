@@ -14,6 +14,9 @@ i18n = new (require 'i18n-2')
 i18n.setLocale(window.language)
 window.__ = i18n.__.bind(i18n)
 
+try
+  require 'poi-plugin-translator'
+
 document.title = __ 'Equipment Info'
 
 window.theme = config.get 'poi.theme', '__default__'
