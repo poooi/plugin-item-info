@@ -9,8 +9,6 @@ i18n = new (require 'i18n-2')
   locales: ['en-US', 'ja-JP', 'zh-CN', 'zh-TW']
   defaultLocale: 'zh-CN'
   directory: path.join(__dirname, 'i18n')
-  updateFiles: false
-  indent: '\t'
   extension: '.json'
   devMode: false
 
@@ -33,8 +31,8 @@ module.exports =
   name: 'ItemInfo'
   priority: 51
   displayName: <span><FontAwesome name='rocket' key={0} />{' ' + __('Equipment Info')}</span>
-  author: 'Yunze'
-  link: 'https://github.com/myzwillmake'
+  author: 'taroxd'
+  link: 'https://github.com/taroxd'
   version: '1.6.5'
   description: __ 'Show detailed information of all owned equipment'
   handleClick: ->

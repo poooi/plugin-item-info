@@ -6,8 +6,6 @@ i18n = new (require 'i18n-2')
   locales: ['en-US', 'ja-JP', 'zh-CN', 'zh-TW']
   defaultLocale: 'zh-CN'
   directory: path.join(__dirname, 'i18n')
-  updateFiles: false
-  indent: '\t'
   extension: '.json'
   devMode: false
 
@@ -19,16 +17,6 @@ try
 
 document.title = __ 'Equipment Info'
 
-window.theme = config.get 'poi.theme', '__default__'
-if theme == '__default__'
-  $('#bootstrap-css')?.setAttribute 'href', "file://#{ROOT}/components/bootstrap/dist/css/bootstrap.css"
-else
-  $('#bootstrap-css')?.setAttribute 'href', "file://#{ROOT}/assets/themes/#{theme}/css/#{theme}.css"
-window.addEventListener 'theme.change', (e) ->
-  window.theme = e.detail.theme
-  if theme == '__default__'
-    $('#bootstrap-css')?.setAttribute 'href', "file://#{ROOT}/components/bootstrap/dist/css/bootstrap.css"
-  else
-    $('#bootstrap-css')?.setAttribute 'href', "file://#{ROOT}/assets/themes/#{theme}/css/#{theme}.css"
+loadTheme config.get('poi.theme', '__default__')
 
 require './views'

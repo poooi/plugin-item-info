@@ -10,8 +10,8 @@
     "type": "git",
     "url": "https://github.com/poooi/plugin-item-info.git"
   },
-  "author": "Yunze",
-  "contributors": ["taroxd"],
+  "author": "taroxd",
+  "contributors": ["Yunze"],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/poooi/plugin-item-info/issues"
