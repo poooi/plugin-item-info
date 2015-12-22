@@ -18,5 +18,6 @@ try
 document.title = __ 'Equipment Info'
 
 loadTheme config.get('poi.theme', '__default__')
+$('#font-awesome').setAttribute 'href', "#{ROOT}/components/font-awesome/css/font-awesome.min.css"
 
 require './views'
