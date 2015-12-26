@@ -1,5 +1,5 @@
-{React, ReactBootstrap} = window
 {Grid, Table, Input} = ReactBootstrap
+{SlotitemIcon} = require "#{ROOT}/views/components/etc/icon"
 Divider = require './divider'
 
 ItemInfoTable = React.createClass
@@ -9,11 +9,7 @@ ItemInfoTable = React.createClass
     <tr className="vertical">
       <td className='item-name-td'>
         {
-          <img src={
-              path = require 'path'
-              path.join(ROOT, 'assets', 'img', 'slotitem', "#{@props.iconIndex + 100}.png")
-            }
-          />
+          <SlotitemIcon slotitemId={@props.iconIndex} />
         }
         {@props.name}
       </td>

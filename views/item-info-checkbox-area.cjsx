@@ -1,5 +1,5 @@
-{React, ReactBootstrap} = window
 {Button, Col, Grid, Row, Input} = ReactBootstrap
+{SlotitemIcon} = require "#{ROOT}/views/components/etc/icon"
 Divider = require './divider'
 path = require 'path'
 
@@ -28,7 +28,7 @@ ItemInfoCheckboxArea = React.createClass
                 type='checkbox'
                 value={index}
                 label={
-                  <img src={path.join(ROOT, 'assets', 'img', 'slotitem', "#{index + 100}.png")} />
+                  <SlotitemIcon slotitemId={index}/>
                 }
                 onChange={@handleClickCheckbox.bind(@, index)}
                 onContextMenu={@handleClickCheckboxRightClick.bind(@, index)}
