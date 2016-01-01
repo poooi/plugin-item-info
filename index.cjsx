@@ -21,6 +21,7 @@ if config.get 'plugin.ItemInfo.enable', true
     y: config.get 'poi.window.y', 0
     width: 1020
     height: 650
+    title: __('Equipment Info')
     indexName: 'ItemInfo'
   window.itemInfoWindow.loadURL "file://#{__dirname}/index.html"
 
