@@ -50,14 +50,24 @@ ItemInfoCheckboxArea = React.createClass
           }
         </Row>
         <Row className='lock-filter'>
-          <Col xs={4}>
+          <Col xs={1}>
             <Input
               className='checkbox'
               type='checkbox'
               value='lock'
-              label={__ 'Display only locked equipment'}
+              label={<FontAwesome name='lock' />}
               onChange={@props.changeLockFilter}
               checked={@props.lockFilter}
+            />
+          </Col>
+          <Col xs={1}>
+            <Input
+              className='checkbox'
+              type='checkbox'
+              value='unlock'
+              label={<FontAwesome name='unlock-alt' />}
+              onChange={@props.changeUnlockFilter}
+              checked={@props.unlockFilter}
             />
           </Col>
         </Row>

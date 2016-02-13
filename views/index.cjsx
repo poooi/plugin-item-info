@@ -8,8 +8,8 @@ ItemInfoArea = React.createClass
   getInitialState: ->
     itemTypeChecked = new Array(maxSlotType + 1)
     itemTypeChecked.fill true
-    @lockFilter = config.get 'plugin.ItemInfo.lockFilter', false
-
+    # 0b10: locked, 0b01: unlocked
+    @lockFilter = config.get 'plugin.ItemInfo.lockedFilter', 0b11
     itemTypeChecked: itemTypeChecked
     rows: []
 
@@ -17,14 +17,21 @@ ItemInfoArea = React.createClass
     callback @state.itemTypeChecked
     @forceUpdate()
   changeLockFilter: ->
-    @lockFilter = !@lockFilter
-    config.set 'plugin.ItemInfo.lockFilter', @lockFilter
+    @lockFilter ^= 0b10
+    @updateAfterChangeLockFilter()
+  changeUnlockFilter: ->
+    @lockFilter ^= 0b01
+    @updateAfterChangeLockFilter()
+  slotShouldDisplay: (locked) ->
+    (if locked then 0b10 else 0b01) & @lockFilter
+  updateAfterChangeLockFilter: ->
+    config.set 'plugin.ItemInfo.lockedFilter', @lockFilter
     @updateAll()
     @setState
       rows: @rows
 
   updateSlot: (slot) ->
-    return if !slot.api_locked && @lockFilter
+    return unless @slotShouldDisplay slot.api_locked
     slotItemId = slot.api_slotitem_id
     isAlv = slot.api_alv
     level = isAlv || slot.api_level || 0
@@ -63,7 +70,7 @@ ItemInfoArea = React.createClass
       continue if slotId <= 0
       slot = _slotitems[slotId]
       continue unless slot?
-      continue if !slot.api_locked && @lockFilter
+      continue unless @slotShouldDisplay slot.api_locked
       row = @rows[slot.api_slotitem_id]
       continue unless row?
       row.used++
@@ -105,7 +112,7 @@ ItemInfoArea = React.createClass
           shouldUpdate = true
           @updateSlot body.api_slot_item
       when '/kcsapi/api_req_kaisou/lock'
-        if @lockFilter
+        if @lockFilter in [0b10, 0b01]
           shouldUpdate = @updateAll()
     if shouldUpdate
       @setState
@@ -120,8 +127,10 @@ ItemInfoArea = React.createClass
       <ItemInfoCheckboxArea
         changeCheckbox={@changeCheckbox}
         changeLockFilter={@changeLockFilter}
+        changeUnlockFilter={@changeUnlockFilter}
         itemTypeChecked={@state.itemTypeChecked}
-        lockFilter={@lockFilter}
+        lockFilter={@slotShouldDisplay true}
+        unlockFilter={@slotShouldDisplay false}
       />
       <ItemInfoTableArea
         itemTypeChecked={@state.itemTypeChecked}
