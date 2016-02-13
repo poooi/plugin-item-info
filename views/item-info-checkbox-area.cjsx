@@ -65,7 +65,7 @@ ItemInfoCheckboxArea = React.createClass
               className='checkbox'
               type='checkbox'
               value='unlock'
-              label={<FontAwesome name='unlock-alt' />}
+              label={<FontAwesome name='unlock' />}
               onChange={@props.changeUnlockFilter}
               checked={@props.unlockFilter}
             />
