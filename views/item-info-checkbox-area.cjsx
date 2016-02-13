@@ -22,16 +22,15 @@ ItemInfoCheckboxArea = React.createClass
         {
           for isChecked, index in @props.itemTypeChecked
             continue if index is 0
-            <Col key={index} xs={1}>
+            <Col key={index} xs={1} onContextMenu={@handleClickCheckboxRightClick.bind(@, index)}>
               <Input
                 className='checkbox'
                 type='checkbox'
                 value={index}
                 label={
-                  <SlotitemIcon slotitemId={index}/>
+                  <SlotitemIcon slotitemId={index} />
                 }
                 onChange={@handleClickCheckbox.bind(@, index)}
-                onContextMenu={@handleClickCheckboxRightClick.bind(@, index)}
                 checked={isChecked}
               />
             </Col>
