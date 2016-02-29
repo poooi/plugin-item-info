@@ -30,11 +30,18 @@ ItemInfoArea = React.createClass
     @setState
       rows: @rows
 
+  getLevelKey: (alv, level) ->
+    alv * 11 + level
+  getLevelsFromKey: (key) ->
+    alv: Math.floor(key / 11)
+    level: key % 11
+
   updateSlot: (slot) ->
     return unless @slotShouldDisplay slot.api_locked
     slotItemId = slot.api_slotitem_id
     alv = slot.api_alv || 0
     level = slot.api_level || 0
+    key = @getLevelKey alv, level
     if @rows[slotItemId]?
       row = @rows[slotItemId]
       row.total++
@@ -42,11 +49,10 @@ ItemInfoArea = React.createClass
         row.hasNoLevel = false
       if alv
         row.hasNoAlv = false
-      alvList = row.levelCount[alv] ?= []
-      if alvList[level]?
-        alvList[level]++
+      if row.levelCount[key]?
+        row.levelCount[key]++
       else
-        alvList[level] = 1
+        row.levelCount[key] = 1
     else
       itemInfo = $slotitems[slotItemId]
       row =
@@ -55,18 +61,17 @@ ItemInfoArea = React.createClass
         name: window.i18n.resources.__(itemInfo.api_name)
         total: 1
         used: 0
-        ships: []
-        levelCount: []
+        ships: {}
+        levelCount: {}
         hasNoLevel: !level
         hasNoAlv: !alv
-      alvList = row.levelCount[alv] ?= []
-      alvList[level] = 1
+      row.levelCount[key] = 1
       @rows[slotItemId] = row
   updateShips: ->
     return if !window._ships? or @rows.length == 0
     for row in @rows
       if row?
-        row.ships = []
+        row.ships = {}
         row.used = 0
     @addShip ship for _id, ship of _ships
   addShip: (ship) ->
@@ -79,9 +84,9 @@ ItemInfoArea = React.createClass
       row = @rows[slot.api_slotitem_id]
       continue unless row?
       row.used++
-      level = slot.api_alv || slot.api_level || 0
-      row.ships[level] ?= []
-      shipInfo = row.ships[level].find (shipInfo) -> shipInfo.id is shipId
+      key = @getLevelKey(slot.api_alv || 0, slot.api_level || 0)
+      row.ships[key] ?= []
+      shipInfo = row.ships[key].find (shipInfo) -> shipInfo.id is shipId
       if shipInfo
         shipInfo.count++
       else
@@ -90,7 +95,7 @@ ItemInfoArea = React.createClass
           level: ship.api_lv
           name: window.i18n.resources.__(ship.api_name)
           count: 1
-        row.ships[level].push shipInfo
+        row.ships[key].push shipInfo
   updateAll: ->
     @rows = []
     if _slotitems?
@@ -140,6 +145,7 @@ ItemInfoArea = React.createClass
       <ItemInfoTableArea
         itemTypeChecked={@state.itemTypeChecked}
         rows={@state.rows}
+        getLevelsFromKey={@getLevelsFromKey}
       />
     </div>
 
