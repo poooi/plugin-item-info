@@ -1,6 +1,7 @@
 {Grid, Table, Input} = ReactBootstrap
 {SlotitemIcon} = require "#{ROOT}/views/components/etc/icon"
 Divider = require './divider'
+path = require 'path'
 
 ItemInfoTable = React.createClass
   shouldComponentUpdate: (nextProps) ->
@@ -18,51 +19,52 @@ ItemInfoTable = React.createClass
         <Table id='equip-table'>
           <tbody>
           {
-            for count, level in @props.levelCount
-              if count?
-                number = ' × ' + count
-                <tr key={level}>
-                  {
-                    if level is 0 and count is @props.total
-                      <td style={width: '13%'}></td>
-                    else if !@props.isAlv
-                      if level is 10
-                        prefix = '★max'
+            for alvList, alv in @props.levelCount
+              continue unless alvList?
+              for count, level in alvList
+                if count?
+                  <tr key={level}>
+                    {
+                      if @props.hasNoAlv and @props.hasNoLevel
+                        <td style={width: '13%'}></td>
                       else
-                        prefix = '★' + level
-                      <td style={width: '13%'}><span className='item-level-span'>{prefix}</span>{number}</td>
-                    else if level is 0
-                      <td style={width: '13%'}><span className='item-alv-0 item-level-span'>O</span>{number}</td>
-                    else if level <= 7
-                      <td style={width: '13%'}>
-                        <span className='item-level-span'>
-                          <img className='item-alv-img' src={
-                              path = require 'path'
-                              path.join(ROOT, 'assets', 'img', 'airplane', "alv#{level}.png")
+                        alvPrefix = if @props.hasNoAlv
+                                      ''
+                                    else if alv is 0
+                                      <span className='item-alv-0'>O</span>
+                                    else if alv <= 7
+                                      <img className='item-alv-img' src={
+                                          path.join(ROOT, 'assets', 'img', 'airplane', "alv#{alv}.png")
+                                        }
+                                      />
+                                    else # unreachable
+                                      ''
+
+                        levelPrefix = if @props.hasNoLevel
+                                        ''
+                                      else if level is 10
+                                        '★max'
+                                      else
+                                        '★' + level
+
+                        <td style={width: '13%'}><span className='item-level-span'>{alvPrefix} {levelPrefix}</span> × {count}</td>
+                    }
+                    <td>
+                    {
+                      if @props.ships[level]?
+                        for ship in @props.ships[level]
+                          <div key={ship.id} className='equip-list-div'>
+                            <span className='equip-list-div-span'>Lv.{ship.level}</span>
+                            {ship.name}
+                            {
+                              if ship.count > 1
+                                <span className='equip-list-number'>×{ship.count}</span>
                             }
-                          />
-                        </span>
-                        {number}
-                      </td>
-                    else # unreachable
-                      <td style={width: '13%'}></td>
-                  }
-                  <td>
-                  {
-                    if @props.ships[level]?
-                      for ship in @props.ships[level]
-                        <div key={ship.id} className='equip-list-div'>
-                          <span className='equip-list-div-span'>{'Lv.' + ship.level}</span>
-                          {ship.name}
-                          {
-                            if ship.count > 1
-                              <span className='equip-list-number'>{'×' + ship.count}</span>
-                          }
-                        </div>
-                  }
-                  </td>
-                </tr>
-          }
+                          </div>
+                    }
+                    </td>
+                  </tr>
+            }
           </tbody>
         </Table>
       </td>
@@ -122,7 +124,8 @@ ItemInfoTableArea = React.createClass
                 rest = {row.total - row.used}
                 ships = {row.ships}
                 levelCount = {row.levelCount}
-                isAlv = {row.isAlv}
+                hasNoLevel = {row.hasNoLevel}
+                hasNoAlv = {row.hasNoAlv}
                 iconIndex = {row.iconIndex}
               />
           }

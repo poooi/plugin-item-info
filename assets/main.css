@@ -70,10 +70,11 @@ img.svg {
 .item-level-span {
   display: inline-block;
   color: #6cf;
-  min-width: 12px;
   text-align: center;
 }
+
 .item-alv-img {
+  width: 11px;
   height: 14px;
   vertical-align: -3px;
 }
@@ -86,6 +87,8 @@ img.svg {
 .item-alv-0 {
   color: #888;
   font-size: 80%;
+  width: 11px;
+  display: inline-block;
 }
 
 .equip-list-number {

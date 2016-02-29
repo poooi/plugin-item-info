@@ -33,17 +33,20 @@ ItemInfoArea = React.createClass
   updateSlot: (slot) ->
     return unless @slotShouldDisplay slot.api_locked
     slotItemId = slot.api_slotitem_id
-    isAlv = slot.api_alv
-    level = isAlv || slot.api_level || 0
+    alv = slot.api_alv || 0
+    level = slot.api_level || 0
     if @rows[slotItemId]?
       row = @rows[slotItemId]
       row.total++
-      if isAlv
-        row.isAlv = true
-      if row.levelCount[level]?
-        row.levelCount[level]++
+      if level
+        row.hasNoLevel = false
+      if alv
+        row.hasNoAlv = false
+      alvList = row.levelCount[alv] ?= []
+      if alvList[level]?
+        alvList[level]++
       else
-        row.levelCount[level] = 1
+        alvList[level] = 1
     else
       itemInfo = $slotitems[slotItemId]
       row =
@@ -54,8 +57,10 @@ ItemInfoArea = React.createClass
         used: 0
         ships: []
         levelCount: []
-        isAlv: isAlv
-      row.levelCount[level] = 1
+        hasNoLevel: !level
+        hasNoAlv: !alv
+      alvList = row.levelCount[alv] ?= []
+      alvList[level] = 1
       @rows[slotItemId] = row
   updateShips: ->
     return if !window._ships? or @rows.length == 0
