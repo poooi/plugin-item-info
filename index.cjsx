@@ -31,7 +31,7 @@ module.exports =
   displayName: <span><FontAwesome name='rocket' key={0} />{' ' + __('Equipment Info')}</span>
   author: 'taroxd'
   link: 'https://github.com/taroxd'
-  version: '1.8.0-beta.0'
+  version: '1.8.0'
   description: __ 'Show detailed information of all owned equipment'
   handleClick: ->
     window.itemInfoWindow.show()
