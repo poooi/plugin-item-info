@@ -8,3 +8,4 @@ module.exports =
     title: __('Equipment Info')
     indexName: 'ItemInfo'
   windowURL: "file://#{__dirname}/index.html"
+  useEnv: true
