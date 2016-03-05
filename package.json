@@ -12,7 +12,8 @@
   },
   "author": {
     "name": "taroxd",
-    "link": "https://github.com/taroxd"
+    "url": "https://github.com/taroxd",
+    "email": "taroxd@outlook.com"
   },
   "contributors": ["Yunze"],
   "license": "MIT",
