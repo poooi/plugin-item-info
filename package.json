@@ -10,11 +10,20 @@
     "type": "git",
     "url": "https://github.com/poooi/plugin-item-info.git"
   },
-  "author": "taroxd",
+  "author": {
+    "name": "taroxd",
+    "link": "https://github.com/taroxd"
+  },
   "contributors": ["Yunze"],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/poooi/plugin-item-info/issues"
   },
-  "homepage": "https://github.com/poooi/plugin-item-info"
+  "homepage": "https://github.com/poooi/plugin-item-info",
+  "poiPlugin": {
+    "title": "Equipment Info",
+    "description": "Show detailed information of all owned equipment",
+    "icon": "fa/rocket",
+    "priority": 51
+  }
 }
