@@ -15,6 +15,6 @@ window.__ = i18n.__.bind(i18n)
 try
   require 'poi-plugin-translator'
 
-$('#font-awesome').setAttribute 'href', "#{ROOT}/components/font-awesome/css/font-awesome.min.css"
+$('#font-awesome').setAttribute 'href', require.resolve('font-awesome/css/font-awesome.css')
 
 require './views'
