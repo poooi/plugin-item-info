@@ -33,7 +33,7 @@ ItemInfoArea = React.createClass
   getLevelKey: (alv, level) ->
     alv * 11 + level
   getLevelsFromKey: (key) ->
-    alv: Math.floor(key / 11)
+    alv: key // 11
     level: key % 11
 
   updateSlot: (slot) ->
@@ -107,7 +107,6 @@ ItemInfoArea = React.createClass
 
   handleResponse: (e) ->
     {method, path, body, postBody} = e.detail
-    {$ships, _ships, _slotitems, $slotitems, _} = window
     @rows = @state.rows
     shouldUpdate = false
     switch path
