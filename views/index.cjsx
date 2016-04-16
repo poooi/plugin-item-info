@@ -57,7 +57,7 @@ ItemInfoArea = React.createClass
       itemInfo = $slotitems[slotItemId]
       row =
         slotItemId: slotItemId
-        typeID: itemInfo.api_type[2]
+        typeId: itemInfo.api_type[2]
         iconIndex: itemInfo.api_type[3]
         name: window.i18n.resources.__(itemInfo.api_name)
         total: 1
