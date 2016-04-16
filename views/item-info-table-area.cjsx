@@ -93,7 +93,7 @@ ItemInfoTableArea = React.createClass
     {rows, itemTypeChecked} = @props
     rows = rows.filter (row) ->
       row? and filterName(row.name) and itemTypeChecked[row.iconIndex]
-    rows.sort (a, b) -> a.iconIndex - b.iconIndex || a.slotItemId - b.slotItemId
+    rows.sort (a, b) -> a.typeID - b.typeID || a.slotItemId - b.slotItemId
     for row in rows
       for shipsInLevel in row.ships
         shipsInLevel?.sort (a, b) -> b.level - a.level || a.id - b.id
