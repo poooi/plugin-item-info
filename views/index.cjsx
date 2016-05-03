@@ -2,7 +2,7 @@
 ItemInfoTableArea = require './item-info-table-area'
 ItemInfoCheckboxArea = require './item-info-checkbox-area'
 
-maxSlotType = 36
+maxSlotType = 38
 
 ItemInfoArea = React.createClass
   getInitialState: ->
