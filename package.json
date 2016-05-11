@@ -1,6 +1,6 @@
 {
   "name": "poi-plugin-item-info",
-  "version": "2.0.2-beta.0",
+  "version": "2.0.2",
   "description": "Show detailed information of all owned equipment.",
   "main": "index.cjsx",
   "scripts": {
@@ -26,6 +26,8 @@
     "title": "Equipment Info",
     "description": "Show detailed information of all owned equipment",
     "icon": "fa/rocket",
-    "priority": 51
+    "priority": 51,
+    "earliestCompatibleMain": "6.2.0",
+    "lastApiVer": "2.0.1"
   }
 }
