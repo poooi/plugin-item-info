@@ -28,6 +28,11 @@ img.svg {
   margin: 5px 3px 4px 3px;
 }
 
+img.png {
+  width: 36px;
+  height: 36px;
+}
+
 .checkbox-right-click-hint {
   margin-top: 17px;
   font-size: 80%;
