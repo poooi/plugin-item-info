@@ -26,6 +26,6 @@
     "title": "Equipment Info",
     "description": "Show detailed information of all owned equipment",
     "icon": "fa/rocket",
-    "priority": 51,
+    "priority": 51
   }
 }
