@@ -1,3 +1,4 @@
+{OverlayTrigger, Tooltip} = ReactBootstrap
 
 ItemInfoTableArea = require './item-info-table-area'
 ItemInfoCheckboxArea = require './item-info-checkbox-area'
@@ -15,7 +16,12 @@ class Ship
     else
       @id = "Unknown"
       @level = null
-      @name = __ "Unknown"
+      @name = 
+        <OverlayTrigger placement="left" overlay={
+          <Tooltip>{__ 'Probably on air base'}</Tooltip>
+        }>
+          <span className='unknown-shipname'>{__ "Unknown"}</span>
+        </OverlayTrigger>
       @count = 1
 
 ItemInfoArea = React.createClass

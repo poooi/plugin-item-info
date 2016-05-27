@@ -52,14 +52,15 @@ ItemInfoTable = React.createClass
                 {
                   if @props.ships[key]?
                     for ship in @props.ships[key]
+                      unknown = !ship.level
                       <div key={ship.id} className='equip-list-div'>
                         {
-                          if ship.level
+                          if !unknown
                             <span className='equip-list-div-span'>Lv.{ship.level}</span>
                         }
                         {ship.name}
                         {
-                          if ship.count > 1
+                          if ship.count > 1 || unknown
                             <span className='equip-list-number'>×{ship.count}</span>
                         }
                       </div>
