@@ -2,7 +2,21 @@
 ItemInfoTableArea = require './item-info-table-area'
 ItemInfoCheckboxArea = require './item-info-checkbox-area'
 
+_unsetslot = null
 maxSlotType = 38
+
+class Ship
+  constructor: (ship) ->
+    if ship?
+      @id = ship.api_id
+      @level = ship.api_lv
+      @name = window.i18n.resources.__ ship.api_name
+      @count = 1
+    else
+      @id = "Unknown"
+      @level = null
+      @name = __ "Unknown"
+      @count = 1
 
 ItemInfoArea = React.createClass
   getInitialState: ->
@@ -62,6 +76,7 @@ ItemInfoArea = React.createClass
         name: window.i18n.resources.__(itemInfo.api_name)
         total: 1
         used: 0
+        unset: null  # have not read unsetslot yet
         ships: {}
         levelCount: {}
         hasNoLevel: !level
@@ -77,8 +92,7 @@ ItemInfoArea = React.createClass
     @addShip ship for _id, ship of _ships
   addShip: (ship) ->
     shipId = ship.api_id
-    for slotId in ship.api_slot.concat ship.api_slot_ex
-      continue if slotId <= 0
+    for slotId in ship.api_slot.concat ship.api_slot_ex when slotId > 0
       slot = _slotitems[slotId]
       continue unless slot?
       continue unless @slotShouldDisplay slot.api_locked
@@ -91,20 +105,42 @@ ItemInfoArea = React.createClass
       if shipInfo
         shipInfo.count++
       else
-        shipInfo =
-          id: shipId
-          level: ship.api_lv
-          name: window.i18n.resources.__(ship.api_name)
-          count: 1
-        row.ships[key].push shipInfo
+        row.ships[key].push new Ship(ship)
   updateAll: ->
     @rows = []
     if _slotitems?
       @updateSlot slot for _slotId, slot of _slotitems
       @updateShips()
-      true
-    else
-      false
+      @updateUnsetslot()
+  updateUnsetslot: ->
+    return if !_unsetslot? or !_slotitems? or @rows.length == 0
+
+    unsetCount = []
+
+    for _key, list of _unsetslot when list isnt -1
+      for slotId in list
+        slot = _slotitems[slotId]
+        slotItemId = slot.api_slotitem_id
+        key = @getLevelKey(slot.api_alv || 0, slot.api_level || 0)
+        levelCount = unsetCount[slotItemId] ?= {}
+        levelCount[key] ?= 0
+        levelCount[key]++
+
+    for row, slotItemId in @rows when row
+      levelCount = unsetCount[slotItemId]
+      unsetTotal = 0
+      for key, count of row.levelCount
+        unset = levelCount?[key] ? 0
+        unsetTotal += unset
+        diff = count - unset
+        if row.ships[key]?
+          for ship in row.ships[key]
+            diff -= ship.count
+        if diff > 0
+          unknownShip = new Ship
+          unknownShip.count = diff
+          (row.ships[key] ?= []).push unknownShip
+      row.unset = unsetTotal
 
   handleResponse: (e) ->
     {method, path, body, postBody} = e.detail
@@ -112,7 +148,17 @@ ItemInfoArea = React.createClass
     shouldUpdate = false
     switch path
       when '/kcsapi/api_port/port', '/kcsapi/api_get_member/slot_item', '/kcsapi/api_get_member/ship3', '/kcsapi/api_req_kousyou/destroyitem2', '/kcsapi/api_req_kousyou/destroyship', '/kcsapi/api_req_kousyou/remodel_slot', '/kcsapi/api_req_kaisou/powerup'
-        shouldUpdate = @updateAll()
+        shouldUpdate = true
+        if path is '/kcsapi/api_get_member/ship3'
+          _unsetslot = body.api_slot_data
+        @updateAll()
+      when '/kcsapi/api_get_member/require_info'
+        # do not need to update
+        _unsetslot = body.api_unsetslot
+      when '/kcsapi/api_get_member/unsetslot'
+        shouldUpdate = true
+        _unsetslot = body
+        @updateUnsetslot()
       when '/kcsapi/api_req_kousyou/getship'
         shouldUpdate = true
         @updateSlot slot for slot in body.api_slotitem
@@ -120,10 +166,17 @@ ItemInfoArea = React.createClass
       when '/kcsapi/api_req_kousyou/createitem'
         if body.api_create_flag == 1
           shouldUpdate = true
+          _unsetslot = body.api_unsetslot
           @updateSlot body.api_slot_item
+          @updateUnsetslot()
       when '/kcsapi/api_req_kaisou/lock'
         if @lockFilter in [0b10, 0b01]
-          shouldUpdate = @updateAll()
+          shouldUpdate = true
+          @updateAll()
+
+      # when '/kcsapi/api_req_air_corps/set_plane'
+      #   Not Implemented as land base status is not yet saved in env
+
     if shouldUpdate
       @setState
         rows: @rows

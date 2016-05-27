@@ -7,14 +7,14 @@ ItemInfoTable = React.createClass
   shouldComponentUpdate: (nextProps) ->
     !_.isEqual(@props, nextProps)
   render: ->
-    <tr className="vertical">
+    <tr className='vertical'>
       <td className='item-name-td'>
         {
           <SlotitemIcon slotitemId={@props.iconIndex} />
         }
         {@props.name}
       </td>
-      <td className='center'>{@props.total + ' '}<span style={fontSize: '12px'}>{'(' + @props.rest + ')'}</span></td>
+      <td className='center'>{@props.total + ' '}<span style={fontSize: '12px'}>{'(' + @props.unset + ')'}</span></td>
       <td>
         <Table id='equip-table'>
           <tbody>
@@ -53,7 +53,10 @@ ItemInfoTable = React.createClass
                   if @props.ships[key]?
                     for ship in @props.ships[key]
                       <div key={ship.id} className='equip-list-div'>
-                        <span className='equip-list-div-span'>Lv.{ship.level}</span>
+                        {
+                          if ship.level
+                            <span className='equip-list-div-span'>Lv.{ship.level}</span>
+                        }
                         {ship.name}
                         {
                           if ship.count > 1
@@ -120,7 +123,7 @@ ItemInfoTableArea = React.createClass
                 slotItemId = {row.slotItemId}
                 name = {row.name}
                 total = {row.total}
-                rest = {row.total - row.used}
+                unset = {row.unset ? row.total - row.used}
                 ships = {row.ships}
                 levelCount = {row.levelCount}
                 hasNoLevel = {row.hasNoLevel}

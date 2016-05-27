@@ -8,5 +8,6 @@
   "Name": "装備名",
   "Total": "総数",
   "rest": "残り",
-  "State": "状態"
+  "State": "状態",
+  "Unknown": "不明"
 }

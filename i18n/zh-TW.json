@@ -8,5 +8,6 @@
   "Name": "裝備名稱",
   "Total": "總數",
   "rest": "剩餘",
-  "State": "裝備情況"
+  "State": "裝備情況",
+  "Unknown": "不明"
 }
