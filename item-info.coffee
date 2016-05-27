@@ -13,7 +13,7 @@ i18n.setLocale(window.language)
 window.__ = i18n.__.bind(i18n)
 
 try
-  require 'poi-plugin-translator'
+  require('poi-plugin-translator').pluginDidLoad()
 
 $('#font-awesome').setAttribute 'href', require.resolve('font-awesome/css/font-awesome.css')
 
