@@ -132,14 +132,14 @@ ItemInfoArea = React.createClass
       for key, count of row.levelCount
         unset = levelCount?[key] ? 0
         unsetTotal += unset
-        diff = count - unset
-        if row.ships[key]?
-          for ship in row.ships[key]
-            diff -= ship.count
-        if diff > 0
-          unknownShip = new Ship
-          unknownShip.count = diff
-          (row.ships[key] ?= []).push unknownShip
+        # diff = count - unset
+        # if row.ships[key]?
+        #   for ship in row.ships[key]
+        #     diff -= ship.count
+        # if diff > 0
+        #   unknownShip = new Ship
+        #   unknownShip.count = diff
+        #   (row.ships[key] ?= []).push unknownShip
       row.unset = unsetTotal
 
   handleResponse: (e) ->
