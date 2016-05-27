@@ -1,0 +1,14 @@
+{
+  "Equipment Info": "장비 정보",
+  "Show detailed information of all owned equipment": "보유하고 있는 장비 현황을 볼 수 있습니다",
+  "Right click a checkbox to select it only": "체크박스를 우클릭하면 해당 장비만 볼 수 있습니다",
+  "Filter Setting": "필터 설정",
+  "Select All": "전체 선택",
+  "Deselect All": "선택 해제",
+  "Name": "장비명",
+  "Total": "보유수",
+  "rest": "여분",
+  "State": "장착중인 칸무스",
+  "Unknown": "(불명)",
+  "Probably on air base": "기지항공대 배치?"
+}
