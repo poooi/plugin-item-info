@@ -100,6 +100,11 @@ img.png {
   font-size: 80%;
 }
 
+.unknown-shipname {
+  font-style: italic;
+  margin-right: 1.5px;
+}
+
 #equip-table {
   background-color: transparent;
   vertical-align: middle;
