@@ -113,7 +113,7 @@ img.png {
 
 #main-table tbody tr td {
   vertical-align: middle;
-  padding: 1px;
+  padding: 0;
 }
 
 #switch-btn {
