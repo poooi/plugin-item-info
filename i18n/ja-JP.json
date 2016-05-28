@@ -2,13 +2,13 @@
   "Equipment Info": "装備データ",
   "Show detailed information of all owned equipment": "持っている装備の情報を表示します",
   "Right click a checkbox to select it only": "チェックボックスを右クリックすると、その装備だけを選択できます",
-  "Filter Setting": "フィルター設定",
+  "Filter Setting": "フィルター",
   "Select All": "全てを選択します",
   "Deselect All": "全選択を解除します",
   "Name": "装備名",
-  "Total": "総数",
+  "Total": "合計",
   "rest": "残り",
-  "State": "状態",
+  "State": "装備している艦娘",
   "Unknown": "(不明)",
   "Probably on air base": "おそらく基地航空隊に装備している"
 }
