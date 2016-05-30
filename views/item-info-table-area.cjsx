@@ -1,4 +1,4 @@
-{Grid, Table, Input} = ReactBootstrap
+{Grid, Table, Input, Tooltip, OverlayTrigger} = ReactBootstrap
 {SlotitemIcon} = require "#{ROOT}/views/components/etc/icon"
 Divider = require './divider'
 path = require 'path'
@@ -52,13 +52,21 @@ ItemInfoTable = React.createClass
                 {
                   if @props.ships[key]?
                     for ship in @props.ships[key]
-                      unknown = !ship.level
+                      unknown = !ship.level?
                       <div key={ship.id} className='equip-list-div'>
                         {
-                          if !unknown
-                            <span className='equip-list-div-span'>Lv.{ship.level}</span>
+                          if unknown
+                            <OverlayTrigger placement="left" overlay={
+                              <Tooltip id="row-#{@props.slotitemId}-#{key}-tooltip">{__ 'Probably on air base'}</Tooltip>
+                            }>
+                              <span className='unknown-shipname'>{__ "Unknown"}</span>
+                            </OverlayTrigger>
+                          else
+                            <span>
+                              <span className='equip-list-div-span'>Lv.{ship.level}</span>
+                              <span className='known-ship-name'>{ship.name}</span>
+                            </span>
                         }
-                        {ship.name}
                         {
                           if ship.count > 1 || unknown
                             <span className='equip-list-number'>×{ship.count}</span>
@@ -124,7 +132,7 @@ ItemInfoTableArea = React.createClass
                 slotItemId = {row.slotItemId}
                 name = {row.name}
                 total = {row.total}
-                unset = {row.unset ? row.total - row.used}
+                unset = {row.getUnset()}
                 ships = {row.ships}
                 levelCount = {row.levelCount}
                 hasNoLevel = {row.hasNoLevel}

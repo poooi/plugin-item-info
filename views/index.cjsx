@@ -1,4 +1,3 @@
-{OverlayTrigger, Tooltip} = ReactBootstrap
 
 ItemInfoTableArea = require './item-info-table-area'
 ItemInfoCheckboxArea = require './item-info-checkbox-area'
@@ -8,21 +7,64 @@ maxSlotType = 38
 
 class Ship
   constructor: (ship) ->
-    if ship?
-      @id = ship.api_id
-      @level = ship.api_lv
-      @name = window.i18n.resources.__ ship.api_name
-      @count = 1
+    @id = ship.api_id
+    @level = ship.api_lv
+    @name = window.i18n.resources.__ ship.api_name
+    @count = 1
+
+class UnknownShip
+  id: 'Unknown'
+  level: null
+  name: null
+  constructor: (@count) ->
+
+getLevelsFromKey = (key) ->
+  alv: key // 11
+  level: key % 11
+getLevelKey = (alv, level) ->
+  (alv ? 0) * 11 + (level ? 0)
+
+class TableRow
+  constructor: (slot) ->
+    @slotItemId = slot.api_slotitem_id
+    itemInfo = $slotitems[@slotItemId]
+    @typeId = itemInfo.api_type[2]
+    @iconIndex = itemInfo.api_type[3]
+    @name = window.i18n.resources.__ itemInfo.api_name
+    @total = 1
+    @used = 0
+    @unset = null      # null or Integer, set when `unsetslot' is read
+    @ships = {}        # @ships = {levelKey: [Ship1, Ship2, ...]}
+    @levelCount = {}   # @levelCount = {levelKey: count}
+    @hasNoLevel = !slot.api_level
+    @hasNoAlv = !slot.api_alv
+  getUnset: ->
+    @unset ? @total - @used
+  updateSlot: (slot) ->
+    alv = slot.api_alv
+    level = slot.api_level
+    if level
+      @hasNoLevel = false
+    if alv
+      @hasNoAlv = false
+    key = getLevelKey alv, level
+    if @levelCount[key]?
+      @levelCount[key]++
     else
-      @id = "Unknown"
-      @level = null
-      @name = 
-        <OverlayTrigger placement="left" overlay={
-          <Tooltip>{__ 'Probably on air base'}</Tooltip>
-        }>
-          <span className='unknown-shipname'>{__ "Unknown"}</span>
-        </OverlayTrigger>
-      @count = 1
+      @levelCount[key] = 1
+  clearShips: ->
+    @used = 0
+    @ships = {}
+  updateShip: (ship, slot) ->
+    @used++
+    key = getLevelKey slot.api_alv, slot.api_level
+    @ships[key] ?= []
+    shipInfo = @ships[key].find (shipInfo) -> shipInfo.id is ship.api_id
+    if shipInfo
+      shipInfo.count++
+    else
+      @ships[key].push new Ship(ship)
+
 
 ItemInfoArea = React.createClass
   getInitialState: ->
@@ -50,68 +92,23 @@ ItemInfoArea = React.createClass
     @setState
       rows: @rows
 
-  getLevelKey: (alv, level) ->
-    alv * 11 + level
-  getLevelsFromKey: (key) ->
-    alv: key // 11
-    level: key % 11
-
   updateSlot: (slot) ->
     return unless @slotShouldDisplay slot.api_locked
     slotItemId = slot.api_slotitem_id
-    alv = slot.api_alv || 0
-    level = slot.api_level || 0
-    key = @getLevelKey alv, level
     if @rows[slotItemId]?
-      row = @rows[slotItemId]
-      row.total++
-      if level
-        row.hasNoLevel = false
-      if alv
-        row.hasNoAlv = false
-      if row.levelCount[key]?
-        row.levelCount[key]++
-      else
-        row.levelCount[key] = 1
+      @rows[slotItemId].updateSlot slot
     else
-      itemInfo = $slotitems[slotItemId]
-      row =
-        slotItemId: slotItemId
-        typeId: itemInfo.api_type[2]
-        iconIndex: itemInfo.api_type[3]
-        name: window.i18n.resources.__(itemInfo.api_name)
-        total: 1
-        used: 0
-        unset: null  # have not read unsetslot yet
-        ships: {}
-        levelCount: {}
-        hasNoLevel: !level
-        hasNoAlv: !alv
-      row.levelCount[key] = 1
-      @rows[slotItemId] = row
+      @rows[slotItemId] = new TableRow(slot)
   updateShips: ->
     return if !window._ships? or @rows.length == 0
-    for row in @rows
-      if row?
-        row.ships = {}
-        row.used = 0
+    row.clearShips() for row in @rows when row?
     @addShip ship for _id, ship of _ships
   addShip: (ship) ->
-    shipId = ship.api_id
     for slotId in ship.api_slot.concat ship.api_slot_ex when slotId > 0
       slot = _slotitems[slotId]
       continue unless slot?
       continue unless @slotShouldDisplay slot.api_locked
-      row = @rows[slot.api_slotitem_id]
-      continue unless row?
-      row.used++
-      key = @getLevelKey(slot.api_alv || 0, slot.api_level || 0)
-      row.ships[key] ?= []
-      shipInfo = row.ships[key].find (shipInfo) -> shipInfo.id is shipId
-      if shipInfo
-        shipInfo.count++
-      else
-        row.ships[key].push new Ship(ship)
+      @rows[slot.api_slotitem_id]?.updateShip ship, slot
   updateAll: ->
     @rows = []
     if _slotitems?
@@ -121,13 +118,14 @@ ItemInfoArea = React.createClass
   updateUnsetslot: ->
     return if !_unsetslot? or !_slotitems? or @rows.length == 0
 
+    # index: slotItemId, element: {levelKey: count}
     unsetCount = []
 
     for _key, list of _unsetslot when list isnt -1
       for slotId in list
         slot = _slotitems[slotId]
         slotItemId = slot.api_slotitem_id
-        key = @getLevelKey(slot.api_alv || 0, slot.api_level || 0)
+        key = getLevelKey(slot.api_alv, slot.api_level)
         levelCount = unsetCount[slotItemId] ?= {}
         levelCount[key] ?= 0
         levelCount[key]++
@@ -143,9 +141,7 @@ ItemInfoArea = React.createClass
           for ship in row.ships[key]
             diff -= ship.count
         if diff > 0
-          unknownShip = new Ship
-          unknownShip.count = diff
-          (row.ships[key] ?= []).push unknownShip
+          (row.ships[key] ?= []).push new UnknownShip(diff)
       row.unset = unsetTotal
 
   handleResponse: (e) ->
@@ -204,7 +200,7 @@ ItemInfoArea = React.createClass
       <ItemInfoTableArea
         itemTypeChecked={@state.itemTypeChecked}
         rows={@state.rows}
-        getLevelsFromKey={@getLevelsFromKey}
+        getLevelsFromKey={getLevelsFromKey}
       />
     </div>
 
