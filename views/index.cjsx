@@ -43,6 +43,7 @@ class TableRow
   updateSlot: (slot) ->
     alv = slot.api_alv
     level = slot.api_level
+    @total++
     if level
       @hasNoLevel = false
     if alv
