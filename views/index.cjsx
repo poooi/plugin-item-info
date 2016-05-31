@@ -123,8 +123,7 @@ ItemInfoArea = React.createClass
     unsetCount = []
 
     for _key, list of _unsetslot when list isnt -1
-      for slotId in list
-        slot = _slotitems[slotId]
+      for slotId in list when (slot = _slotitems[slotId])?
         slotItemId = slot.api_slotitem_id
         key = getLevelKey(slot.api_alv, slot.api_level)
         levelCount = unsetCount[slotItemId] ?= {}
