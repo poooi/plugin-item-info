@@ -150,7 +150,14 @@ ItemInfoArea = React.createClass
     @rows = @state.rows
     shouldUpdate = false
     switch path
-      when '/kcsapi/api_port/port', '/kcsapi/api_get_member/slot_item', '/kcsapi/api_get_member/ship3', '/kcsapi/api_req_kousyou/destroyitem2', '/kcsapi/api_req_kousyou/destroyship', '/kcsapi/api_req_kousyou/remodel_slot', '/kcsapi/api_req_kaisou/powerup'
+      when '/kcsapi/api_port/port'
+      , '/kcsapi/api_get_member/slot_item'
+      , '/kcsapi/api_get_member/ship3'
+      , '/kcsapi/api_req_kousyou/destroyitem2'
+      , '/kcsapi/api_req_kousyou/destroyship'
+      , '/kcsapi/api_req_kousyou/remodel_slot'
+      , '/kcsapi/api_req_kaisou/powerup'
+      , '/kcsapi/api_req_kaisou/slot_deprive'
         shouldUpdate = true
         if path is '/kcsapi/api_get_member/ship3'
           _unsetslot = body.api_slot_data
