@@ -31,13 +31,14 @@ class TableRow
     @typeId = itemInfo.api_type[2]
     @iconIndex = itemInfo.api_type[3]
     @name = window.i18n.resources.__ itemInfo.api_name
-    @total = 1
+    @total = 0
     @used = 0
     @unset = null      # null or Integer, set when `unsetslot' is read
     @ships = {}        # @ships = {levelKey: [Ship1, Ship2, ...]}
     @levelCount = {}   # @levelCount = {levelKey: count}
-    @hasNoLevel = !slot.api_level
-    @hasNoAlv = !slot.api_alv
+    @hasNoLevel = true
+    @hasNoAlv = true
+    @updateSlot slot
   getUnset: ->
     @unset ? @total - @used
   updateSlot: (slot) ->
