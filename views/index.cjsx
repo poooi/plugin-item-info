@@ -116,9 +116,14 @@ ItemInfoArea = React.createClass
     if _slotitems?
       @updateSlot slot for _slotId, slot of _slotitems
       @updateShips()
-      @updateUnsetslot()
+
+      # Not required currently
+      # @updateUnsetslot()
+
+      # Always call '@updateAll()' to update data
+      @setState {rows: @rows}
   updateUnsetslot: ->
-    return if !_unsetslot? or !_slotitems? or @rows.length == 0
+    return if !_unsetslot?
 
     # index: slotItemId, element: {levelKey: count}
     unsetCount = []
@@ -147,49 +152,34 @@ ItemInfoArea = React.createClass
 
   handleResponse: (e) ->
     {method, path, body, postBody} = e.detail
-    @rows = @state.rows
-    shouldUpdate = false
     switch path
       when '/kcsapi/api_port/port'
       , '/kcsapi/api_get_member/slot_item'
-      , '/kcsapi/api_get_member/ship3'
       , '/kcsapi/api_req_kousyou/destroyitem2'
       , '/kcsapi/api_req_kousyou/destroyship'
       , '/kcsapi/api_req_kousyou/remodel_slot'
       , '/kcsapi/api_req_kaisou/powerup'
       , '/kcsapi/api_req_kaisou/slot_deprive'
-        shouldUpdate = true
-        if path is '/kcsapi/api_get_member/ship3'
-          _unsetslot = body.api_slot_data
+      , '/kcsapi/api_req_kousyou/getship'
+        @updateAll()
+      when '/kcsapi/api_get_member/ship3'
+        _unsetslot = body.api_slot_data
         @updateAll()
       when '/kcsapi/api_get_member/require_info'
-        # do not need to update
         _unsetslot = body.api_unsetslot
       when '/kcsapi/api_get_member/unsetslot'
-        shouldUpdate = true
         _unsetslot = body
-        @updateUnsetslot()
-      when '/kcsapi/api_req_kousyou/getship'
-        shouldUpdate = true
-        @updateSlot slot for slot in body.api_slotitem
-        @addShip body.api_ship
+        @updateAll()
       when '/kcsapi/api_req_kousyou/createitem'
         if body.api_create_flag == 1
-          shouldUpdate = true
           _unsetslot = body.api_unsetslot
-          @updateSlot body.api_slot_item
-          @updateUnsetslot()
+          @updateAll()
       when '/kcsapi/api_req_kaisou/lock'
         if @lockFilter in [0b10, 0b01]
-          shouldUpdate = true
           @updateAll()
-
       # when '/kcsapi/api_req_air_corps/set_plane'
       #   Not Implemented as land base status is not yet saved in env
 
-    if shouldUpdate
-      @setState
-        rows: @rows
   componentDidMount: ->
     window.addEventListener 'game.response', @handleResponse
   componentWillUnmount: ->
