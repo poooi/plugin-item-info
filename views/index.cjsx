@@ -2,7 +2,7 @@
 ItemInfoTableArea = require './item-info-table-area'
 ItemInfoCheckboxArea = require './item-info-checkbox-area'
 
-_unsetslot = null
+# _unsetslot = null
 maxSlotType = 38
 
 class Ship
@@ -12,11 +12,12 @@ class Ship
     @name = window.i18n.resources.__ ship.api_name
     @count = 1
 
-class UnknownShip
-  id: 'Unknown'
-  level: null
-  name: null
-  constructor: (@count) ->
+# The class for landbase. Waiting for the new API
+# class UnknownShip
+#   id: 'Unknown'
+#   level: -1
+#   name: null
+#   constructor: (@count) ->
 
 getLevelsFromKey = (key) ->
   alv: key // 11
@@ -33,14 +34,15 @@ class TableRow
     @name = window.i18n.resources.__ itemInfo.api_name
     @total = 0
     @used = 0
-    @unset = null      # null or Integer, set when `unsetslot' is read
+    # @unset = null      # null or Integer, set when `unsetslot' is read
     @ships = {}        # @ships = {levelKey: [Ship1, Ship2, ...]}
     @levelCount = {}   # @levelCount = {levelKey: count}
     @hasNoLevel = true
     @hasNoAlv = true
     @updateSlot slot
   getUnset: ->
-    @unset ? @total - @used
+    # @unset ? @total - @used
+    @total - @used
   updateSlot: (slot) ->
     alv = slot.api_alv
     level = slot.api_level
@@ -91,9 +93,6 @@ ItemInfoArea = React.createClass
   updateAfterChangeLockFilter: ->
     config.set 'plugin.ItemInfo.lockedFilter', @lockFilter
     @updateAll()
-    @setState
-      rows: @rows
-
   updateSlot: (slot) ->
     return unless @slotShouldDisplay slot.api_locked
     slotItemId = slot.api_slotitem_id
@@ -105,6 +104,7 @@ ItemInfoArea = React.createClass
     return if !window._ships? or @rows.length == 0
     row.clearShips() for row in @rows when row?
     @addShip ship for _id, ship of _ships
+    # addLandBase
   addShip: (ship) ->
     for slotId in ship.api_slot.concat ship.api_slot_ex when slotId > 0
       slot = _slotitems[slotId]
@@ -122,33 +122,33 @@ ItemInfoArea = React.createClass
 
       # Always call '@updateAll()' to update data
       @setState {rows: @rows}
-  updateUnsetslot: ->
-    return if !_unsetslot?
+  # updateUnsetslot: ->
+  #   return if !_unsetslot?
 
-    # index: slotItemId, element: {levelKey: count}
-    unsetCount = []
+  #   # index: slotItemId, element: {levelKey: count}
+  #   unsetCount = []
 
-    for _key, list of _unsetslot when list isnt -1
-      for slotId in list when (slot = _slotitems[slotId])?
-        slotItemId = slot.api_slotitem_id
-        key = getLevelKey(slot.api_alv, slot.api_level)
-        levelCount = unsetCount[slotItemId] ?= {}
-        levelCount[key] ?= 0
-        levelCount[key]++
+  #   for _key, list of _unsetslot when list isnt -1
+  #     for slotId in list when (slot = _slotitems[slotId])?
+  #       slotItemId = slot.api_slotitem_id
+  #       key = getLevelKey(slot.api_alv, slot.api_level)
+  #       levelCount = unsetCount[slotItemId] ?= {}
+  #       levelCount[key] ?= 0
+  #       levelCount[key]++
 
-    for row, slotItemId in @rows when row
-      levelCount = unsetCount[slotItemId]
-      unsetTotal = 0
-      for key, count of row.levelCount
-        unset = levelCount?[key] ? 0
-        unsetTotal += unset
-        diff = count - unset
-        if row.ships[key]?
-          for ship in row.ships[key]
-            diff -= ship.count
-        if diff > 0
-          (row.ships[key] ?= []).push new UnknownShip(diff)
-      row.unset = unsetTotal
+  #   for row, slotItemId in @rows when row
+  #     levelCount = unsetCount[slotItemId]
+  #     unsetTotal = 0
+  #     for key, count of row.levelCount
+  #       unset = levelCount?[key] ? 0
+  #       unsetTotal += unset
+  #       diff = count - unset
+  #       if row.ships[key]?
+  #         for ship in row.ships[key]
+  #           diff -= ship.count
+  #       if diff > 0
+  #         (row.ships[key] ?= []).push new UnknownShip(diff)
+  #     row.unset = unsetTotal
 
   handleResponse: (e) ->
     {method, path, body, postBody} = e.detail
@@ -161,18 +161,19 @@ ItemInfoArea = React.createClass
       , '/kcsapi/api_req_kaisou/powerup'
       , '/kcsapi/api_req_kaisou/slot_deprive'
       , '/kcsapi/api_req_kousyou/getship'
+      , '/kcsapi/api_get_member/ship3'
         @updateAll()
-      when '/kcsapi/api_get_member/ship3'
-        _unsetslot = body.api_slot_data
-        @updateAll()
-      when '/kcsapi/api_get_member/require_info'
-        _unsetslot = body.api_unsetslot
-      when '/kcsapi/api_get_member/unsetslot'
-        _unsetslot = body
-        @updateAll()
+      # when '/kcsapi/api_get_member/ship3'
+        # _unsetslot = body.api_slot_data
+        # @updateAll()
+      # when '/kcsapi/api_get_member/require_info'
+      #   _unsetslot = body.api_unsetslot
+      # when '/kcsapi/api_get_member/unsetslot'
+      #   _unsetslot = body
+      #   @updateAll()
       when '/kcsapi/api_req_kousyou/createitem'
         if body.api_create_flag == 1
-          _unsetslot = body.api_unsetslot
+          # _unsetslot = body.api_unsetslot
           @updateAll()
       when '/kcsapi/api_req_kaisou/lock'
         if @lockFilter in [0b10, 0b01]

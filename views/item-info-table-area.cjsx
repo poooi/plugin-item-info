@@ -52,23 +52,25 @@ ItemInfoTable = React.createClass
                 {
                   if @props.ships[key]?
                     for ship in @props.ships[key]
-                      unknown = !ship.level?
+                      # unknown = ship.level > 0
                       <div key={ship.id} className='equip-list-div'>
                         {
-                          if unknown
-                            <OverlayTrigger placement="left" overlay={
-                              <Tooltip id="row-#{@props.slotitemId}-#{key}-tooltip">{__ 'Probably on air base'}</Tooltip>
-                            }>
-                              <span className='unknown-shipname'>{__ "Unknown"}</span>
-                            </OverlayTrigger>
-                          else
-                            <span>
-                              <span className='equip-list-div-span'>Lv.{ship.level}</span>
-                              <span className='known-ship-name'>{ship.name}</span>
-                            </span>
+                          # waiting for new landbase API
+
+                          # if unknown
+                          #   <OverlayTrigger placement="left" overlay={
+                          #     <Tooltip id="row-#{@props.slotitemId}-#{key}-tooltip">{__ 'Probably on air base'}</Tooltip>
+                          #   }>
+                          #     <span className='unknown-shipname'>{__ "Unknown"}</span>
+                          #   </OverlayTrigger>
+                          # else
+                          #  <span>
+                          if ship.level > 0
+                            <span className='equip-list-div-span'>Lv.{ship.level}</span>
                         }
+                        <span className='known-ship-name'>{ship.name}</span>
                         {
-                          if ship.count > 1 || unknown
+                          if ship.count > 1 # || unknown
                             <span className='equip-list-number'>×{ship.count}</span>
                         }
                       </div>
