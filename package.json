@@ -1,6 +1,6 @@
 {
   "name": "poi-plugin-item-info",
-  "version": "2.0.3",
+  "version": "2.1.1",
   "description": "Show detailed information of all owned equipment.",
   "main": "index.cjsx",
   "scripts": {
