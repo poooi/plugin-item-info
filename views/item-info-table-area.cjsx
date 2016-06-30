@@ -1,4 +1,4 @@
-{Grid, Table, Input, Tooltip, OverlayTrigger} = ReactBootstrap
+{Grid, Table, FormControl, Tooltip, OverlayTrigger} = ReactBootstrap
 {SlotitemIcon} = require "#{ROOT}/views/components/etc/icon"
 Divider = require './divider'
 path = require 'path'
@@ -88,20 +88,21 @@ alwaysTrue = -> true
 ItemInfoTableArea = React.createClass
   getInitialState: ->
     rows: []
+    inputValue: ''
     filterName: alwaysTrue
-  handleFilterNameChange: ->
-    key = @refs.input.getValue()
-    if key
+  handleFilterNameChange: (e) ->
+    inputValue = e.target.value
+    if inputValue
       filterName = null
-      match = key.match /^\/(.+)\/([gim]*)$/
+      match = inputValue.match /^\/(.+)\/([gim]*)$/
       if match?
         try
           re = new RegExp match[1], match[2]
           filterName = re.test.bind(re)
-      filterName ?= (name) -> name.indexOf(key) >= 0
+      filterName ?= (name) -> name.indexOf(inputValue) >= 0
     else
       filterName = alwaysTrue
-    @setState {filterName}
+    @setState {filterName, inputValue}
   displayedRows: ->
     {filterName} = @state
     {rows, itemTypeChecked} = @props
@@ -120,7 +121,13 @@ ItemInfoTableArea = React.createClass
           <thead className="slot-item-table-thead">
             <tr>
               <th className="center" style={width: '25%'}>
-                <Input className='name-filter' type='text' ref='input' placeholder={__ 'Name'} onChange={@handleFilterNameChange}/>
+                <FormControl
+                  className='name-filter'
+                  value={@state.inputValue}
+                  type="text"
+                  placeholder={__ 'Name'}
+                  onChange={@handleFilterNameChange}
+                />
               </th>
               <th className="center" style={width: '9%'}>{__ 'Total'}<span style={fontSize: '11px'}>{'(' + __('rest') + ')'}</span></th>
               <th className="center" style={width: '66%'}>{__ 'State'}</th>
