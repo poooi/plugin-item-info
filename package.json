@@ -15,7 +15,9 @@
     "url": "https://github.com/taroxd",
     "email": "taroxd@outlook.com"
   },
-  "contributors": ["Yunze"],
+  "contributors": [
+    "Yunze"
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/poooi/plugin-item-info/issues"
@@ -27,5 +29,15 @@
     "description": "Show detailed information of all owned equipment",
     "icon": "fa/rocket",
     "priority": 51
+  },
+  "devDependencies": {
+    "babel-eslint": "^7.1.1",
+    "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-preset-es2015-node6": "^0.4.0",
+    "babel-preset-react": "^6.16.0",
+    "babel-preset-stage-0": "^6.16.0",
+    "eslint": "^3.12.2",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-react": "^6.8.0"
   }
 }
