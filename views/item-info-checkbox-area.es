@@ -5,13 +5,13 @@ import Divider from './divider'
 import FontAwesome from 'react-fontawesome'
 
 export default class ItemInfoCheckboxArea extends Component {
-  handleClickCheckbox = (index) => {
+  handleClickCheckbox = (index) => () => {
     this.props.changeCheckbox(
       (box) => box[index] = !box[index]
     )
   }
 
-  handleClickCheckboxRightClick = (index) => {
+  handleClickCheckboxRightClick = (index) => () => {
     this.props.changeCheckbox(
       (box) => {
         box.fill(false)
@@ -46,7 +46,7 @@ export default class ItemInfoCheckboxArea extends Component {
                     <Col
                       key={index}
                       xs={1}
-                      onContextMenu={this.handleClickCheckboxRightClick.bind(this, index)}
+                      onContextMenu={this.handleClickCheckboxRightClick(index)}
                     >
                       <Input
                         className='checkbox'
@@ -55,7 +55,7 @@ export default class ItemInfoCheckboxArea extends Component {
                         label={
                           <SlotitemIcon slotitemId={index} />
                         }
-                        onChange={this.handleClickCheckbox.bind(this, index)}
+                        onChange={this.handleClickCheckbox(index)}
                         checked={isChecked}
                       />                  
                     </Col>
