@@ -1,4 +1,4 @@
-{Button, Col, Grid, Row, Input} = ReactBootstrap
+{Button, Col, Grid, Row, Checkbox} = ReactBootstrap
 {SlotitemIcon} = require "#{ROOT}/views/components/etc/icon"
 Divider = require './divider'
 path = require 'path'
@@ -23,16 +23,13 @@ ItemInfoCheckboxArea = React.createClass
           for isChecked, index in @props.itemTypeChecked
             continue if index is 0
             <Col key={index} xs={1} onContextMenu={@handleClickCheckboxRightClick.bind(@, index)}>
-              <Input
+              <Checkbox
                 className='checkbox'
-                type='checkbox'
-                value={index}
-                label={
-                  <SlotitemIcon slotitemId={index} />
-                }
                 onChange={@handleClickCheckbox.bind(@, index)}
                 checked={isChecked}
-              />
+              >
+                <SlotitemIcon slotitemId={index} />
+              </Checkbox>
             </Col>
         }
         </Row>
@@ -50,24 +47,22 @@ ItemInfoCheckboxArea = React.createClass
         </Row>
         <Row className='lock-filter'>
           <Col xs={1}>
-            <Input
+            <Checkbox
               className='checkbox'
-              type='checkbox'
-              value='lock'
-              label={<FontAwesome name='lock' />}
               onChange={@props.changeLockFilter}
               checked={@props.lockFilter}
-            />
+            >
+              <FontAwesome name='lock' />
+            </Checkbox>
           </Col>
           <Col xs={1}>
-            <Input
+            <Checkbox
               className='checkbox'
-              type='checkbox'
-              value='unlock'
-              label={<FontAwesome name='unlock' />}
               onChange={@props.changeUnlockFilter}
               checked={@props.unlockFilter}
-            />
+            >
+              <FontAwesome name='unlock' />
+            </Checkbox>
           </Col>
         </Row>
       </Grid>
