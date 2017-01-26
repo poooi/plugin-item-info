@@ -3,7 +3,7 @@ ItemInfoTableArea = require './item-info-table-area'
 ItemInfoCheckboxArea = require './item-info-checkbox-area'
 
 # _unsetslot = null
-maxSlotType = 38
+maxSlotType = 40
 
 class Ship
   constructor: (ship) ->
@@ -112,6 +112,16 @@ ItemInfoArea = React.createClass
       continue unless @slotShouldDisplay slot.api_locked
       @rows[slot.api_slotitem_id]?.updateShip ship, slot
   updateAll: ->
+    maxSlotTypeOld = maxSlotType
+    maxSlotType = Object.keys($slotitems).map((a) ->
+      $slotitems[a]?.api_type?[3]
+    ).reduce((a, b) ->
+      Math.max(a || 0, b || 0)
+    )
+    if maxSlotType > maxSlotTypeOld
+      itemTypeCheckedNew = @state.itemTypeChecked.concat (new Array(maxSlotType - maxSlotTypeOld)).fill true
+      @setState
+        itemTypeChecked: itemTypeCheckedNew
     @rows = []
     if _slotitems?
       @updateSlot slot for _slotId, slot of _slotitems
