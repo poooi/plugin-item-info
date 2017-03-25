@@ -1,6 +1,7 @@
+import React, {Component} from 'react'
 import ItemInfoTableArea from './item-info-table-area'
 import ItemInfoCheckboxArea from './item-info-checkbox-area'
-import React, {Component} from 'react'
+
 
 // _unsetslot = null
 
@@ -33,7 +34,7 @@ class Ship {
 class TableRow {
   constructor(slot){
     this.slotItemId = slot.api_slotitem_id
-    itemInfo = $slotitems[this.slotItemId]
+    let itemInfo = $slotitems[this.slotItemId]
     this.typeId = itemInfo.api_type[2]
     this.iconIndex = itemInfo.api_type[3]
     this.name = window.i18n.resources.__(itemInfo.api_name)
@@ -48,51 +49,54 @@ class TableRow {
   }
   getUnset = () => (
      this.total - this.used
-   )
+  )
     // @unset ? @total - @used
   updateSlot = (slot) => {
-    alv = slot.api_alv
-    level = slot.api_level
+    const alv = slot.api_alv
+    const level = slot.api_level
     this.total++
     if (level)
       this.hasNoLevel = false
     if (alv)
       this.hasNoAlv = false
-    key = getLevelKey(alv, level)
-    if (levelCount[key] != null)
+    const key = getLevelKey(alv, level)
+    if (levelCount[key] != null) {
       this.levelCount[key]++
-    else
+    }
+    else {
       this.levelCount[key] = 1
     }
+  }
   clearShips = () => {
     this.used = 0
     this.ships = {}
   }
   updateShip = (ship, slot) => {
     this.used++
-    key = getLevelKey(slot.api_alv, slot.api_level)
+    const key = getLevelKey(slot.api_alv, slot.api_level)
+    let _base = []
     if ((_base = this.ships)[key] == null) {
       _base[key] = []
     }
-    shipInfo = this.ships[key].find((shipInfo) => (shipInfo.id === ship.api_id))
+    const shipInfo = this.ships[key].find((shipInfo) => (shipInfo.id === ship.api_id))
     if (shipInfo){
       shipInfo.count++
     }
-    else
+    else{
       this.ships[key].push(new Ship(ship))
- }
+    }
+  }
 }
 
 export default class ItemInfoArea extends Component {
-  constructor(itemTypeChecked){
-    super(itemTypeChecked)
-    this.state = () => {
-      itemTypeChecked = new Array(maxSlotType + 1),
-      itemTypeChecked.fill(true),
-      // 0b10: locked, 0b01: unlocked
-      this.lockFilter = config.get('plugin.ItemInfo.lockedFilter', 0b11)
-      itemTypeChecked: itemTypeChecked
-      rows: []
+  constructor(props){
+    super(props)
+    const itemTypeChecked = new Array(maxSlotType + 1).fill(true)
+    // 0b10: locked, 0b01: unlocked
+    this.lockFilter = config.get('plugin.ItemInfo.lockedFilter', 0b11)
+    this.state = {
+      itemTypeChecked,
+      rows: [],
     }
   }
   changeCheckbox = (callback) => {
@@ -116,17 +120,20 @@ export default class ItemInfoArea extends Component {
   }
   updateSlot = (slot) => {
     if(!this.slotShouldDisplay(slot.api_locked)) return
-    slotItemId = slot.api_slotitem_id
-    if(this.rows[slotItemId] != null)
+    const slotItemId = slot.api_slotitem_id
+    if(this.rows[slotItemId] != null) {
       this.rows[slotItemId].updateSlot(slot)
-    else
+    }
+    else {
       this.rows[slotItemId] = new TableRow(slot)
+    }
   }
   updateShips = () => {
-    if(!window._ships != null || this.rows.length === 0)
-    for(row in this.rows)
+    if(!window._ships != null || this.state.rows.length === 0)
+    for(let row of this.state.rows)
       if(row != null)
         row.clearShips()
+    let _ships = []
     for(let _id in _ships) {
       const ship = _ships[_id]
       this.addShip(ship)
@@ -134,27 +141,30 @@ export default class ItemInfoArea extends Component {
     // addLandBase
   }
   addShip = (ship) => {
-    for(slotId in ship.api_slot.concat(ship.api_slot_ex)){
+    let _slotitems = []
+    for(let slotId of ship.api_slot.concat(ship.api_slot_ex)){
       if(!slotId > 0) continue
-      slot = _slotitems[slotId]
+      let slot = _slotitems[slotId]
       if(slot == null) continue
       if(!slotShouldDisplay(slot.api_locked)) continue
       if(this.rows[slot.api_slotitem_id] !== null) this.rows[slot.api_slotitem_id].updateShip(ship, slot)
     }
   }
   updateAll = () => {
-    this.rows = []
+    this.setState({rows : []})
+    let _slotitems = []
+    let slot
     if (typeof _slotitems !== "undefined" && _slotitems !== null){
-      for (_slotId in _slotitems) {
-        slot = _slotitems[_slotId];
-        this.updateSlot(slot);
+      for (let _slotId of _slotitems) {
+        slot = _slotitems[_slotId]
+        this.updateSlot(slot)
       }
 
       // Not required currently
       // @updateUnsetslot()
 
       // Always call '@updateAll()' to update data
-      this.setState({rows: this.rows})
+      this.setState({rows: this.state.rows})
   // updateUnsetslot: ->
   //   return if !_unsetslot?
 
