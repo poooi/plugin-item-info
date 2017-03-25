@@ -1,6 +1,6 @@
 {
   "name": "poi-plugin-item-info",
-  "version": "2.1.1",
+  "version": "2.2.0",
   "description": "Show detailed information of all owned equipment.",
   "main": "index.cjsx",
   "scripts": {
@@ -28,7 +28,10 @@
     "title": "Equipment Info",
     "description": "Show detailed information of all owned equipment",
     "icon": "fa/rocket",
-    "priority": 51
+    "priority": 51,
+    "apiVer": {
+      "6.99.99": "2.1.1"
+    }
   },
   "devDependencies": {
     "babel-eslint": "^7.1.1",
