@@ -85,10 +85,13 @@ class ItemInfoTable extends React.Component {
 const alwaysTrue = () => true
 
 export default class ItemInfoTableArea extends Component{
-  getInitialState = () => ({
-    rows: [],
-    filterName: alwaysTrue,
-  })
+  constructor(props) {
+    super(props)
+    this.state = {
+      rows: [],
+      filterName: alwaysTrue,
+    }
+  }
   handleFilterNameChange = (e) => {
     let key = e.target.value
     let filterName
@@ -114,14 +117,14 @@ export default class ItemInfoTableArea extends Component{
   displayedRows = () => {
     const {filterName} = this.state
     let {rows, itemTypeChecked} = this.props
-    rows = rows.filter = (row) => {
-      (row != null) && filterName(row.name) && itemTypeChecked[row.iconIndex]
-    }
-    rows.sort = (a, b) => a.typeId - b.typeId || a.slotItemId - b.slotItemId
+    rows = rows.filter((row) => {
+      return ((row != null) && filterName(row.name) && itemTypeChecked[row.iconIndex])
+    })
+    rows.sort((a, b) => ((a.typeId - b.typeId) || (a.slotItemId - b.slotItemId)))
     for (let row of rows) {
       for (let shipsInLevel in row.ships) {
         if (shipsInLevel != null) {
-          shipsInLevel.sort = (a, b) => b.level - a.level || a.id - b.id
+          shipsInLevel.sort((a, b) => ((b.level - a.level) || (a.id - b.id)))
         }
       }
     }
