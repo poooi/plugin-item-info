@@ -24,8 +24,7 @@
   },
   "homepage": "https://github.com/poooi/plugin-item-info",
   "poiPlugin": {
-    "id": "ItemInfo",
-    "title": "Equipment Info",
+    "title": "poi-plugin-item-info",
     "description": "Show detailed information of all owned equipment",
     "icon": "fa/rocket",
     "priority": 51,
