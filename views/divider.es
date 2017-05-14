@@ -1,13 +1,13 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 
 export default class Divider extends Component {
-  render(){
+  render() {
     const text = this.props.text || ''
-    return(
+    return (
       <div className="divider">
         <h5>{text}</h5>
         <hr />
       </div>
-    )   
+    )
   }
 }

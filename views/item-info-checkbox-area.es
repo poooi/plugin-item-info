@@ -1,6 +1,6 @@
-import React, {Component} from 'react'
-import {Button, Col, Grid, Row, Input} from 'react-bootstrap'
-import {SlotitemIcon} from 'views/components/etc/icon'
+import React, { Component } from 'react'
+import { Button, Col, Grid, Row, Input } from 'react-bootstrap'
+import { SlotitemIcon } from 'views/components/etc/icon'
 import Divider from './divider'
 import FontAwesome from 'react-fontawesome'
 
@@ -57,7 +57,7 @@ export default class ItemInfoCheckboxArea extends Component {
                         }
                         onChange={this.handleClickCheckbox(index)}
                         checked={isChecked}
-                      />                  
+                      />
                     </Col>
                   )
                 }
@@ -68,10 +68,10 @@ export default class ItemInfoCheckboxArea extends Component {
 
           <Row>
             <Col xs={2}>
-              <Button 
-                className="filter-button" 
-                bsStyle='default' 
-                bsSize='small' 
+              <Button
+                className="filter-button"
+                bsStyle='default'
+                bsSize='small'
                 onClick={this.handleClickCheckboxAllButton}
                 block
               >
@@ -79,11 +79,11 @@ export default class ItemInfoCheckboxArea extends Component {
               </Button>
             </Col>
             <Col xs={2}>
-              <Button 
-                className="filter-button" 
-                bsStyle='default' 
-                bsSize='small' 
-                onClick={this.handleClickCheckboxNoneButton} 
+              <Button
+                className="filter-button"
+                bsStyle='default'
+                bsSize='small'
+                onClick={this.handleClickCheckboxNoneButton}
                 block
               >
                 {__('Deselect All')}

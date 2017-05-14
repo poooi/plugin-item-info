@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import ItemInfoTableArea from './item-info-table-area'
 import ItemInfoCheckboxArea from './item-info-checkbox-area'
 
@@ -8,7 +8,7 @@ import ItemInfoCheckboxArea from './item-info-checkbox-area'
 const maxSlotType = 40
 
 class Ship {
-  constructor(ship){
+  constructor(ship) {
     this.id = ship.api_id
     this.level = ship.api_lv
     this.name = window.i18n.resources.__(ship.api_name)
@@ -32,15 +32,15 @@ class Ship {
 }
 
 class TableRow {
-  constructor(slot){
+  constructor(slot) {
     this.slotItemId = slot.api_slotitem_id
-    let itemInfo = $slotitems[this.slotItemId]
+    const itemInfo = $slotitems[this.slotItemId]
     this.typeId = itemInfo.api_type[2]
     this.iconIndex = itemInfo.api_type[3]
     this.name = window.i18n.resources.__(itemInfo.api_name)
     this.total = 0
     this.used = 0
-    //@unset = null       null or Integer, set when `unsetslot' is read
+    // @unset = null       null or Integer, set when `unsetslot' is read
     this.ships = {}        // @ships = {levelKey: [Ship1, Ship2, ...]}
     this.levelCount = {}   // @levelCount = {levelKey: count}
     this.hasNoLevel = true
@@ -55,10 +55,12 @@ class TableRow {
     const alv = slot.api_alv
     const level = slot.api_level
     this.total++
-    if (level)
+    if (level) {
       this.hasNoLevel = false
-    if (alv)
+    }
+    if (alv) {
       this.hasNoAlv = false
+    }
     const key = getLevelKey(alv, level)
     if (levelCount[key] != null) {
       this.levelCount[key]++
@@ -75,21 +77,22 @@ class TableRow {
     this.used++
     const key = getLevelKey(slot.api_alv, slot.api_level)
     let _base = []
-    if ((_base = this.ships)[key] == null) {
+    _base = this.ships
+    if (_base[key] == null) {
       _base[key] = []
     }
     const shipInfo = this.ships[key].find((shipInfo) => (shipInfo.id === ship.api_id))
-    if (shipInfo){
+    if (shipInfo) {
       shipInfo.count++
     }
-    else{
+    else {
       this.ships[key].push(new Ship(ship))
     }
   }
 }
 
 export default class ItemInfoArea extends Component {
-  constructor(props){
+  constructor(props) {
     super(props)
     const itemTypeChecked = new Array(maxSlotType + 1).fill(true)
     // 0b10: locked, 0b01: unlocked
@@ -111,7 +114,7 @@ export default class ItemInfoArea extends Component {
     this.lockFilter ^= 0b01
     this.updateAfterChangeLockFilter()
   }
-  slotShouldDisplay =  (locked) => (
+  slotShouldDisplay = (locked) => (
     (locked ? 0b10 : 0b01) & this.lockFilter
   )
   updateAfterChangeLockFilter = () => {
@@ -119,9 +122,9 @@ export default class ItemInfoArea extends Component {
     this.updateAll()
   }
   updateSlot = (slot) => {
-    if(!this.slotShouldDisplay(slot.api_locked)) return
+    if (!this.slotShouldDisplay(slot.api_locked)) return
     const slotItemId = slot.api_slotitem_id
-    if(this.rows[slotItemId] != null) {
+    if (this.rows[slotItemId] != null) {
       this.rows[slotItemId].updateSlot(slot)
     }
     else {
@@ -129,30 +132,34 @@ export default class ItemInfoArea extends Component {
     }
   }
   updateShips = () => {
-    if(!window._ships != null || this.state.rows.length === 0)
-    for(let row of this.state.rows)
-      if(row != null)
-        row.clearShips()
+    if (!window._ships != null || this.state.rows.length === 0)
+      for (const row of this.state.rows) {
+        if(row != null) {
+          row.clearShips()
+        }
+      }
     let _ships = []
-    for(let _id in _ships) {
+    for (let _id in _ships) {
       const ship = _ships[_id]
       this.addShip(ship)
     }
     // addLandBase
   }
   addShip = (ship) => {
-    let _slotitems = []
-    for(let slotId of ship.api_slot.concat(ship.api_slot_ex)){
-      if(!slotId > 0) continue
-      let slot = _slotitems[slotId]
-      if(slot == null) continue
-      if(!slotShouldDisplay(slot.api_locked)) continue
-      if(this.rows[slot.api_slotitem_id] !== null) this.rows[slot.api_slotitem_id].updateShip(ship, slot)
+    const _slotitems = []
+    for (const slotId of ship.api_slot.concat(ship.api_slot_ex)) {
+      if (!slotId > 0) continue
+      const slot = _slotitems[slotId]
+      if (slot == null) continue
+      if (!slotShouldDisplay(slot.api_locked)) continue
+      if (this.rows[slot.api_slotitem_id] !== null) {
+        this.rows[slot.api_slotitem_id].updateShip(ship, slot)
+      }
     }
   }
   updateAll = () => {
-    this.setState({rows : []})
-    let _slotitems = []
+    this.setState({ rows: [] })
+    const _slotitems = []
     let slot
     if (typeof _slotitems !== "undefined" && _slotitems !== null){
       for (let _slotId of _slotitems) {
@@ -164,7 +171,7 @@ export default class ItemInfoArea extends Component {
       // @updateUnsetslot()
 
       // Always call '@updateAll()' to update data
-      this.setState({rows: this.state.rows})
+      this.setState({ rows: this.state.rows })
   // updateUnsetslot: ->
   //   return if !_unsetslot?
 
@@ -195,8 +202,8 @@ export default class ItemInfoArea extends Component {
     }
   }
   handleResponse = (e) => {
-    const{method, path, body, postBody} = e.detail
-    switch(path){
+    const { path, body } = e.detail
+    switch (path) {
       case '/kcsapi/api_port/port':
       case '/kcsapi/api_get_member/slot_item':
       case '/kcsapi/api_req_kousyou/destroyitem2':
@@ -216,13 +223,15 @@ export default class ItemInfoArea extends Component {
       //   _unsetslot = body
       //   @updateAll()
       case '/kcsapi/api_req_kousyou/createitem':
-        if(body.api_create_flag === 1)
+        if (body.api_create_flag === 1){
           // _unsetslot = body.api_unsetslot
           this.updateAll()
+        }
         break
       case '/kcsapi/api_req_kaisou/lock':
-        if(this.lockFilter === 0b10 || this.lockFilter === 0b01)
+        if (this.lockFilter === 0b10 || this.lockFilter === 0b01) {
           this.updateAll()
+        }
     }
       // when '/kcsapi/api_req_air_corps/set_plane'
       //   Not Implemented as land base status is not yet saved in env
@@ -234,9 +243,9 @@ export default class ItemInfoArea extends Component {
     window.removeEventListener('game.response', this.handleResponse)
   )
   render(){
-    const{itemTypeChecked} = this.props
-    const{getLevelsFromKey} = this.props
-    return(
+    const { itemTypeChecked } = this.props
+    const { getLevelsFromKey } = this.props
+    return (
       <div>
         <ItemInfoCheckboxArea
           changeCheckbox={this.changeCheckbox}
