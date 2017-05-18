@@ -50,4 +50,7 @@ module.exports = {
       'semver',
     ],
   },
+	globals: {
+		config: false,
+	}
 }
