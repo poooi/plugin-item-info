@@ -21,7 +21,7 @@ class Ship {
 //   level: -1
 //  name: null
 //  constructor: (@count) ->
-  getLevelsFromKey = (key) => ({
+  getLevelsFromKey = key => ({
     alv: Math.floor(key / 11),
     level: key % 11,
   })
@@ -64,8 +64,7 @@ class TableRow {
     const key = getLevelKey(alv, level)
     if (levelCount[key] != null) {
       this.levelCount[key]++
-    }
-    else {
+    } else {
       this.levelCount[key] = 1
     }
   }
@@ -81,11 +80,10 @@ class TableRow {
     if (_base[key] == null) {
       _base[key] = []
     }
-    const shipInfo = this.ships[key].find((shipInfo) => (shipInfo.id === ship.api_id))
+    const shipInfo = this.ships[key].find(shipInfo => (shipInfo.id === ship.api_id))
     if (shipInfo) {
       shipInfo.count++
-    }
-    else {
+    } else {
       this.ships[key].push(new Ship(ship))
     }
   }
@@ -114,7 +112,7 @@ export default class ItemInfoArea extends Component {
     this.lockFilter ^= 0b01
     this.updateAfterChangeLockFilter()
   }
-  slotShouldDisplay = (locked) => (
+  slotShouldDisplay = locked => (
     (locked ? 0b10 : 0b01) & this.lockFilter
   )
   updateAfterChangeLockFilter = () => {
@@ -126,20 +124,20 @@ export default class ItemInfoArea extends Component {
     const slotItemId = slot.api_slotitem_id
     if (this.rows[slotItemId] != null) {
       this.rows[slotItemId].updateSlot(slot)
-    }
-    else {
+    } else {
       this.rows[slotItemId] = new TableRow(slot)
     }
   }
   updateShips = () => {
-    if (!window._ships != null || this.state.rows.length === 0)
+    if (!window._ships != null || this.state.rows.length === 0) {
       for (const row of this.state.rows) {
-        if(row != null) {
+        if (row != null) {
           row.clearShips()
         }
       }
-    let _ships = []
-    for (let _id in _ships) {
+    }
+    const _ships = []
+    for (const _id in _ships) {
       const ship = _ships[_id]
       this.addShip(ship)
     }
@@ -161,8 +159,8 @@ export default class ItemInfoArea extends Component {
     this.setState({ rows: [] })
     const _slotitems = []
     let slot
-    if (typeof _slotitems !== "undefined" && _slotitems !== null){
-      for (let _slotId of _slotitems) {
+    if (typeof _slotitems !== 'undefined' && _slotitems !== null) {
+      for (const _slotId of _slotitems) {
         slot = _slotitems[_slotId]
         this.updateSlot(slot)
       }
@@ -223,7 +221,7 @@ export default class ItemInfoArea extends Component {
       //   _unsetslot = body
       //   @updateAll()
       case '/kcsapi/api_req_kousyou/createitem':
-        if (body.api_create_flag === 1){
+        if (body.api_create_flag === 1) {
           // _unsetslot = body.api_unsetslot
           this.updateAll()
         }
@@ -242,7 +240,7 @@ export default class ItemInfoArea extends Component {
   componentWillUnmount = () => (
     window.removeEventListener('game.response', this.handleResponse)
   )
-  render(){
+  render() {
     const { itemTypeChecked } = this.props
     const { getLevelsFromKey } = this.props
     return (

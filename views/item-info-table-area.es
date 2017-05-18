@@ -1,7 +1,7 @@
 import { Grid, Table, FormControl, Tooltip, OverlayTrigger } from 'react-bootstrap'
 import React, { Component } from 'react'
 import _ from 'lodash'
-import { SlotitemIcon } from "views/components/etc/icon"
+import { SlotitemIcon } from 'views/components/etc/icon'
 import Divider from './divider'
 import path from 'path'
 
@@ -13,59 +13,55 @@ class ItemInfoTable extends React.Component {
   }
   render() {
     return (
-      <tr className='vertical'>
-        <td className='item-name-td'>
+      <tr className="vertical">
+        <td className="item-name-td">
           {
             <SlotitemIcon slotitemId={this.props.iconIndex} />
           }
           {this.props.name}
         </td>
-        <td className='center'>{this.props.total + ' '}<span style={{fontSize: '12px'}}>{'(' + this.props.unset + ')'}</span></td>
+        <td className="center">{`${this.props.total} `}<span style={{ fontSize: '12px' }}>{`(${this.props.unset})`}</span></td>
         <td>
-          <Table id='equip-table'>
+          <Table id="equip-table">
             <tbody>
               {
-              Object.keys(this.props.levelCount).map((key) => parseInt(key)).sort((a, b) => a - b).map((key) => {
+              Object.keys(this.props.levelCount).map(key => parseInt(key)).sort((a, b) => a - b).map((key) => {
                 const { alv, level } = this.props.getLevelsFromKey(key)
                 let count = this.props.levelCount[key]
                 let alvPrefix
                 let levelPrefix
                 if (this.props.hasNoAlv) {
                   alvPrefix = ''
-                }
-                else if (alv === 0) {
-                  alvPrefix = <span className='item-alv-0'>O</span>
-                }
-                else if (alv <= 7) {
-                  alvPrefix = <img className='item-alv-img' src={path.join(ROOT, 'assets', 'img', 'airplane', "alv#{alv}.png")}/>
+                } else if (alv === 0) {
+                  alvPrefix = <span className="item-alv-0">O</span>
+                } else if (alv <= 7) {
+                  alvPrefix = <img className="item-alv-img" src={path.join(ROOT, 'assets', 'img', 'airplane', 'alv#{alv}.png')} />
                 }
                 if (this.props.hasNoLevel) {
                   levelPrefix = ''
-                }
-                else if (level === 10) {
+                } else if (level === 10) {
                   levelPrefix = '★max'
-                }
-                else {
-                  levelPrefix = '★' + level
+                } else {
+                  levelPrefix = `★${level}`
                 }
                 count = this.props.levelCount[key]
                 return (
                   <tr key={key}>
-                    <td style={{width: '13%'}}><span className='item-level-span'>{alvPrefix} {levelPrefix}</span> × {count}</td>
+                    <td style={{ width: '13%' }}><span className="item-level-span">{alvPrefix} {levelPrefix}</span> × {count}</td>
                     <td>
                       {
                         this.props.ships[key] &&
                         this.props.ships[key].map(ship =>
                       // unknown = ship.level > 0
-                          <div key={ship.id} className='equip-list-div'>
+                          <div key={ship.id} className="equip-list-div">
                             {
                               ship.level > 0 &&
-                                <span className='equip-list-div-span'>Lv.{ship.level}</span>
+                                <span className="equip-list-div-span">Lv.{ship.level}</span>
                             }
-                            <span className='known-ship-name'>{ship.name}</span>
+                            <span className="known-ship-name">{ship.name}</span>
                             {
                               ship.count > 1 && // || unknown
-                                <span className='equip-list-number'>×{ship.count}</span>
+                                <span className="equip-list-number">×{ship.count}</span>
                             }
                           </div>)
                       }
@@ -84,7 +80,7 @@ class ItemInfoTable extends React.Component {
 
 const alwaysTrue = () => true
 
-export default class ItemInfoTableArea extends Component{
+export default class ItemInfoTableArea extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -93,7 +89,7 @@ export default class ItemInfoTableArea extends Component{
     }
   }
   handleFilterNameChange = (e) => {
-    let key = e.target.value
+    const key = e.target.value
     let filterName
     if (key) {
       filterName = null
@@ -102,14 +98,12 @@ export default class ItemInfoTableArea extends Component{
         try {
           const re = new RegExp(match[1], match[2])
           filterName = re.test.bind(re)
-        }
-        catch (err) {}
+        } catch (err) {}
       }
       if (filterName === null) {
-        filterName = (name) => name.indexOf(key) >= 0
+        filterName = name => name.indexOf(key) >= 0
       }
-    }
-    else {
+    } else {
       filterName = alwaysTrue
     }
     this.setState({ filterName })
@@ -117,9 +111,7 @@ export default class ItemInfoTableArea extends Component{
   displayedRows = () => {
     const { filterName } = this.state
     let { rows, itemTypeChecked } = this.props
-    rows = rows.filter((row) => {
-      return ((row != null) && filterName(row.name) && itemTypeChecked[row.iconIndex])
-    })
+    rows = rows.filter(row => ((row != null) && filterName(row.name) && itemTypeChecked[row.iconIndex]))
     rows.sort((a, b) => ((a.typeId - b.typeId) || (a.slotItemId - b.slotItemId)))
     for (const row of rows) {
       for (const shipsInLevel in row.ships) {
@@ -132,22 +124,22 @@ export default class ItemInfoTableArea extends Component{
   }
   render() {
     return (
-      <div id='item-info-show'>
+      <div id="item-info-show">
         <Divider text={window.__('Equipment Info')} />
         <Grid id="item-info-area">
           <Table striped condensed hover id="main-table">
             <thead className="slot-item-table-thead">
               <tr>
                 <th className="center" style={{ width: '25%' }}>
-                  <FormControl className='name-filter' type='text' placeholder={window.__('Name')} onChange={this.handleFilterNameChange} />
+                  <FormControl className="name-filter" type="text" placeholder={window.__('Name')} onChange={this.handleFilterNameChange} />
                 </th>
-                <th className="center" style={{ width: '9%' }}>{ window.__('Total') }<span style={{ fontSize: '11px'} }>{'(' + window.__('rest') + ')'}</span></th>
+                <th className="center" style={{ width: '9%' }}>{ window.__('Total') }<span style={{ fontSize: '11px' }}>{`(${window.__('rest')})`}</span></th>
                 <th className="center" style={{ width: '66%' }}>{ window.__('State') }</th>
               </tr>
             </thead>
             <tbody>
               {
-                this.displayedRows().map(row => {
+                this.displayedRows().map(row =>
                   <ItemInfoTable
                     key={row.slotItemId}
                     slotItemId={row.slotItemId}
@@ -161,7 +153,7 @@ export default class ItemInfoTableArea extends Component{
                     iconIndex={row.iconIndex}
                     getLevelsFromKey={this.props.getLevelsFromKey}
                   />
-                })
+                )
               }
             </tbody>
           </Table>
