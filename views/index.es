@@ -21,15 +21,15 @@ class Ship {
 //   level: -1
 //  name: null
 //  constructor: (@count) ->
-  getLevelsFromKey = key => ({
-    alv: Math.floor(key / 11),
-    level: key % 11,
-  })
-
-  getLevelKey = (alv, level) => (
-    alv != null ? alv : 0 * 11 + (level != null ? level : 0)
-  )
 }
+
+const getLevelsFromKey = key => ({
+  alv: Math.floor(key / 11),
+  level: key % 11,
+})
+
+const getLevelKey = (alv, level) =>
+  ((alv || 0) * 11) + (level || 0)
 
 class TableRow {
   constructor(slot) {
@@ -73,16 +73,14 @@ class TableRow {
     this.ships = {}
   }
   updateShip = (ship, slot) => {
-    this.used++
+    this.used += 1
     const key = getLevelKey(slot.api_alv, slot.api_level)
-    let _base = []
-    _base = this.ships
-    if (_base[key] == null) {
-      _base[key] = []
+    if (typeof this.ships[key] === 'undefined') {
+      this.ships[key] = []
     }
-    const shipInfo = this.ships[key].find(shipInfo => (shipInfo.id === ship.api_id))
+    const shipInfo = this.ships[key].find(s => (s.id === ship.api_id))
     if (shipInfo) {
-      shipInfo.count++
+      shipInfo.count += 1
     } else {
       this.ships[key].push(new Ship(ship))
     }
@@ -242,7 +240,6 @@ export default class ItemInfoArea extends Component {
   )
   render() {
     const { itemTypeChecked } = this.props
-    const { getLevelsFromKey } = this.props
     return (
       <div>
         <ItemInfoCheckboxArea
