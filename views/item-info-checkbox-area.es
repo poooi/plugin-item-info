@@ -2,67 +2,109 @@ import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import { Button, Col, Grid, Row, Input, Checkbox } from 'react-bootstrap'
 import FontAwesome from 'react-fontawesome'
+import { get } from 'lodash'
+import PropTypes from 'prop-types'
 
 import { SlotitemIcon } from 'views/components/etc/icon'
 import Divider from './divider'
 
 import { iconEquipMapSelector } from './selectors'
+import { int2BoolArray, boolArray2Int } from './utils'
+
+const { __, config } = window
 
 const ItemInfoCheckboxArea = connect(
-  (state) => ({
-    iconEquipMap: iconEquipMapSelector(state),
-  })
+  (state) => {
+    const iconEquipMap = iconEquipMapSelector(state)
+    let type = int2BoolArray(get(state, 'config.plugin.ItemInfo.type'))
+    if (type.length !== Object.keys(iconEquipMap).length) {
+      type = Object.keys(iconEquipMap).fill(true)
+    }
+
+    return {
+      iconEquipMap,
+      type,
+      lock: int2BoolArray(get(state, 'config.plugin.ItemInfo.lock', 7)),
+    }
+  }
 )(class ItemInfoCheckboxArea extends PureComponent {
-  handleClickCheckbox = index => () => {
-    this.props.changeCheckbox(
-      box => box[index] = !box[index]
-    )
+  static propTypes = {
+    iconEquipMap: PropTypes.objectOf(PropTypes.array).isRequired,
+    type: PropTypes.arrayOf(PropTypes.boool).isRequired,
+    lock: PropTypes.arrayOf(PropTypes.bool).isRequired,
   }
 
-  handleClickCheckboxRightClick = index => () => {
-    this.props.changeCheckbox(
-      (box) => {
-        box.fill(false)
-        box[index] = true
-      }
-    )
+
+  saveConfig = (name, value) => {
+    config.set(`plugin.ItemInfo.${name}`, value)
   }
 
-  handleClickCheckboxAllButton = () => {
-    this.props.changeCheckbox(
-      box => box.fill(true)
-    )
+  handleClickCheck = index => () => {
+    const type = this.props.type.slice()
+    type[index] = !type[index]
+
+    this.saveConfig('type', boolArray2Int(type))
   }
 
-  handleClickCheckboxNoneButton = () => {
-    this.props.changeCheckbox(
-      box => box.fill(false)
-    )
+  handleClickCheckContext = index => () => {
+    const type = this.props.type.slice()
+    type.fill(false)
+    type[index] = true
+
+    this.saveConfig('type', boolArray2Int(type))
+  }
+
+  handleClickCheckAll = () => {
+    const type = this.props.type.slice()
+    type.fill(true)
+
+    this.saveConfig('type', boolArray2Int(type))
+  }
+
+  handleClickCheckboxNone = () => {
+    const type = this.props.type.slice()
+    type.fill(false)
+
+    this.saveConfig('type', boolArray2Int(type))
+  }
+
+  handleLockFilter = () => {
+    const lock = this.props.lock.slice()
+    lock[0] = !lock[0]
+
+    this.saveConfig('lock', boolArray2Int(lock))
+  }
+
+  handleUnlockFilter = () => {
+    const lock = this.props.lock.slice()
+    lock[1] = !lock[1]
+
+    this.saveConfig('lock', boolArray2Int(lock))
   }
 
   render() {
-    const { iconEquipMap } = this.props
+    const { iconEquipMap, type, lock } = this.props
     return (
       <div id="item-info-settings">
         <Divider text={__('Filter Setting')} />
         <Grid id="item-info-filter">
           <Row>
             {
-              Object.keys(iconEquipMap).map(str => +str).map(index =>
+              Object.keys(iconEquipMap).map(str => +str).map((key, index) =>
                 <Col
-                  key={index}
+                  key={key}
                   xs={1}
-                  onContextMenu={this.handleClickCheckboxRightClick(index)}
+                  onContextMenu={this.handleClickCheckContext(index)}
                 >
                   <Input
                     className="checkbox"
                     type="checkbox"
                     value={index}
                     label={
-                      <SlotitemIcon slotitemId={index} />
+                      <SlotitemIcon slotitemId={index + 1} />
                     }
-                    onChange={this.handleClickCheckbox(index)}
-                    // checked={isChecked}
+                    onChange={this.handleClickCheck(index)}
+                    checked={type[index]}
                   />
                 </Col>
               )
@@ -75,7 +117,7 @@ const ItemInfoCheckboxArea = connect(
                 className="filter-button"
                 bsStyle="default"
                 bsSize="small"
-                onClick={this.handleClickCheckboxAllButton}
+                onClick={this.handleClickCheckAll}
                 block
               >
                 {__('Select All')}
@@ -86,7 +128,7 @@ const ItemInfoCheckboxArea = connect(
                 className="filter-button"
                 bsStyle="default"
                 bsSize="small"
-                onClick={this.handleClickCheckboxNoneButton}
+                onClick={this.handleClickCheckboxNone}
                 block
               >
                 {__('Deselect All')}
@@ -104,8 +146,8 @@ const ItemInfoCheckboxArea = connect(
               <Checkbox
                 inline
                 className="checkbox"
-                onChange={this.props.changeLockFilter}
-                checked={this.props.lockFilter}
+                onChange={this.handleLockFilter}
+                checked={lock[0]}
               >
                 <FontAwesome name="lock" />
               </Checkbox>
@@ -114,8 +156,8 @@ const ItemInfoCheckboxArea = connect(
               <Checkbox
                 inline
                 className="checkbox"
-                onChange={this.props.changeUnlockFilter}
-                checked={this.props.unlockFilter}
+                onChange={this.handleUnlockFilter}
+                checked={lock[1]}
               >
                 <FontAwesome name="unlock" />
               </Checkbox>
