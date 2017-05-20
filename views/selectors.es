@@ -3,7 +3,7 @@ import { get, invertBy, mapValues, map, transform, each, groupBy, countBy, filte
 
 import { constSelector, configSelector, shipsSelector, equipsSelector, shipDataSelectorFactory } from 'views/utils/selectors'
 
-import { getLevelKey } from './utils'
+import { getLevelKey, int2BoolArray } from './utils'
 
 // [$equip.api_id]: $equip.api_type[3]
 export const equipIconMapSelector = createSelector(
@@ -43,11 +43,28 @@ const equipsSelectorMod = createSelector(
   mapValues(equips, equip => ({ ...equip, shipId: equipShipMap[equip.api_id] || 0 }))
 )
 
+const filterEquipsSelector = createSelector(
+  [
+    equipsSelectorMod,
+    state => int2BoolArray(get(state, 'config.plugin.ItemInfo.lock', 7)),
+  ], (equips, lock) => {
+  // array position = 0: loced, 1: unclocked
+  const arr = []
+  if (lock[0]) {
+    arr.push(1)
+  }
+  if (lock[1]) {
+    arr.push(0)
+  }
+
+  return filter(equips, equip => arr.includes(equip.api_locked))
+})
+
 // lvShip {[levelKey]: {[shipId]: [equips on ship]}}
 export const rowsSelector = createSelector(
   [
     constSelector,
-    equipsSelectorMod,
+    filterEquipsSelector,
   ], ({ $equips = {} } = {}, _equips) => map($equips, ($equip) => {
     const equips = filter(_equips, equip => equip.api_slotitem_id === $equip.api_id)
     const hasAlv = equips.some(equip => typeof equip.api_alv !== 'undefined')
