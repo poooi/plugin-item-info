@@ -49,10 +49,10 @@ const ItemInfoTable = ({ row }) => {
             {
             Object.keys(lvCount).map(key => +key).sort((a, b) => a - b).map((key) => {
               const { alv, level } = getLevelsFromKey(key)
-              console.log(alv, level)
               const count = lvCount[key]
               let alvPrefix
               let levelPrefix
+
               if (!hasAlv) {
                 alvPrefix = ''
               } else if (alv === 0) {
@@ -60,6 +60,7 @@ const ItemInfoTable = ({ row }) => {
               } else if (alv <= 7) {
                 alvPrefix = <img className="item-alv-img" src={path.join(ROOT, 'assets', 'img', 'airplane', `alv${alv}.png`)} />
               }
+
               if (!hasLevel) {
                 levelPrefix = ''
               } else if (level === 10) {
@@ -67,19 +68,20 @@ const ItemInfoTable = ({ row }) => {
               } else {
                 levelPrefix = `★${level}`
               }
-              const activeShips = lvShip[key]
+
+              const countByShip = lvShip[key]
               return (
                 <tr key={key}>
                   <td style={{ width: '13%' }}><span className="item-level-span">{alvPrefix} {levelPrefix}</span> × {count}</td>
                   <td>
                     {
-                      activeShips &&
-                      Object.keys(activeShips).map(shipId =>
+                      countByShip &&
+                      Object.keys(countByShip).map(shipId =>
                         shipId > 0 &&
                           <ShipTag
                             key={shipId}
                             shipId={+shipId}
-                            count={activeShips[shipId]}
+                            count={countByShip[shipId]}
                           />
                       )
                     }
