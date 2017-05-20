@@ -14,3 +14,11 @@ export const boolArray2Int = (boolArray = []) => {
   const str = arr.map(bool => +bool).join('')
   return parseInt(str, 2)
 }
+
+export const getLevelsFromKey = key => ({
+  alv: Math.floor(key / 11),
+  level: key % 11,
+})
+
+export const getLevelKey = (alv, level) =>
+  ((alv || 0) * 11) + (level || 0)

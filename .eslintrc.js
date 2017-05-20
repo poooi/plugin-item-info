@@ -24,6 +24,8 @@ module.exports = {
     'import/extensions': ['error', { 'es': 'never' }],
     'import/no-extraneous-dependencies': 'off',
     'comma-dangle': ['error', 'always-multiline'],
+    'camelcase': 'off',
+    'no-confusing-arrow': 'off',
   },
   'settings': {
     'import/resolver': {
