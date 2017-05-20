@@ -30,7 +30,7 @@ const ItemInfoCheckboxArea = connect(
 )(class ItemInfoCheckboxArea extends PureComponent {
   static propTypes = {
     iconEquipMap: PropTypes.objectOf(PropTypes.array).isRequired,
-    type: PropTypes.arrayOf(PropTypes.boool).isRequired,
+    type: PropTypes.arrayOf(PropTypes.bool).isRequired,
     lock: PropTypes.arrayOf(PropTypes.bool).isRequired,
   }
 
