@@ -185,7 +185,7 @@ const ItemInfoTableArea = connect(
     const { filterName } = this.state
     const { equips } = this.props
     const rows = this.props.rows.filter(row =>
-      (filterName(row.name) && row.total > 0 && equips.includes(row.api_id)))
+      (filterName(row.api_name) && row.total > 0 && equips.includes(row.api_id)))
     return sortBy(rows, ['api_type.3', 'api_id'])
   }
   render() {
