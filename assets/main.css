@@ -3,10 +3,20 @@
 }
 body {
   font-size: 13px;
+  zoom: 0 !important;
 }
 
 .center {
   text-align: center;
+}
+
+.type-check-area {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.type-check-entry {
+  margin-right: 1em;
 }
 
 #item-info-settings .checkbox,
@@ -52,8 +62,25 @@ img.png {
   font-size: inherit;
 }
 
-.item-name-td {
+.item-name-cell {
   padding: 0 0 0 10px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  max-width: 20em;
+}
+
+.item-count-cell {
+  min-width: 4em;
+}
+
+.equip-table {
+  min-width: 12em;
+}
+
+.item-level-cell {
+  width: 10%;
+  min-width: 5em;
 }
 
 .slot-item-table-td {
