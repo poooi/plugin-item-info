@@ -1,7 +1,7 @@
 import { createSelector } from 'reselect'
-import { get, invertBy, mapValues, map, transform, each, groupBy, countBy, filter, memoize } from 'lodash'
+import { get, invertBy, mapValues, map, transform, each, groupBy, countBy, filter, memoize, flatMap, fromPairs, toPairs, reverse } from 'lodash'
 
-import { constSelector, configSelector, shipsSelector, equipsSelector, shipDataSelectorFactory } from 'views/utils/selectors'
+import { constSelector, shipsSelector, equipsSelector, shipDataSelectorFactory } from 'views/utils/selectors'
 
 import { getLevelKey, int2BoolArray } from './utils'
 
@@ -28,19 +28,38 @@ const equipShipMapSelector = createSelector(
   const shipEquipsMap = mapValues(_ships, ship =>
     ship.api_slot.concat(ship.api_slot_ex).filter(id => id > 0)
   )
-  return transform(shipEquipsMap, (result, value, key) => {
-    each(value, (id) => {
-      result[id] = (+key)
-    })
-  }, {})
+
+  const equipShipMap = fromPairs(flatMap(shipEquipsMap, (equips, id) =>
+    map(equips, equip => [equip, id])
+  ))
+  return equipShipMap
+})
+
+// we use negative values to store airbase index + 1
+const equipAirbaseMapSelector = createSelector(
+  [
+    state => state.info.airbase,
+  ], (airbase = []) => {
+  const airbaseEquipsMap = map(airbase, (squad = {}) =>
+    map(squad.api_plane_info, plane => plane.api_slotid).filter(id => id > 0)
+  )
+
+  const equipAirbaseMap = fromPairs(flatMap(airbaseEquipsMap, (equips, index) =>
+    map(equips, equip => [equip, -(index + 1)])
+  ))
+  return equipAirbaseMap
 })
 
 const equipsSelectorMod = createSelector(
   [
     equipsSelector,
     equipShipMapSelector,
-  ], (equips, equipShipMap) =>
-  mapValues(equips, equip => ({ ...equip, shipId: equipShipMap[equip.api_id] || 0 }))
+    equipAirbaseMapSelector,
+  ], (equips, equipShipMap, equipAirbaseMap) =>
+  mapValues(equips, equip => ({
+    ...equip,
+    shipId: equipShipMap[equip.api_id] || equipAirbaseMap[equip.api_id] || 0,
+  }))
 )
 
 const filterEquipsSelector = createSelector(
@@ -94,6 +113,18 @@ export const reduceShipDataSelectorFactory = memoize(shipId =>
     ], ([ship = {}, $ship = {}] = []) => ({
       level: ship.api_lv,
       name: $ship.api_name,
+    })
+  )
+)
+
+export const reduceAirbaseSelectorFactory = memoize(airbaseIndex =>
+  createSelector(
+    [
+      state => (state.info.airbase || [])[airbaseIndex],
+      state => state.const.$mapareas,
+    ], ({ api_name, api_area_id } = {}, mapareas) => ({
+      area: mapareas[api_area_id].api_name,
+      name: api_name,
     })
   )
 )

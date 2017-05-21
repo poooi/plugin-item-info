@@ -6,7 +6,7 @@ import path from 'path'
 
 import { SlotitemIcon } from 'views/components/etc/icon'
 
-import { rowsSelector, iconEquipMapSelector, reduceShipDataSelectorFactory } from './selectors'
+import { rowsSelector, iconEquipMapSelector, reduceShipDataSelectorFactory, reduceAirbaseSelectorFactory } from './selectors'
 import { int2BoolArray, getLevelsFromKey } from './utils'
 import Divider from './divider'
 
@@ -15,15 +15,15 @@ const { __, ROOT } = window
 
 const ShipTag = connect(
   (state, { shipId }) => ({
-    ship: reduceShipDataSelectorFactory(shipId)(state),
+    ship: shipId > 0 ? reduceShipDataSelectorFactory(shipId)(state) : reduceAirbaseSelectorFactory(-shipId - 1)(state),
   })
-)(({ ship, count }) =>
+)(({ ship: { level, name, area }, count }) =>
   <div className="equip-list-div">
     {
-      ship.level > 0 &&
-        <span className="equip-list-div-span">Lv.{ship.level}</span>
+      level > 0 &&
+        <span className="equip-list-div-span">Lv.{level}</span>
     }
-    <span className="known-ship-name">{ship.name}</span>
+    <span className="known-ship-name">{area && `[${area}]`}{name}</span>
     {
       count > 1 &&
         <span className="equip-list-number">×{count}</span>
@@ -76,11 +76,11 @@ const ItemInfoTable = ({ row }) => {
                   <td>
                     {
                       countByShip &&
-                      Object.keys(countByShip).map(shipId =>
-                        shipId > 0 &&
+                      Object.keys(countByShip).map(id => +id).map(shipId =>
+                        shipId !== 0 &&
                           <ShipTag
                             key={shipId}
-                            shipId={+shipId}
+                            shipId={shipId}
                             count={countByShip[shipId]}
                           />
                       )
