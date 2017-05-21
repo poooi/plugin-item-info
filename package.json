@@ -10,7 +10,11 @@
     "type": "git",
     "url": "https://github.com/poooi/plugin-item-info.git"
   },
-  "author": "かがみ <seki@kagami.moe> (https://kagami.moe/)",
+  "author": {
+    "name": "かがみ",
+    "email": "seki@kagami.moe",
+    "url": "https://kagami.moe/"
+  },
   "contributors": [
     "Yunze (https://github.com/myzWILLmake)",
     "taroxd <taroxd@outlook.com> (https://github.com/taroxd)",
