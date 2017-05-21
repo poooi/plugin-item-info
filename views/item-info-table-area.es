@@ -36,13 +36,13 @@ const ItemInfoTable = ({ row }) => {
 
   return (
     <tr className="vertical">
-      <td className="item-name-td">
+      <td className="item-name-cell">
         {
           <SlotitemIcon slotitemId={row.api_type[3]} />
         }
         {row.api_name}
       </td>
-      <td className="center">{`${total} `}<span style={{ fontSize: '12px' }}>{`(${total - active})`}</span></td>
+      <td className="item-count-cell">{`${total} `}<span style={{ fontSize: '12px' }}>{`(${total - active})`}</span></td>
       <td>
         <Table id="equip-table">
           <tbody>
@@ -72,7 +72,7 @@ const ItemInfoTable = ({ row }) => {
               const countByShip = lvShip[key]
               return (
                 <tr key={key}>
-                  <td style={{ width: '13%' }}><span className="item-level-span">{alvPrefix} {levelPrefix}</span> × {count}</td>
+                  <td className="item-level-cell"><span className="item-level-span">{alvPrefix} {levelPrefix}</span> × {count}</td>
                   <td>
                     {
                       countByShip &&

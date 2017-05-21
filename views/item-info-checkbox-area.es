@@ -88,12 +88,12 @@ const ItemInfoCheckboxArea = connect(
       <div id="item-info-settings">
         <Divider text={__('Filter Setting')} />
         <Grid id="item-info-filter">
-          <Row>
+          <Row className="type-check-area">
             {
-              Object.keys(iconEquipMap).map(str => +str).map((key, index) =>
-                <Col
+              Object.keys(iconEquipMap).map(str => +str).map((key, index) =>(
+                <div
                   key={key}
-                  xs={1}
+                  className="type-check-entry"
                   onContextMenu={this.handleClickCheckContext(index)}
                 >
                   <Input
@@ -106,8 +106,8 @@ const ItemInfoCheckboxArea = connect(
                     onChange={this.handleClickCheck(index)}
                     checked={type[index]}
                   />
-                </Col>
-              )
+                </div>
+              ))
             }
           </Row>
 
