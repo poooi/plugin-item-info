@@ -1,6 +1,10 @@
 # Plugin-Item-Info
-Show detailed information of all owned equipment.  
-Created by [Yunze](https://github.com/myzwillmake), maintained by [taroxd](https://github.com/taroxd).
+
+[![npm package][npm-badge]][npm]
+
+Show detailed information of all owned equipment.
+Current maintainer: [かがみ](https://github.com/KagamiChan)
+Created by [Yunze](https://github.com/myzwillmake) and previously maintained by [taroxd](https://github.com/taroxd).
 
 ### Changelog
 
@@ -19,3 +23,6 @@ Please refer to [the release page](https://github.com/poooi/plugin-item-info/rel
 
 #### V1.0.1
 * Fix bugs
+
+[npm-badge]: https://img.shields.io/npm/v/poi-plugin-item-info.svg?style=flat-square
+[npm]: https://www.npmjs.org/package/poi-plugin-item-info

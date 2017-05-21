@@ -10,14 +10,10 @@
     "type": "git",
     "url": "https://github.com/poooi/plugin-item-info.git"
   },
-  "author": {
-    "name": "taroxd",
-    "url": "https://github.com/taroxd",
-    "email": "taroxd@outlook.com"
-  },
+  "author": "かがみ <seki@kagami.moe> (https://kagami.moe/)",
   "contributors": [
     "Yunze (https://github.com/myzWILLmake)",
-    "かがみ <seki@kagami.moe> (https://kagami.moe/)",
+    "taroxd <taroxd@outlook.com> (https://github.com/taroxd)",
     "SoraYama (https://github.com/hyq77766177"
   ],
   "license": "MIT",
