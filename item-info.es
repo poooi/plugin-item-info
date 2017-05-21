@@ -1,5 +1,5 @@
 import 'views/env'
-import path from 'path'
+import { join } from 'path'
 import i18n2 from 'i18n-2'
 import { remote } from 'electron'
 import { debounce } from 'lodash'
@@ -7,7 +7,7 @@ import { debounce } from 'lodash'
 const i18n = new i18n2({
   locales: ['ko-KR', 'en-US', 'ja-JP', 'zh-CN', 'zh-TW'],
   defaultLocale: 'zh-CN',
-  directory: path.join(__dirname, 'i18n'),
+  directory: join(__dirname, 'i18n'),
   extension: '.json',
   devMode: false,
 })
@@ -23,7 +23,7 @@ if (i18n.resources.translate == null) {
   i18n.resources.translate = (locale, str) => str
 }
 if (i18n.resources.setLocale == null) {
-  i18n.resources.setLocale = (str) => {}
+  i18n.resources.setLocale = () => {}
 }
 window.i18n = i18n
 try {

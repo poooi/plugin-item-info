@@ -90,7 +90,7 @@ const ItemInfoCheckboxArea = connect(
         <Grid id="item-info-filter">
           <Row className="type-check-area">
             {
-              Object.keys(iconEquipMap).map(str => +str).map((key, index) =>(
+              Object.keys(iconEquipMap).map(str => +str).map((key, index) => (
                 <div
                   key={key}
                   className="type-check-entry"

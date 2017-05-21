@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect'
-import { get, invertBy, mapValues, map, transform, each, groupBy, countBy, filter, memoize, flatMap, fromPairs, toPairs, reverse } from 'lodash'
+import { get, invertBy, mapValues, map, groupBy, countBy, filter, memoize, flatMap, fromPairs } from 'lodash'
 
 import { constSelector, shipsSelector, equipsSelector, shipDataSelectorFactory } from 'views/utils/selectors'
 
