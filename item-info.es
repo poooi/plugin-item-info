@@ -34,7 +34,7 @@ try {
 window.__ = i18n.__.bind(i18n)
 window.__r = i18n.resources.__.bind(i18n.resources)
 
-document.title = window.__('Item Info')
+document.title = window.__('Equipment Info')
 window.pluginWindow = remote.getCurrentWindow()
 window.pluginContents = remote.getCurrentWebContents()
 

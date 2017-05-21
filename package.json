@@ -1,8 +1,8 @@
 {
   "name": "poi-plugin-item-info",
-  "version": "2.2.0",
+  "version": "3.0.0",
   "description": "Show detailed information of all owned equipment.",
-  "main": "index.cjsx",
+  "main": "index.es",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -24,12 +24,13 @@
   },
   "homepage": "https://github.com/poooi/plugin-item-info",
   "poiPlugin": {
-    "title": "poi-plugin-item-info",
+    "title": "Equipment Info",
     "description": "Show detailed information of all owned equipment",
     "icon": "fa/rocket",
     "priority": 51,
     "apiVer": {
-      "6.99.99": "2.1.1"
+      "6.99.99": "2.1.1",
+      "7.6.0-beta.1": "2.2.0"
     }
   },
   "devDependencies": {
