@@ -87,7 +87,7 @@ export const rowsSelector = createSelector(
   ], ({ $equips = {} } = {}, _equips) => map($equips, ($equip) => {
     const equips = filter(_equips, equip => equip.api_slotitem_id === $equip.api_id)
     const hasAlv = equips.some(equip => typeof equip.api_alv !== 'undefined')
-    const hasLevel = equips.some(equip => typeof equip.api_level !== 'undefined')
+    const hasLevel = equips.some(equip => typeof equip.api_level !== 'undefined' && equip.api_level > 0)
     const total = equips.length
     const active = filter(equips, equip => equip.shipId !== 0).length
     const lvGroup = groupBy(equips, ({ api_alv, api_level }) => getLevelKey(api_alv, api_level))
