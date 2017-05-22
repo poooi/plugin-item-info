@@ -123,7 +123,7 @@ export const reduceAirbaseSelectorFactory = memoize(airbaseIndex =>
       state => (state.info.airbase || [])[airbaseIndex],
       state => state.const.$mapareas,
     ], ({ api_name, api_area_id } = {}, mapareas) => ({
-      area: mapareas[api_area_id].api_name,
+      area: get(mapareas, `${api_area_id}.api_name`),
       name: api_name,
     })
   )
