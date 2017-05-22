@@ -50,7 +50,7 @@ const setZoom = (zoom) => {
 
 setZoom(config.get('poi.zoomLevel', 1))
 
-config.on('config.set', (path, value) => {
+const handleConfig = (path, value) => {
   switch (path) {
     case 'poi.zoomLevel': {
       const zoom = parseFloat(value)
@@ -61,6 +61,12 @@ config.on('config.set', (path, value) => {
       break
     default:
   }
+}
+
+config.on('config.set', handleConfig)
+
+window.addEventListener('unload', () => {
+  config.removeListener('config.set', handleConfig)
 })
 
 window.pluginWindow.on('move', rememberSize)
