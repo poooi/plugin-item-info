@@ -40,7 +40,7 @@ window.pluginContents = remote.getCurrentWebContents()
 
 const rememberSize = debounce(() => {
   const b = window.pluginWindow.getBounds()
-  config.set('plugin.ShipInfo.bounds', b)
+  config.set('plugin.ItemInfo.bounds', b)
 }, 5000)
 
 // apply zoomLevel to webcontents
