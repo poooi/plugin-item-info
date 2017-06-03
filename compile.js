@@ -35,6 +35,7 @@ const compileToJsAsync = (appDir, dontRemove) => {
               const result = await babel.transformFileAsync(srcPath, {
                 presets: presets.map(p => require.resolve(`babel-preset-${p}`)),
                 plugins: plugins.map(p => require.resolve(`babel-plugin-${p}`)),
+                sourceMap: 'inline',
               })
               tgt = result.code
             } catch (e) {
