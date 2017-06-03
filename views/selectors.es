@@ -76,7 +76,7 @@ const filterEquipsSelector = createSelector(
     arr.push(0)
   }
 
-  return filter(equips, equip => arr.includes(equip.api_locked))
+  return filter(equips, equip => arr.includes(equip.api_locked || 0))
 })
 
 // lvShip {[levelKey]: {[shipId]: [equips on ship]}}

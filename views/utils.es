@@ -20,5 +20,5 @@ export const getLevelsFromKey = key => ({
   level: key % 11,
 })
 
-export const getLevelKey = (alv, level) =>
-  ((alv || 0) * 11) + (level || 0)
+export const getLevelKey = (alv = 0, level = 0) =>
+  (alv * 11) + level
