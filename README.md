@@ -6,6 +6,9 @@ Show detailed information of all owned equipment.
 Current maintainer: [かがみ](https://github.com/KagamiChan)
 Created by [Yunze](https://github.com/myzwillmake) and previously maintained by [taroxd](https://github.com/taroxd).
 
+## Note for developers
+This plugin uses prepublish & postpublish scripts for publishing new versions, please use npm^5 for publishing new versions, behaviours with npm<5 are not guaranteed.
+
 ### Changelog
 
 #### V1.4.0 and later
