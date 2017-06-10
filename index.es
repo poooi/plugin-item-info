@@ -28,7 +28,7 @@ export const windowOptions = {
   y,
   width,
   height,
-  realClose: !config.get('plugin.ItemInfo.persist', true),
+  realClose: !config.get('plugin.ItemInfo.persist', false),
 }
 
 export const windowURL = `file://${__dirname}/index.html`
