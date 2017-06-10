@@ -10,5 +10,6 @@
   "rest": "剩餘",
   "State": "裝備情況",
   "Unknown": "(不明)",
-  "Probably on air base": "可能裝備於基地航空隊"
+  "Probably on air base": "可能裝備於基地航空隊",
+  "Keep running at backend (takes effect after restart)": "後臺常駐運行（重啓後生效）"
 }

@@ -1,14 +1,14 @@
 module.exports = {
   'extends': 'airbnb',
   'plugins': [
-  'react',
-  'jsx-a11y',
-  'import'
+    'react',
+    'jsx-a11y',
+    'import'
   ],
   'env': {
-  'browser': true,
-  'es6': true,
-  'node': true,
+    'browser': true,
+    'es6': true,
+    'node': true,
   },
   "parserOptions": {
     "ecmaFeatures": {
@@ -17,8 +17,8 @@ module.exports = {
   },
   'parser': 'babel-eslint',
   'rules': {
-  'semi': ['error', 'never'],
-  'import/no-unresolved': [2, { 'ignore': ['views/.*'] }],
+    'semi': ['error', 'never'],
+    'import/no-unresolved': [2, { 'ignore': ['views/.*'] }],
     'react/jsx-filename-extension': 'off',
     'no-underscore-dangle': ['error', { 'allow': ['__'], 'allowAfterThis': true }],
     'import/extensions': ['error', { 'es': 'never' }],
@@ -50,10 +50,10 @@ module.exports = {
       'react-dom',
       'redux',
       'semver',
-  'prop-types',
+      'prop-types',
     ],
   },
   globals: {
-  config: false,
+    config: false,
   }
 }
