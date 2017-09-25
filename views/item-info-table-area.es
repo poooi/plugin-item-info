@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Grid, Table, FormControl, OverlayTrigger } from 'react-bootstrap'
+import { Grid, Table, FormControl, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { get, map, flatten, sortBy } from 'lodash'
 import path from 'path'
@@ -55,11 +55,25 @@ const ItemInfoTable = ({ row }) => {
   const itemData = $equip && getItemData($equip).map((data, propId) =>
     <div key={propId}>{data}</div>
   )
+  const itemOverlay = itemData &&
+    <Tooltip id={`$equip-${$equip.api_id}`}>
+      <div> { itemData } </div>
+    </Tooltip>
+  const slotItemIconSpan = 
+    <span>
+      <SlotitemIcon slotitemId={row.api_type[3]} />
+    </span>
+
   return (
     <tr className="vertical">
       <td className="item-name-cell">
         {
-          <SlotitemIcon slotitemId={row.api_type[3]} />
+          itemOverlay ?
+            <OverlayTrigger placement='left' overlay={itemOverlay}>
+              {slotItemIconSpan}
+            </OverlayTrigger>
+            :
+            slotItemIconSpan
         }
         {i18n.resources.__(row.api_name)}
       </td>
