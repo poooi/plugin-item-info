@@ -50,8 +50,11 @@ ShipTag.WrappedComponent.propTypes = {
 }
 
 const ItemInfoTable = ({ row }) => {
-  const { total, active, lvCount, lvShip, hasAlv, hasLevel } = row
+  const { $equip, total, active, lvCount, lvShip, hasAlv, hasLevel } = row
 
+  const itemData = $equip && getItemData($equip).map((data, propId) =>
+    <div key={propId}>{data}</div>
+  )
   return (
     <tr className="vertical">
       <td className="item-name-cell">
