@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
-import { Grid, Table, FormControl } from 'react-bootstrap'
+import { Grid, Table, FormControl, OverlayTrigger } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { get, map, flatten, sortBy } from 'lodash'
 import path from 'path'
 import PropTypes from 'prop-types'
 
 import { SlotitemIcon } from 'views/components/etc/icon'
+import { getItemData } from 'views/components/ship/slotitems-data'
 
 import { rowsSelector, iconEquipMapSelector, reduceShipDataSelectorFactory, reduceAirbaseSelectorFactory } from './selectors'
 import { int2BoolArray, getLevelsFromKey } from './utils'
