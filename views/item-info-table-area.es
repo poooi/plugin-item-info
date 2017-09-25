@@ -52,10 +52,10 @@ ShipTag.WrappedComponent.propTypes = {
 const ItemInfoTable = ({ row }) => {
   const { total, active, lvCount, lvShip, hasAlv, hasLevel } = row
 
-  const itemData = row && getItemData(row).map((data, propId) =>
+  const itemData = getItemData(row).map((data, propId) =>
     <div key={propId}>{data}</div>
   )
-  const itemOverlay = itemData &&
+  const itemOverlay = itemData.length &&
     <Tooltip id={`$equip-${row.api_id}`}>
       <div> { itemData } </div>
     </Tooltip>
