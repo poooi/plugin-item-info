@@ -52,24 +52,26 @@ ShipTag.WrappedComponent.propTypes = {
 const ItemInfoTable = ({ row }) => {
   const { total, active, lvCount, lvShip, hasAlv, hasLevel } = row
 
-  const itemData = getItemData(row).map((data, propId) =>
-    <div key={propId}>{data}</div>
+  const itemData = getItemData(row).map((data, index) =>
+    <div key={index}>{data}</div> // eslint-disable-line react/no-array-index-key
   )
-  const itemOverlay = itemData.length &&
+  const itemOverlay = itemData.length && (
     <Tooltip id={`$equip-${row.api_id}`}>
       <div> { itemData } </div>
     </Tooltip>
-  const slotItemIconSpan = 
+  )
+  const slotItemIconSpan = (
     <span>
       <SlotitemIcon slotitemId={row.api_type[3]} />
     </span>
+  )
 
   return (
     <tr className="vertical">
       <td className="item-name-cell">
         {
           itemOverlay ?
-            <OverlayTrigger placement='left' overlay={itemOverlay}>
+            <OverlayTrigger placement="top" overlay={itemOverlay}>
               {slotItemIconSpan}
             </OverlayTrigger>
             :
