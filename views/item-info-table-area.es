@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
-import { Grid, Table, FormControl } from 'react-bootstrap'
+import { Grid, Table, FormControl, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { get, map, flatten, sortBy } from 'lodash'
 import path from 'path'
 import PropTypes from 'prop-types'
 
 import { SlotitemIcon } from 'views/components/etc/icon'
+import { getItemData } from 'views/components/ship/slotitems-data'
 
 import { rowsSelector, iconEquipMapSelector, reduceShipDataSelectorFactory, reduceAirbaseSelectorFactory } from './selectors'
 import { int2BoolArray, getLevelsFromKey } from './utils'
@@ -51,11 +52,28 @@ ShipTag.WrappedComponent.propTypes = {
 const ItemInfoTable = ({ row }) => {
   const { total, active, lvCount, lvShip, hasAlv, hasLevel } = row
 
+  const itemData = getItemData(row).map((data, propId) =>
+    <div key={propId}>{data}</div>
+  )
+  const itemOverlay = itemData.length &&
+    <Tooltip id={`$equip-${row.api_id}`}>
+      <div> { itemData } </div>
+    </Tooltip>
+  const slotItemIconSpan = 
+    <span>
+      <SlotitemIcon slotitemId={row.api_type[3]} />
+    </span>
+
   return (
     <tr className="vertical">
       <td className="item-name-cell">
         {
-          <SlotitemIcon slotitemId={row.api_type[3]} />
+          itemOverlay ?
+            <OverlayTrigger placement='left' overlay={itemOverlay}>
+              {slotItemIconSpan}
+            </OverlayTrigger>
+            :
+            slotItemIconSpan
         }
         {i18n.resources.__(row.api_name)}
       </td>
