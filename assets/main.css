@@ -1,68 +1,69 @@
-*, body, h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
-  font-family: "Ubuntu", "Helvetica Neue", "Helvetica", "Arial", "Heiti SC", "WenQuanYi Micro Hei", "Microsoft YaHei", sans-serif;
-}
-body {
-  font-size: 13px;
-  zoom: 0 !important;
+.item-info {
+  height: 100%;
+  overflow: auto;
 }
 
-.center {
+.item-info .table tbody tr td {
+  padding: 0;
+}
+
+.item-info .center {
   text-align: center;
 }
 
-.type-check-area {
+.item-info .type-check-area {
   display: flex;
   flex-wrap: wrap;
 }
 
-.type-check-entry {
+.item-info .type-check-entry {
   margin-right: 1em;
 }
 
-#item-info-settings .checkbox,
-#item-info-settings .form-group {
+.item-info #item-info-settings .checkbox,
+.item-info #item-info-settings .form-group {
   margin-top: 0;
   margin-bottom: 0;
 }
 
-input.checkbox {
+.item-info input.checkbox {
   vertical-align: middle;
   display: inline-block;
   top: 0;
   margin: 0;
 }
 
-img.svg {
+.item-info img.svg {
   width: 26px;
   height: 23px;
   margin: 5px 3px 4px 3px;
 }
 
-img.png {
+.item-info img.png {
   width: 36px;
   height: 36px;
 }
 
-.checkbox-right-click-hint {
+.item-info .checkbox-right-click-hint {
   margin-top: 17px;
   font-size: 80%;
   color: #aaa;
 }
 
-.lock-filter {
+.item-info .lock-filter {
   margin-bottom: 10px;
   margin-top: 10px;
 }
 
-.slot-item-table-thead .form-group {
+.item-info .slot-item-table-thead .form-group {
   margin-bottom: 0;
 }
 
-.slot-item-table-thead .name-filter {
+.item-info .slot-item-table-thead .name-filter {
   font-size: inherit;
 }
 
-.item-name-cell {
+.item-info .item-name-cell {
   padding: 0 0 0 10px;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -70,108 +71,110 @@ img.png {
   max-width: 20em;
 }
 
-.item-count-cell {
+.item-info .item-count-cell {
   min-width: 4em;
 }
 
-.equip-table {
+.item-info .equip-table {
   min-width: 12em;
 }
 
-.item-level-cell {
+.item-info .item-level-cell {
   width: 10%;
   min-width: 5em;
 }
 
-.slot-item-table-td {
+.item-info .slot-item-table-td {
   background-color: transparent;
   width: 20%;
 }
-.slot-item-table-name {
+.item-info .slot-item-table-name {
   padding-left: 10px;
 }
-.slot-item-table-thead {
+.item-info .slot-item-table-thead {
   font-size: 14px;
 }
 
-.equip-list-div {
+.item-info .equip-list-div {
   margin: 0 5px 0 5px;
   display: inline-block;
 }
 
-.item-level-span {
+.item-info .item-level-span {
   display: inline-block;
   color: #6cf;
   text-align: center;
 }
 
-.item-alv-img {
+.item-info .item-alv-img {
   width: 11px;
   height: 14px;
   vertical-align: -3px;
 }
 
-.equip-list-div-span {
+.item-info .equip-list-div-span {
   font-size: 10px;
   margin-right: 2px;
 }
 
-.item-alv-0 {
+.item-info .item-alv-0 {
   color: #888;
   font-size: 80%;
   width: 11px;
   display: inline-block;
 }
 
-.equip-list-number {
+.item-info .equip-list-number {
   font-size: 80%;
 }
 
-.unknown-shipname {
+.item-info .unknown-shipname {
   font-style: italic;
   margin-right: 1.5px;
 }
 
-#equip-table {
+.item-info .item-info #equip-table {
   background-color: transparent;
   vertical-align: middle;
   margin-bottom: 0;
 }
 
-#main-table tbody tr td {
+.item-info .item-info #main-table tbody tr td {
   vertical-align: middle;
   padding: 0;
 }
 
-#switch-btn {
+.item-info .item-info #switch-btn {
   padding: 0 5px;
   background-color: transparent;
 }
-.divider {
+.item-info .divider {
   padding-left: 15px;
   padding-right: 15px;
 }
-.divider hr {
+.item-info .divider hr {
   margin-bottom: 15.5px;
   margin-top: 11px;
   border-top: 1px solid #aaa;
 }
 
-.filter-button {
+.item-info .filter-button {
   margin-top: 10px;
   margin-bottom: 10px;
 }
-.col-xs-1, .col-sm-1, .col-md-1, .col-lg-1, .col-xs-2, .col-sm-2, .col-md-2, .col-lg-2, .col-xs-3, .col-sm-3, .col-md-3, .col-lg-3, .col-xs-4, .col-sm-4, .col-md-4, .col-lg-4, .col-xs-5, .col-sm-5, .col-md-5, .col-lg-5, .col-xs-6, .col-sm-6, .col-md-6, .col-lg-6, .col-xs-7, .col-sm-7, .col-md-7, .col-lg-7, .col-xs-8, .col-sm-8, .col-md-8, .col-lg-8, .col-xs-9, .col-sm-9, .col-md-9, .col-lg-9, .col-xs-10, .col-sm-10, .col-md-10, .col-lg-10, .col-xs-11, .col-sm-11, .col-md-11, .col-lg-11, .col-xs-12, .col-sm-12, .col-md-12, .col-lg-12 {
+.item-info .col-xs-1, .col-sm-1, .col-md-1, .col-lg-1, .col-xs-2, .col-sm-2, .col-md-2, .col-lg-2, .col-xs-3, .col-sm-3, .col-md-3, .col-lg-3, .col-xs-4, .col-sm-4, .col-md-4, .col-lg-4, .col-xs-5, .col-sm-5, .col-md-5, .col-lg-5, .col-xs-6, .col-sm-6, .col-md-6, .col-lg-6, .col-xs-7, .col-sm-7, .col-md-7, .col-lg-7, .col-xs-8, .col-sm-8, .col-md-8, .col-lg-8, .col-xs-9, .col-sm-9, .col-md-9, .col-lg-9, .col-xs-10, .col-sm-10, .col-md-10, .col-lg-10, .col-xs-11, .col-sm-11, .col-md-11, .col-lg-11, .col-xs-12, .col-sm-12, .col-md-12, .col-lg-12 {
     padding-left: 10px;
     padding-right: 10px;
 }
-::-webkit-scrollbar {
+.item-info::-webkit-scrollbar {
   width: 10px;
 }
-::-webkit-scrollbar-track {
+.item-info::-webkit-scrollbar-track {
+  border-radius: 1px;
   -webkit-border-radius: 1px;
 }
-::-webkit-scrollbar-thumb {
+.item-info::-webkit-scrollbar-thumb {
+  border-radius: 1px;
   -webkit-border-radius: 1px;
   background-color: #3d3d3d;
 }

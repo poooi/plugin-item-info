@@ -13,7 +13,8 @@ import { int2BoolArray, getLevelsFromKey } from './utils'
 import Divider from './divider'
 
 
-const { __, ROOT, i18n } = window
+const { ROOT, i18n } = window
+const { __ } = window.i18n['poi-plugin-item-info']
 
 const ShipTag = connect(
   (state, { shipId }) => ({
@@ -188,6 +189,7 @@ const ItemInfoTableArea = connect(
           const re = new RegExp(match[1], match[2])
           filterName = re.test.bind(re)
         } catch (err) {
+          // eslint-disable-next-line no-console
           console.warn(err)
         }
       }

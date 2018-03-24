@@ -1,4 +1,5 @@
 import { screen } from 'electron'
+import ItemInfoArea from './views'
 
 const { workArea } = screen.getPrimaryDisplay()
 let { x, y, width, height } = config.get('plugin.ItemInfo.bounds', workArea)
@@ -25,5 +26,5 @@ export const windowOptions = {
   height,
 }
 
-export const windowURL = `file://${__dirname}/index.html`
-export const useEnv = true
+export const reactClass = ItemInfoArea
+export const windowMode = true

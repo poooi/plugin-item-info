@@ -11,7 +11,8 @@ import Divider from './divider'
 import { iconEquipMapSelector } from './selectors'
 import { int2BoolArray, boolArray2Int } from './utils'
 
-const { __, config } = window
+const { config } = window
+const { __ } = window.i18n['poi-plugin-item-info']
 
 const ItemInfoCheckboxArea = connect(
   (state) => {
