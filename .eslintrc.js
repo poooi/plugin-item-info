@@ -1,5 +1,5 @@
 module.exports = {
-  'extends': 'airbnb',
+  'extends': ['airbnb', 'poi-plugin'],
   'plugins': [
   'react',
   'jsx-a11y',
@@ -9,11 +9,6 @@ module.exports = {
   'browser': true,
   'es6': true,
   'node': true,
-  },
-  "parserOptions": {
-    "ecmaFeatures": {
-      "jsx": true
-    }
   },
   'parser': 'babel-eslint',
   'rules': {
@@ -27,33 +22,4 @@ module.exports = {
     'camelcase': 'off',
     'no-confusing-arrow': 'off',
   },
-  'settings': {
-    'import/resolver': {
-      'node': {
-        'extensions': ['.js', '.jsx', '.es'],
-        'paths': [__dirname],
-      },
-    },
-    'import/core-modules': [
-      'bluebird',
-      'electron',
-      'react',
-      'react-redux',
-      'redux-observers',
-      'reselect',
-      'react-bootstrap',
-      'react-fontawesome',
-      'path-extra',
-      'fs-extra',
-      'lodash',
-      'cson',
-      'react-dom',
-      'redux',
-      'semver',
-  'prop-types',
-    ],
-  },
-  globals: {
-  config: false,
-  }
 }
