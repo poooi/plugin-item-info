@@ -3,7 +3,10 @@
 // 12 => '1100' => [true, true, false, false] => [true, false, false]
 // [true, false, false] => [true, true, false, false] => '1100' => 12
 export const int2BoolArray = (int = 0) => {
-  const boolArray = int.toString(2).split('').map(s => !!+s)
+  const boolArray = int
+    .toString(2)
+    .split('')
+    .map(s => !!+s)
   boolArray.shift()
   return boolArray
 }
@@ -20,5 +23,4 @@ export const getLevelsFromKey = key => ({
   level: key % 11,
 })
 
-export const getLevelKey = (alv = 0, level = 0) =>
-  (alv * 11) + level
+export const getLevelKey = (alv = 0, level = 0) => alv * 11 + level
