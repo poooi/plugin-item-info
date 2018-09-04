@@ -90,7 +90,7 @@ const ItemInfoTable = ({ row }) => {
         <span style={{ fontSize: '12px' }}>{`(${total - active})`}</span>
       </td>
       <td>
-        <Table id="equip-table">
+        <Table className="equip-table">
           <tbody>
             {Object.keys(lvCount)
               .map(key => +key)

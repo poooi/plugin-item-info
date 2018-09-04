@@ -75,13 +75,9 @@
   min-width: 4em;
 }
 
-.item-info .equip-table {
-  min-width: 12em;
-}
-
 .item-info .item-level-cell {
-  width: 10%;
-  min-width: 5em;
+  white-space: nowrap;
+  width: 7em;
 }
 
 .item-info .slot-item-table-td {
@@ -133,18 +129,25 @@
   margin-right: 1.5px;
 }
 
-.item-info .item-info #equip-table {
+.item-info .equip-table {
+  min-width: 12em;
+  margin: 0.5ex 0;
   background-color: transparent;
   vertical-align: middle;
-  margin-bottom: 0;
+  border-collapse: separate;
+  border-spacing: 1ex;
 }
 
-.item-info .item-info #main-table tbody tr td {
+.item-info .equip-table tr+tr {
+  margin-top: 1ex;
+}
+
+.item-info #main-table tbody tr td {
   vertical-align: middle;
   padding: 0;
 }
 
-.item-info .item-info #switch-btn {
+.item-info #switch-btn {
   padding: 0 5px;
   background-color: transparent;
 }
