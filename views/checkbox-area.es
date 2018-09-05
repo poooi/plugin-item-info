@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
-import { Button, Col, Grid, Row, Input, Checkbox } from 'react-bootstrap'
+import { Button, Col, Grid, Row, Checkbox } from 'react-bootstrap'
 import FontAwesome from 'react-fontawesome'
 import { get } from 'lodash'
 import PropTypes from 'prop-types'
@@ -96,14 +96,15 @@ const ItemInfoCheckboxArea = connect(state => {
                     className="type-check-entry"
                     onContextMenu={this.handleClickCheckContext(index)}
                   >
-                    <Input
+                    <Checkbox
                       className="checkbox"
                       type="checkbox"
                       value={index}
-                      label={<SlotitemIcon slotitemId={index + 1} />}
                       onChange={this.handleClickCheck(index)}
                       checked={type[index]}
-                    />
+                    >
+                      <SlotitemIcon slotitemId={index + 1} />
+                    </Checkbox>
                   </div>
                 ))}
             </Row>
