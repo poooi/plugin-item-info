@@ -1,6 +1,7 @@
 .item-info {
   height: 100%;
   overflow: auto;
+  margin-top: 1em;
 }
 
 .item-info .table tbody tr td {
@@ -53,6 +54,10 @@
 .item-info .lock-filter {
   margin-bottom: 10px;
   margin-top: 10px;
+}
+
+.item-info #item-info-area {
+  margin: 0 2em;
 }
 
 .item-info .slot-item-table-thead .form-group {

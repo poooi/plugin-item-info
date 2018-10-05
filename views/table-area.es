@@ -1,11 +1,5 @@
 import React, { Component } from 'react'
-import {
-  Grid,
-  Table,
-  FormControl,
-  OverlayTrigger,
-  Tooltip,
-} from 'react-bootstrap'
+import { Table, FormControl, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { get, map, flatten, sortBy } from 'lodash'
 import path from 'path'
@@ -256,7 +250,7 @@ class ItemInfoTableArea extends Component {
     return (
       <div id="item-info-show">
         <Divider text={t('Equipment Info')} />
-        <Grid id="item-info-area">
+        <div id="item-info-area">
           <Table striped condensed hover id="main-table">
             <thead className="slot-item-table-thead">
               <tr>
@@ -283,7 +277,7 @@ class ItemInfoTableArea extends Component {
               ))}
             </tbody>
           </Table>
-        </Grid>
+        </div>
       </div>
     )
   }
