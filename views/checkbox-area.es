@@ -4,6 +4,7 @@ import { Button, Col, Grid, Row, Checkbox } from 'react-bootstrap'
 import FontAwesome from 'react-fontawesome'
 import { get } from 'lodash'
 import PropTypes from 'prop-types'
+import { translate } from 'react-i18next'
 
 import { SlotitemIcon } from 'views/components/etc/icon'
 import Divider from './divider'
@@ -12,9 +13,9 @@ import { iconEquipMapSelector } from './selectors'
 import { int2BoolArray, boolArray2Int } from './utils'
 
 const { config } = window
-const { __ } = window.i18n['poi-plugin-item-info']
 
-const ItemInfoCheckboxArea = connect(state => {
+@translate(['poi-plugin-item-info'])
+@connect(state => {
   const iconEquipMap = iconEquipMapSelector(state)
   let type = int2BoolArray(get(state, 'config.plugin.ItemInfo.type'))
   if (type.length !== Object.keys(iconEquipMap).length) {
@@ -26,145 +27,145 @@ const ItemInfoCheckboxArea = connect(state => {
     type,
     lock: int2BoolArray(get(state, 'config.plugin.ItemInfo.lock', 7)),
   }
-})(
-  class ItemInfoCheckboxArea extends PureComponent {
-    static propTypes = {
-      iconEquipMap: PropTypes.objectOf(PropTypes.array).isRequired,
-      type: PropTypes.arrayOf(PropTypes.bool).isRequired,
-      lock: PropTypes.arrayOf(PropTypes.bool).isRequired,
-    }
+})
+class ItemInfoCheckboxArea extends PureComponent {
+  static propTypes = {
+    iconEquipMap: PropTypes.objectOf(PropTypes.array).isRequired,
+    type: PropTypes.arrayOf(PropTypes.bool).isRequired,
+    lock: PropTypes.arrayOf(PropTypes.bool).isRequired,
+    t: PropTypes.func.isRequired,
+  }
 
-    saveConfig = (name, value) => {
-      config.set(`plugin.ItemInfo.${name}`, value)
-    }
+  saveConfig = (name, value) => {
+    config.set(`plugin.ItemInfo.${name}`, value)
+  }
 
-    handleClickCheck = index => () => {
-      const type = this.props.type.slice()
-      type[index] = !type[index]
+  handleClickCheck = index => () => {
+    const type = this.props.type.slice()
+    type[index] = !type[index]
 
-      this.saveConfig('type', boolArray2Int(type))
-    }
+    this.saveConfig('type', boolArray2Int(type))
+  }
 
-    handleClickCheckContext = index => () => {
-      const type = this.props.type.slice()
-      type.fill(false)
-      type[index] = true
+  handleClickCheckContext = index => () => {
+    const type = this.props.type.slice()
+    type.fill(false)
+    type[index] = true
 
-      this.saveConfig('type', boolArray2Int(type))
-    }
+    this.saveConfig('type', boolArray2Int(type))
+  }
 
-    handleClickCheckAll = () => {
-      const type = this.props.type.slice()
-      type.fill(true)
+  handleClickCheckAll = () => {
+    const type = this.props.type.slice()
+    type.fill(true)
 
-      this.saveConfig('type', boolArray2Int(type))
-    }
+    this.saveConfig('type', boolArray2Int(type))
+  }
 
-    handleClickCheckboxNone = () => {
-      const type = this.props.type.slice()
-      type.fill(false)
+  handleClickCheckboxNone = () => {
+    const type = this.props.type.slice()
+    type.fill(false)
 
-      this.saveConfig('type', boolArray2Int(type))
-    }
+    this.saveConfig('type', boolArray2Int(type))
+  }
 
-    handleLockFilter = () => {
-      const lock = this.props.lock.slice()
-      lock[0] = !lock[0]
+  handleLockFilter = () => {
+    const lock = this.props.lock.slice()
+    lock[0] = !lock[0]
 
-      this.saveConfig('lock', boolArray2Int(lock))
-    }
+    this.saveConfig('lock', boolArray2Int(lock))
+  }
 
-    handleUnlockFilter = () => {
-      const lock = this.props.lock.slice()
-      lock[1] = !lock[1]
+  handleUnlockFilter = () => {
+    const lock = this.props.lock.slice()
+    lock[1] = !lock[1]
 
-      this.saveConfig('lock', boolArray2Int(lock))
-    }
+    this.saveConfig('lock', boolArray2Int(lock))
+  }
 
-    render() {
-      const { iconEquipMap, type, lock } = this.props
-      return (
-        <div id="item-info-settings">
-          <Divider text={__('Filter Setting')} />
-          <Grid id="item-info-filter">
-            <Row className="type-check-area">
-              {Object.keys(iconEquipMap)
-                .map(str => +str)
-                .map((key, index) => (
-                  <div
-                    key={key}
-                    className="type-check-entry"
-                    onContextMenu={this.handleClickCheckContext(index)}
+  render() {
+    const { iconEquipMap, type, lock, t } = this.props
+    return (
+      <div id="item-info-settings">
+        <Divider text={t('Filter Setting')} />
+        <Grid id="item-info-filter">
+          <Row className="type-check-area">
+            {Object.keys(iconEquipMap)
+              .map(str => +str)
+              .map((key, index) => (
+                <div
+                  key={key}
+                  className="type-check-entry"
+                  onContextMenu={this.handleClickCheckContext(index)}
+                >
+                  <Checkbox
+                    className="checkbox"
+                    type="checkbox"
+                    value={index}
+                    onChange={this.handleClickCheck(index)}
+                    checked={type[index]}
                   >
-                    <Checkbox
-                      className="checkbox"
-                      type="checkbox"
-                      value={index}
-                      onChange={this.handleClickCheck(index)}
-                      checked={type[index]}
-                    >
-                      <SlotitemIcon slotitemId={index + 1} />
-                    </Checkbox>
-                  </div>
-                ))}
-            </Row>
+                    <SlotitemIcon slotitemId={index + 1} />
+                  </Checkbox>
+                </div>
+              ))}
+          </Row>
 
-            <Row>
-              <Col xs={2}>
-                <Button
-                  className="filter-button"
-                  bsStyle="default"
-                  bsSize="small"
-                  onClick={this.handleClickCheckAll}
-                  block
-                >
-                  {__('Select All')}
-                </Button>
+          <Row>
+            <Col xs={2}>
+              <Button
+                className="filter-button"
+                bsStyle="default"
+                bsSize="small"
+                onClick={this.handleClickCheckAll}
+                block
+              >
+                {t('Select All')}
+              </Button>
+            </Col>
+            <Col xs={2}>
+              <Button
+                className="filter-button"
+                bsStyle="default"
+                bsSize="small"
+                onClick={this.handleClickCheckboxNone}
+                block
+              >
+                {t('Deselect All')}
+              </Button>
+            </Col>
+            {!config.get('plugin.ItemInfo.hideCheckboxHint', false) && (
+              <Col xs={8} className="checkbox-right-click-hint">
+                {t('Right click a checkbox to select it only')}
               </Col>
-              <Col xs={2}>
-                <Button
-                  className="filter-button"
-                  bsStyle="default"
-                  bsSize="small"
-                  onClick={this.handleClickCheckboxNone}
-                  block
-                >
-                  {__('Deselect All')}
-                </Button>
-              </Col>
-              {!config.get('plugin.ItemInfo.hideCheckboxHint', false) && (
-                <Col xs={8} className="checkbox-right-click-hint">
-                  {__('Right click a checkbox to select it only')}
-                </Col>
-              )}
-            </Row>
-            <Row className="lock-filter">
-              <Col xs={1}>
-                <Checkbox
-                  inline
-                  className="checkbox"
-                  onChange={this.handleLockFilter}
-                  checked={lock[0]}
-                >
-                  <FontAwesome name="lock" />
-                </Checkbox>
-              </Col>
-              <Col xs={1}>
-                <Checkbox
-                  inline
-                  className="checkbox"
-                  onChange={this.handleUnlockFilter}
-                  checked={lock[1]}
-                >
-                  <FontAwesome name="unlock" />
-                </Checkbox>
-              </Col>
-            </Row>
-          </Grid>
-        </div>
-      )
-    }
-  },
-)
+            )}
+          </Row>
+          <Row className="lock-filter">
+            <Col xs={1}>
+              <Checkbox
+                inline
+                className="checkbox"
+                onChange={this.handleLockFilter}
+                checked={lock[0]}
+              >
+                <FontAwesome name="lock" />
+              </Checkbox>
+            </Col>
+            <Col xs={1}>
+              <Checkbox
+                inline
+                className="checkbox"
+                onChange={this.handleUnlockFilter}
+                checked={lock[1]}
+              >
+                <FontAwesome name="unlock" />
+              </Checkbox>
+            </Col>
+          </Row>
+        </Grid>
+      </div>
+    )
+  }
+}
 
 export default ItemInfoCheckboxArea

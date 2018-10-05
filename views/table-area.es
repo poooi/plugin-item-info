@@ -10,6 +10,8 @@ import { connect } from 'react-redux'
 import { get, map, flatten, sortBy } from 'lodash'
 import path from 'path'
 import PropTypes from 'prop-types'
+import { translate } from 'react-i18next'
+import { compose } from 'redux'
 
 import { SlotitemIcon } from 'views/components/etc/icon'
 import { getItemData } from 'views/components/ship/slotitems-data'
@@ -23,20 +25,22 @@ import {
 import { int2BoolArray, getLevelsFromKey } from './utils'
 import Divider from './divider'
 
-const { ROOT, i18n } = window
-const { __ } = window.i18n['poi-plugin-item-info']
+const { ROOT } = window
 
-const ShipTag = connect((state, { shipId }) => ({
-  ship:
-    shipId > 0
-      ? reduceShipDataSelectorFactory(shipId)(state)
-      : reduceAirbaseSelectorFactory(-shipId - 1)(state),
-}))(({ ship: { level, name, area }, count }) => (
+const ShipTag = compose(
+  translate(['resources']),
+  connect((state, { shipId }) => ({
+    ship:
+      shipId > 0
+        ? reduceShipDataSelectorFactory(shipId)(state)
+        : reduceAirbaseSelectorFactory(-shipId - 1)(state),
+  })),
+)(({ ship: { level, name, area }, count, t }) => (
   <div className="equip-list-div">
     {level > 0 && <span className="equip-list-div-span">Lv.{level}</span>}
     <span className="known-ship-name">
       {area && `[${area}]`}
-      {i18n.resources.__(name)}
+      {t(name)}
     </span>
     {count > 1 && <span className="equip-list-number">×{count}</span>}
   </div>
@@ -56,7 +60,7 @@ ShipTag.WrappedComponent.propTypes = {
   count: PropTypes.number.isRequired,
 }
 
-const ItemInfoTable = ({ row }) => {
+const ItemInfoTable = ({ row, t }) => {
   const { total, active, lvCount, lvShip, hasAlv, hasLevel } = row
 
   const itemData = getItemData(row).map(
@@ -83,7 +87,7 @@ const ItemInfoTable = ({ row }) => {
         ) : (
           slotItemIconSpan
         )}
-        {i18n.resources.__(row.api_name)}
+        {t(row.api_name, { keySeparator: 'chiba' })}
       </td>
       <td className="item-count-cell">
         {`${total} `}
@@ -174,11 +178,15 @@ const rowShape = PropTypes.shape({
 
 ItemInfoTable.propTypes = {
   row: rowShape.isRequired,
+  t: PropTypes.func.isRequired,
 }
+
+const TranslatedItemInfoTable = translate(['resources'])(ItemInfoTable)
 
 const alwaysTrue = () => true
 
-const ItemInfoTableArea = connect(state => {
+@translate(['poi-plugin-item-info'])
+@connect(state => {
   const iconEquipMap = iconEquipMapSelector(state)
   let type = int2BoolArray(get(state, 'config.plugin.ItemInfo.type'))
   if (type.length !== Object.keys(iconEquipMap).length) {
@@ -193,93 +201,92 @@ const ItemInfoTableArea = connect(state => {
     equips,
     rows: rowsSelector(state),
   }
-})(
-  class ItemInfoTableArea extends Component {
-    static propTypes = {
-      equips: PropTypes.arrayOf(PropTypes.number).isRequired,
-      rows: PropTypes.arrayOf(rowShape).isRequired,
-    }
+})
+class ItemInfoTableArea extends Component {
+  static propTypes = {
+    equips: PropTypes.arrayOf(PropTypes.number).isRequired,
+    rows: PropTypes.arrayOf(rowShape).isRequired,
+    t: PropTypes.func.isRequired,
+  }
 
-    constructor(props) {
-      super(props)
-      this.state = {
-        filterName: alwaysTrue,
-      }
+  constructor(props) {
+    super(props)
+    this.state = {
+      filterName: alwaysTrue,
     }
-    handleFilterNameChange = e => {
-      const key = e.target.value
-      let filterName
-      if (key) {
-        filterName = null
-        const match = key.match(/^\/(.+)\/([gim]*)$/)
-        if (match != null) {
-          try {
-            const re = new RegExp(match[1], match[2])
-            filterName = re.test.bind(re)
-          } catch (err) {
-            // eslint-disable-next-line no-console
-            console.warn(err)
-          }
+  }
+  handleFilterNameChange = e => {
+    const key = e.target.value
+    let filterName
+    if (key) {
+      filterName = null
+      const match = key.match(/^\/(.+)\/([gim]*)$/)
+      if (match != null) {
+        try {
+          const re = new RegExp(match[1], match[2])
+          filterName = re.test.bind(re)
+        } catch (err) {
+          // eslint-disable-next-line no-console
+          console.warn(err)
         }
-        if (filterName === null) {
-          filterName = name => name.indexOf(key) >= 0
-        }
-      } else {
-        filterName = alwaysTrue
       }
-      this.setState({
-        filterName,
-      })
+      if (filterName === null) {
+        filterName = name => name.indexOf(key) >= 0
+      }
+    } else {
+      filterName = alwaysTrue
     }
-    displayedRows = () => {
-      const { filterName } = this.state
-      const { equips } = this.props
-      const rows = this.props.rows.filter(
-        row =>
-          filterName(row.api_name) &&
-          row.total > 0 &&
-          equips.includes(row.api_id),
-      )
-      return sortBy(rows, ['api_type.3', 'api_id'])
-    }
-    render() {
-      return (
-        <div id="item-info-show">
-          <Divider text={__('Equipment Info')} />
-          <Grid id="item-info-area">
-            <Table striped condensed hover id="main-table">
-              <thead className="slot-item-table-thead">
-                <tr>
-                  <th className="center" style={{ width: '25%' }}>
-                    <FormControl
-                      className="name-filter"
-                      type="text"
-                      placeholder={__('Name')}
-                      onChange={this.handleFilterNameChange}
-                    />
-                  </th>
-                  <th className="center" style={{ width: '9%' }}>
-                    {__('Total')}
-                    <span style={{ fontSize: '11px' }}>{`(${__(
-                      'rest',
-                    )})`}</span>
-                  </th>
-                  <th className="center" style={{ width: '66%' }}>
-                    {__('State')}
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {this.displayedRows().map(row => (
-                  <ItemInfoTable key={row.api_id} row={row} />
-                ))}
-              </tbody>
-            </Table>
-          </Grid>
-        </div>
-      )
-    }
-  },
-)
+    this.setState({
+      filterName,
+    })
+  }
+  displayedRows = () => {
+    const { filterName } = this.state
+    const { equips } = this.props
+    const rows = this.props.rows.filter(
+      row =>
+        filterName(row.api_name) &&
+        row.total > 0 &&
+        equips.includes(row.api_id),
+    )
+    return sortBy(rows, ['api_type.3', 'api_id'])
+  }
+  render() {
+    const { t } = this.props
+    return (
+      <div id="item-info-show">
+        <Divider text={t('Equipment Info')} />
+        <Grid id="item-info-area">
+          <Table striped condensed hover id="main-table">
+            <thead className="slot-item-table-thead">
+              <tr>
+                <th className="center" style={{ width: '25%' }}>
+                  <FormControl
+                    className="name-filter"
+                    type="text"
+                    placeholder={t('Name')}
+                    onChange={this.handleFilterNameChange}
+                  />
+                </th>
+                <th className="center" style={{ width: '9%' }}>
+                  {t('Total')}
+                  <span style={{ fontSize: '11px' }}>{`(${t('rest')})`}</span>
+                </th>
+                <th className="center" style={{ width: '66%' }}>
+                  {t('State')}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {this.displayedRows().map(row => (
+                <TranslatedItemInfoTable key={row.api_id} row={row} />
+              ))}
+            </tbody>
+          </Table>
+        </Grid>
+      </div>
+    )
+  }
+}
 
 export default ItemInfoTableArea
