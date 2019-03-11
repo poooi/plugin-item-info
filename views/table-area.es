@@ -45,14 +45,14 @@ ShipTag.propTypes = {
   count: PropTypes.number.isRequired,
 }
 
-ShipTag.WrappedComponent.propTypes = {
-  ship: PropTypes.shape({
-    level: PropTypes.number,
-    name: PropTypes.string.isRequired,
-    area: PropTypes.string,
-  }).isRequired,
-  count: PropTypes.number.isRequired,
-}
+// ShipTag.WrappedComponent.propTypes = {
+//   ship: PropTypes.shape({
+//     level: PropTypes.number,
+//     name: PropTypes.string.isRequired,
+//     area: PropTypes.string,
+//   }).isRequired,
+//   count: PropTypes.number.isRequired,
+// }
 
 const ItemInfoTable = ({ row, t }) => {
   const { total, active, lvCount, lvShip, hasAlv, hasLevel } = row
