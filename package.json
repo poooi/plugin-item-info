@@ -40,7 +40,7 @@
     }
   },
   "devDependencies": {
-    "@commitlint/cli": "^7.0.0",
+    "@commitlint/cli": "^8.1.0",
     "@commitlint/config-conventional": "^7.0.1",
     "babel-eslint": "=8.2.1",
     "eslint": "^4.19.1",
@@ -53,7 +53,7 @@
     "eslint-plugin-react": "^7.9.1",
     "husky": "^1.0.0-rc.13",
     "lint-staged": "^7.2.0",
-    "poi-util-transpile": "^8.2.2",
+    "poi-util-transpile": "^10.3.4",
     "prettier": "^1.13.5"
   },
   "husky": {
