@@ -1,6 +1,7 @@
-import { screen } from 'electron'
+import { remote } from 'electron'
 import ItemInfoArea from './views'
 
+const { screen } = remote
 const { workArea } = screen.getPrimaryDisplay()
 const bounds = config.get('plugin.ItemInfo.bounds', workArea)
 
