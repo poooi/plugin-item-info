@@ -209,6 +209,7 @@ class ItemInfoTableArea extends Component {
       filterName: alwaysTrue,
     }
   }
+
   handleFilterNameChange = e => {
     const key = e.target.value
     let filterName
@@ -234,6 +235,7 @@ class ItemInfoTableArea extends Component {
       filterName,
     })
   }
+
   displayedRows = () => {
     const { filterName } = this.state
     const { equips } = this.props
@@ -245,6 +247,7 @@ class ItemInfoTableArea extends Component {
     )
     return sortBy(rows, ['api_type.3', 'api_id'])
   }
+
   render() {
     const { t } = this.props
     return (

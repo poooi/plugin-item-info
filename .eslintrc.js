@@ -18,5 +18,7 @@ module.exports = {
     camelcase: 'off',
     'no-confusing-arrow': 'off',
     'prettier/prettier': 'error',
+    'react/static-property-placement': 'off',
+    'react/destructuring-assignment': 'off',
   },
 }

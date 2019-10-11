@@ -36,16 +36,19 @@ export const iconEquipMapSelector = createSelector(
 
 // for equips on kanmusus
 // equip.api_id: ship.api_id
-const equipShipMapSelector = createSelector([shipsSelector], _ships => {
-  const shipEquipsMap = mapValues(_ships, ship =>
-    ship.api_slot.concat(ship.api_slot_ex).filter(id => id > 0),
-  )
+const equipShipMapSelector = createSelector(
+  [shipsSelector],
+  _ships => {
+    const shipEquipsMap = mapValues(_ships, ship =>
+      ship.api_slot.concat(ship.api_slot_ex).filter(id => id > 0),
+    )
 
-  const equipShipMap = fromPairs(
-    flatMap(shipEquipsMap, (equips, id) => map(equips, equip => [equip, id])),
-  )
-  return equipShipMap
-})
+    const equipShipMap = fromPairs(
+      flatMap(shipEquipsMap, (equips, id) => map(equips, equip => [equip, id])),
+    )
+    return equipShipMap
+  },
+)
 
 // we use negative values to store airbase index + 1
 const equipAirbaseMapSelector = createSelector(
