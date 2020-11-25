@@ -91,9 +91,9 @@ const ItemInfoTable = ({ row, t }) => {
         <Table className="equip-table">
           <tbody>
             {Object.keys(lvCount)
-              .map(key => +key)
+              .map((key) => +key)
               .sort((a, b) => a - b)
-              .map(key => {
+              .map((key) => {
                 const { alv, level } = getLevelsFromKey(key)
                 const count = lvCount[key]
                 let alvPrefix
@@ -139,9 +139,9 @@ const ItemInfoTable = ({ row, t }) => {
                     <td>
                       {countByShip &&
                         Object.keys(countByShip)
-                          .map(id => +id)
+                          .map((id) => +id)
                           .map(
-                            shipId =>
+                            (shipId) =>
                               shipId !== 0 && (
                                 <ShipTag
                                   key={shipId}
@@ -168,6 +168,9 @@ const rowShape = PropTypes.shape({
   lvShip: PropTypes.objectOf(PropTypes.objectOf(PropTypes.number)).isRequired,
   hasAlv: PropTypes.bool.isRequired,
   hasLevel: PropTypes.bool.isRequired,
+  api_id: PropTypes.number.isRequired,
+  api_name: PropTypes.string.isRequired,
+  api_type: PropTypes.arrayOf(PropTypes.number).isRequired,
 })
 
 ItemInfoTable.propTypes = {
@@ -180,11 +183,11 @@ const TranslatedItemInfoTable = translate(['resources'])(ItemInfoTable)
 const alwaysTrue = () => true
 
 @translate(['poi-plugin-item-info'])
-@connect(state => {
+@connect((state) => {
   const iconEquipMap = iconEquipMapSelector(state)
   let type = int2BoolArray(get(state, 'config.plugin.ItemInfo.type'))
 
-  const expectedLength = max(map(keys(iconEquipMap), id => +id)) + 1
+  const expectedLength = max(map(keys(iconEquipMap), (id) => +id)) + 1
   if (type.length !== expectedLength) {
     type = Array.from({ length: expectedLength }).fill(true)
   }
@@ -212,7 +215,7 @@ class ItemInfoTableArea extends Component {
     }
   }
 
-  handleFilterNameChange = e => {
+  handleFilterNameChange = (e) => {
     const key = e.target.value
     let filterName
     if (key) {
@@ -228,7 +231,7 @@ class ItemInfoTableArea extends Component {
         }
       }
       if (filterName === null) {
-        filterName = name => name.indexOf(key) >= 0
+        filterName = (name) => name.indexOf(key) >= 0
       }
     } else {
       filterName = alwaysTrue
@@ -242,7 +245,7 @@ class ItemInfoTableArea extends Component {
     const { filterName } = this.state
     const { equips } = this.props
     const rows = this.props.rows.filter(
-      row =>
+      (row) =>
         filterName(row.api_name) &&
         row.total > 0 &&
         equips.includes(row.api_id),
@@ -277,7 +280,7 @@ class ItemInfoTableArea extends Component {
               </tr>
             </thead>
             <tbody>
-              {this.displayedRows().map(row => (
+              {this.displayedRows().map((row) => (
                 <TranslatedItemInfoTable key={row.api_id} row={row} />
               ))}
             </tbody>

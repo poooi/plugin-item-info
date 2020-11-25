@@ -6,7 +6,7 @@ export const int2BoolArray = (int = 0) => {
   const boolArray = int
     .toString(2)
     .split('')
-    .map(s => !!+s)
+    .map((s) => !!+s)
   boolArray.shift()
   return boolArray
 }
@@ -14,11 +14,11 @@ export const int2BoolArray = (int = 0) => {
 export const boolArray2Int = (boolArray = []) => {
   const arr = boolArray.slice()
   arr.unshift(true)
-  const str = arr.map(bool => +bool).join('')
+  const str = arr.map((bool) => +bool).join('')
   return parseInt(str, 2)
 }
 
-export const getLevelsFromKey = key => ({
+export const getLevelsFromKey = (key) => ({
   alv: Math.floor(key / 11),
   level: key % 11,
 })
