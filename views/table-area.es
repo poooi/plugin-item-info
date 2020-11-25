@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Table, FormControl, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { connect } from 'react-redux'
-import { get, map, flatten, sortBy } from 'lodash'
+import { get, map, flatten, sortBy, max, keys } from 'lodash'
 import path from 'path'
 import PropTypes from 'prop-types'
 import { translate } from 'react-i18next'
@@ -183,12 +183,14 @@ const alwaysTrue = () => true
 @connect(state => {
   const iconEquipMap = iconEquipMapSelector(state)
   let type = int2BoolArray(get(state, 'config.plugin.ItemInfo.type'))
-  if (type.length !== Object.keys(iconEquipMap).length) {
-    type = Object.keys(iconEquipMap).fill(true)
+
+  const expectedLength = max(map(keys(iconEquipMap), id => +id)) + 1
+  if (type.length !== expectedLength) {
+    type = Array.from({ length: expectedLength }).fill(true)
   }
 
   const equips = flatten(
-    map(type, (checked, index) => (checked ? iconEquipMap[index + 1] : [])),
+    map(type, (checked, index) => (checked ? iconEquipMap[index] || [] : [])),
   )
 
   return {

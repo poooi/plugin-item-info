@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import { Button, Col, Grid, Row, Checkbox } from 'react-bootstrap'
 import FontAwesome from 'react-fontawesome'
-import { get } from 'lodash'
+import { get, map, keys, max } from 'lodash'
 import PropTypes from 'prop-types'
 import { translate } from 'react-i18next'
 
@@ -18,8 +18,10 @@ const { config } = window
 @connect(state => {
   const iconEquipMap = iconEquipMapSelector(state)
   let type = int2BoolArray(get(state, 'config.plugin.ItemInfo.type'))
-  if (type.length !== Object.keys(iconEquipMap).length) {
-    type = Object.keys(iconEquipMap).fill(true)
+
+  const expectedLength = max(map(keys(iconEquipMap), id => +id)) + 1
+  if (type.length !== expectedLength) {
+    type = Array.from({ length: expectedLength }).fill(true)
   }
 
   return {
@@ -90,25 +92,23 @@ class ItemInfoCheckboxArea extends PureComponent {
         <Divider text={t('Filter Setting')} />
         <Grid id="item-info-filter">
           <Row className="type-check-area">
-            {Object.keys(iconEquipMap)
-              .map(str => +str)
-              .map((key, index) => (
-                <div
-                  key={key}
-                  className="type-check-entry"
-                  onContextMenu={this.handleClickCheckContext(index)}
+            {map(iconEquipMap, (_, id) => (
+              <div
+                key={id}
+                className="type-check-entry"
+                onContextMenu={this.handleClickCheckContext(id)}
+              >
+                <Checkbox
+                  className="checkbox"
+                  type="checkbox"
+                  value={id}
+                  onChange={this.handleClickCheck(id)}
+                  checked={type[id]}
                 >
-                  <Checkbox
-                    className="checkbox"
-                    type="checkbox"
-                    value={index}
-                    onChange={this.handleClickCheck(index)}
-                    checked={type[index]}
-                  >
-                    <SlotitemIcon slotitemId={index + 1} />
-                  </Checkbox>
-                </div>
-              ))}
+                  <SlotitemIcon slotitemId={+id} />
+                </Checkbox>
+              </div>
+            ))}
           </Row>
 
           <Row>
