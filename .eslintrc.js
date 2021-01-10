@@ -20,5 +20,6 @@ module.exports = {
     'prettier/prettier': 'error',
     'react/static-property-placement': 'off',
     'react/destructuring-assignment': 'off',
+    'import/prefer-default-export': 'off',
   },
 }
