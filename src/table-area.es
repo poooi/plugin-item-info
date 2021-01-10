@@ -7,9 +7,9 @@ import PropTypes from 'prop-types'
 import { translate } from 'react-i18next'
 import { compose } from 'redux'
 
-import { SlotitemIcon } from 'views/components/etc/icon'
 import { getItemData } from 'views/components/ship/slotitems-data'
 
+import { ItemIcon } from './common-styled'
 import {
   rowsSelector,
   iconEquipMapSelector,
@@ -67,7 +67,7 @@ const ItemInfoTable = ({ row, t }) => {
   )
   const slotItemIconSpan = (
     <span>
-      <SlotitemIcon slotitemId={row.api_type[3]} />
+      <ItemIcon slotitemId={row.api_type[3]} />
     </span>
   )
 

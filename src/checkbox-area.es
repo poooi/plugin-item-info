@@ -1,18 +1,61 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
-import { Button, Col, Grid, Row, Checkbox } from 'react-bootstrap'
+import { Button } from '@blueprintjs/core'
 import FontAwesome from 'react-fontawesome'
 import { get, map, keys, max } from 'lodash'
 import PropTypes from 'prop-types'
 import { translate } from 'react-i18next'
+import styled from 'styled-components'
+import { rgba } from 'polished'
 
-import { SlotitemIcon } from 'views/components/etc/icon'
-import Divider from './divider'
+import { ItemIcon } from './common-styled'
 
 import { iconEquipMapSelector } from './selectors'
 import { int2BoolArray, boolArray2Int } from './utils'
 
 const { config } = window
+
+const ItemList = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+`
+
+const ItemEntry = styled.div`
+  img {
+    cursor: pointer;
+  }
+  width: 36px;
+  height: 36px;
+  margin: 2px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  background-color: ${({ checked, theme = {} }) =>
+    checked ? rgba(theme.GREEN1, 0.7) : rgba('black', 0.3)};
+`
+
+const FilterEntry = styled(ItemEntry)`
+  background-color: ${({ checked, theme = {} }) =>
+    checked ? rgba(theme.BLUE1, 0.7) : rgba('black', 0.3)};
+`
+
+const ControlArea = styled.div`
+  margin-top: 0.5rem;
+  display: flex;
+  align-items: center;
+
+  button {
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+`
+
+const HR = styled.hr`
+  display: block;
+`
 
 @translate(['poi-plugin-item-info'])
 @connect(state => {
@@ -93,80 +136,53 @@ class ItemInfoCheckboxArea extends PureComponent {
     const { iconEquipMap, type, lock, t } = this.props
     return (
       <div id="item-info-settings">
-        <Divider text={t('Filter Setting')} />
-        <Grid id="item-info-filter">
-          <Row className="type-check-area">
+        <div id="item-info-filter">
+          <ItemList className="type-check-area">
             {map(iconEquipMap, (_, id) => (
-              <div
+              <ItemEntry
                 key={id}
                 className="type-check-entry"
                 onContextMenu={this.handleClickCheckContext(id)}
+                onClick={this.handleClickCheck(id)}
+                checked={type[id]}
               >
-                <Checkbox
-                  className="checkbox"
-                  type="checkbox"
-                  value={id}
-                  onChange={this.handleClickCheck(id)}
-                  checked={type[id]}
-                >
-                  <SlotitemIcon slotitemId={+id} />
-                </Checkbox>
-              </div>
+                <ItemIcon slotitemId={+id} />
+              </ItemEntry>
             ))}
-          </Row>
+          </ItemList>
 
-          <Row>
-            <Col xs={2}>
-              <Button
-                className="filter-button"
-                bsStyle="default"
-                bsSize="small"
-                onClick={this.handleClickCheckAll}
-                block
-              >
-                {t('Select All')}
-              </Button>
-            </Col>
-            <Col xs={2}>
-              <Button
-                className="filter-button"
-                bsStyle="default"
-                bsSize="small"
-                onClick={this.handleClickCheckboxNone}
-                block
-              >
-                {t('Deselect All')}
-              </Button>
-            </Col>
+          <HR />
+
+          <ControlArea>
+            <FilterEntry onClick={this.handleLockFilter} checked={lock[0]}>
+              <FontAwesome name="lock" />
+            </FilterEntry>
+            <FilterEntry onClick={this.handleUnlockFilter} checked={lock[1]}>
+              <FontAwesome name="unlock" />
+            </FilterEntry>
+            <Button
+              className="filter-button"
+              onClick={this.handleClickCheckAll}
+              minimal
+            >
+              {t('Select All')}
+            </Button>
+
+            <Button
+              className="filter-button"
+              onClick={this.handleClickCheckboxNone}
+              minimal
+            >
+              {t('Deselect All')}
+            </Button>
+
             {!config.get('plugin.ItemInfo.hideCheckboxHint', false) && (
-              <Col xs={8} className="checkbox-right-click-hint">
+              <div xs={8} className="checkbox-right-click-hint">
                 {t('Right click a checkbox to select it only')}
-              </Col>
+              </div>
             )}
-          </Row>
-          <Row className="lock-filter">
-            <Col xs={1}>
-              <Checkbox
-                inline
-                className="checkbox"
-                onChange={this.handleLockFilter}
-                checked={lock[0]}
-              >
-                <FontAwesome name="lock" />
-              </Checkbox>
-            </Col>
-            <Col xs={1}>
-              <Checkbox
-                inline
-                className="checkbox"
-                onChange={this.handleUnlockFilter}
-                checked={lock[1]}
-              >
-                <FontAwesome name="unlock" />
-              </Checkbox>
-            </Col>
-          </Row>
-        </Grid>
+          </ControlArea>
+        </div>
       </div>
     )
   }
