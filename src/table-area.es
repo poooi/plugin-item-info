@@ -1,11 +1,14 @@
 import React, { Component } from 'react'
-import { Table, FormControl, OverlayTrigger, Tooltip } from 'react-bootstrap'
+import { FormControl, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { get, map, flatten, sortBy, max, keys } from 'lodash'
 import path from 'path'
 import PropTypes from 'prop-types'
 import { translate } from 'react-i18next'
 import { compose } from 'redux'
+import { HTMLTable } from '@blueprintjs/core'
+import styled from 'styled-components'
+import { rgba } from 'polished'
 
 import { getItemData } from 'views/components/ship/slotitems-data'
 
@@ -17,9 +20,47 @@ import {
   reduceAirbaseSelectorFactory,
 } from './selectors'
 import { int2BoolArray, getLevelsFromKey } from './utils'
-import Divider from './divider'
 
 const { ROOT } = window
+
+const ItemCount = styled.div`
+  min-width: 3em;
+`
+
+const ItemSubCategory = styled.div`
+  display: flex;
+  align-items: center;
+
+  & + & {
+    margin-top: 1em;
+  }
+`
+
+const ItemSubCategoryCount = styled.div`
+  min-width: 5em;
+
+  img {
+    width: 16px;
+    height: 16px;
+  }
+`
+
+const ShipTags = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+`
+
+const ShipTagContainer = styled.div`
+  margin: 0.5ex;
+  padding: 0.5ex;
+  border-radius: 4px;
+  background-color: ${rgba('black', 0.5)};
+`
+
+const ShipEquipCount = styled.span`
+  color: ${({ theme = {} }) => theme.BLUE4};
+  font-weight: bold;
+`
 
 const ShipTag = compose(
   translate(['resources']),
@@ -30,14 +71,14 @@ const ShipTag = compose(
         : reduceAirbaseSelectorFactory(-shipId - 1)(state),
   })),
 )(({ ship: { level, name, area }, count, t }) => (
-  <div className="equip-list-div">
-    {level > 0 && <span className="equip-list-div-span">Lv.{level}</span>}
+  <ShipTagContainer>
+    {level > 0 && <span className="equip-list-div-span">Lv.{level}</span>}{' '}
     <span className="known-ship-name">
       {area && `[${area}]`}
       {t(name)}
     </span>
-    {count > 1 && <span className="equip-list-number">×{count}</span>}
-  </div>
+    {count > 1 && <ShipEquipCount>×{count}</ShipEquipCount>}
+  </ShipTagContainer>
 ))
 
 ShipTag.propTypes = {
@@ -54,7 +95,7 @@ ShipTag.propTypes = {
 //   count: PropTypes.number.isRequired,
 // }
 
-const ItemInfoTable = ({ row, t }) => {
+const ItemInfoTable = ({ row, t, compact }) => {
   const { total, active, lvCount, lvShip, hasAlv, hasLevel } = row
 
   const itemData = getItemData(row).map(
@@ -72,24 +113,50 @@ const ItemInfoTable = ({ row, t }) => {
   )
 
   return (
-    <tr className="vertical">
-      <td className="item-name-cell">
-        {itemOverlay ? (
-          <OverlayTrigger placement="top" overlay={itemOverlay}>
-            {slotItemIconSpan}
-          </OverlayTrigger>
-        ) : (
-          slotItemIconSpan
+    <>
+      {compact && (
+        <tr>
+          <td>
+            {itemOverlay ? (
+              <OverlayTrigger placement="top" overlay={itemOverlay}>
+                {slotItemIconSpan}
+              </OverlayTrigger>
+            ) : (
+              slotItemIconSpan
+            )}
+            {t(row.api_name, { keySeparator: 'chiba' })}
+          </td>
+          <td className="item-count-cell">
+            <ItemCount>
+              {`${total} `}
+              <span>{`(${total - active})`}</span>
+            </ItemCount>
+          </td>
+        </tr>
+      )}
+      <tr className="vertical">
+        {!compact && (
+          <>
+            <td className="item-name-cell">
+              {itemOverlay ? (
+                <OverlayTrigger placement="top" overlay={itemOverlay}>
+                  {slotItemIconSpan}
+                </OverlayTrigger>
+              ) : (
+                slotItemIconSpan
+              )}
+              {t(row.api_name, { keySeparator: 'chiba' })}
+            </td>
+            <td className="item-count-cell">
+              <ItemCount>
+                {`${total} `}
+                <span>{`(${total - active})`}</span>
+              </ItemCount>
+            </td>
+          </>
         )}
-        {t(row.api_name, { keySeparator: 'chiba' })}
-      </td>
-      <td className="item-count-cell">
-        {`${total} `}
-        <span style={{ fontSize: '12px' }}>{`(${total - active})`}</span>
-      </td>
-      <td>
-        <Table className="equip-table">
-          <tbody>
+        <td>
+          <div className="equip-table">
             {Object.keys(lvCount)
               .map((key) => +key)
               .sort((a, b) => a - b)
@@ -129,14 +196,14 @@ const ItemInfoTable = ({ row, t }) => {
 
                 const countByShip = lvShip[key]
                 return (
-                  <tr key={key}>
-                    <td className="item-level-cell">
+                  <ItemSubCategory key={key}>
+                    <ItemSubCategoryCount>
                       <span className="item-level-span">
                         {alvPrefix} {levelPrefix}
                       </span>{' '}
                       × {count}
-                    </td>
-                    <td>
+                    </ItemSubCategoryCount>
+                    <ShipTags>
                       {countByShip &&
                         Object.keys(countByShip)
                           .map((id) => +id)
@@ -150,14 +217,14 @@ const ItemInfoTable = ({ row, t }) => {
                                 />
                               ),
                           )}
-                    </td>
-                  </tr>
+                    </ShipTags>
+                  </ItemSubCategory>
                 )
               })}
-          </tbody>
-        </Table>
-      </td>
-    </tr>
+          </div>
+        </td>
+      </tr>
+    </>
   )
 }
 
@@ -176,6 +243,7 @@ const rowShape = PropTypes.shape({
 ItemInfoTable.propTypes = {
   row: rowShape.isRequired,
   t: PropTypes.func.isRequired,
+  compact: PropTypes.bool.isRequired,
 }
 
 const TranslatedItemInfoTable = translate(['resources'])(ItemInfoTable)
@@ -255,36 +323,42 @@ class ItemInfoTableArea extends Component {
 
   render() {
     const { t } = this.props
+    const compact = true
     return (
       <div id="item-info-show">
-        <Divider text={t('Equipment Info')} />
         <div id="item-info-area">
-          <Table striped condensed hover id="main-table">
-            <thead className="slot-item-table-thead">
-              <tr>
-                <th className="center" style={{ width: '25%' }}>
-                  <FormControl
-                    className="name-filter"
-                    type="text"
-                    placeholder={t('Name')}
-                    onChange={this.handleFilterNameChange}
-                  />
-                </th>
-                <th className="center" style={{ width: '9%' }}>
-                  {t('Total')}
-                  <span style={{ fontSize: '11px' }}>{`(${t('rest')})`}</span>
-                </th>
-                <th className="center" style={{ width: '66%' }}>
-                  {t('State')}
-                </th>
-              </tr>
-            </thead>
+          <HTMLTable condensed id="main-table">
+            {!compact && (
+              <thead className="slot-item-table-thead">
+                <tr>
+                  {!compact && (
+                    <th className="center">
+                      <FormControl
+                        className="name-filter"
+                        type="text"
+                        placeholder={t('Name')}
+                        onChange={this.handleFilterNameChange}
+                      />
+                    </th>
+                  )}
+                  <th className="center">
+                    {t('Total')}
+                    <span style={{ fontSize: '11px' }}>{`(${t('rest')})`}</span>
+                  </th>
+                  <th className="center">{t('State')}</th>
+                </tr>
+              </thead>
+            )}
             <tbody>
               {this.displayedRows().map((row) => (
-                <TranslatedItemInfoTable key={row.api_id} row={row} />
+                <TranslatedItemInfoTable
+                  key={row.api_id}
+                  row={row}
+                  compact={compact}
+                />
               ))}
             </tbody>
-          </Table>
+          </HTMLTable>
         </div>
       </div>
     )
