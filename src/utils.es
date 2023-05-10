@@ -18,6 +18,23 @@ export const boolArray2Int = (boolArray = []) => {
   return parseInt(str, 2)
 }
 
+export const intStr2BoolArray = (str = '0') => {
+  str = typeof(str) === 'number' ? str.toString() : str
+  const boolArray = BigInt(str)
+    .toString(2)
+    .split('')
+    .map((s) => !!+s)
+  boolArray.shift()
+  return boolArray
+}
+
+export const boolArray2IntStr = (boolArray = []) => {
+  const arr = boolArray.slice()
+  arr.unshift(true)
+  const str = arr.map((bool) => +bool).join('')
+  return BigInt('0b' + str).toString()
+}
+
 export const getLevelsFromKey = (key) => ({
   alv: Math.floor(key / 11),
   level: key % 11,

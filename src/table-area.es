@@ -19,7 +19,7 @@ import {
   reduceShipDataSelectorFactory,
   reduceAirbaseSelectorFactory,
 } from './selectors'
-import { int2BoolArray, getLevelsFromKey } from './utils'
+import { intStr2BoolArray, getLevelsFromKey } from './utils'
 
 const { ROOT } = window
 
@@ -253,7 +253,7 @@ const alwaysTrue = () => true
 @translate(['poi-plugin-item-info'])
 @connect((state) => {
   const iconEquipMap = iconEquipMapSelector(state)
-  let type = int2BoolArray(get(state, 'config.plugin.ItemInfo.type'))
+  let type = intStr2BoolArray(get(state, 'config.plugin.ItemInfo.type'))
 
   const expectedLength = max(map(keys(iconEquipMap), (id) => +id)) + 1
   if (type.length !== expectedLength) {

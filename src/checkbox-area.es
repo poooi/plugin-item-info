@@ -11,7 +11,7 @@ import { rgba } from 'polished'
 import { ItemIcon } from './common-styled'
 
 import { iconEquipMapSelector } from './selectors'
-import { int2BoolArray, boolArray2Int } from './utils'
+import { int2BoolArray, boolArray2Int, intStr2BoolArray, boolArray2IntStr } from './utils'
 
 const { config } = window
 
@@ -60,7 +60,7 @@ const HR = styled.hr`
 @translate(['poi-plugin-item-info'])
 @connect((state) => {
   const iconEquipMap = iconEquipMapSelector(state)
-  let type = int2BoolArray(get(state, 'config.plugin.ItemInfo.type'))
+  let type = intStr2BoolArray(get(state, 'config.plugin.ItemInfo.type'))
 
   const expectedLength = max(map(keys(iconEquipMap), (id) => +id)) + 1
   if (type.length !== expectedLength) {
@@ -89,7 +89,7 @@ class ItemInfoCheckboxArea extends PureComponent {
     const type = this.props.type.slice()
     type[index] = !type[index]
 
-    this.saveConfig('type', boolArray2Int(type))
+    this.saveConfig('type', boolArray2IntStr(type))
   }
 
   handleClickCheckContext = (index) => () => {
@@ -97,21 +97,21 @@ class ItemInfoCheckboxArea extends PureComponent {
     type.fill(false)
     type[index] = true
 
-    this.saveConfig('type', boolArray2Int(type))
+    this.saveConfig('type', boolArray2IntStr(type))
   }
 
   handleClickCheckAll = () => {
     const type = this.props.type.slice()
     type.fill(true)
 
-    this.saveConfig('type', boolArray2Int(type))
+    this.saveConfig('type', boolArray2IntStr(type))
   }
 
   handleClickCheckboxNone = () => {
     const type = this.props.type.slice()
     type.fill(false)
 
-    this.saveConfig('type', boolArray2Int(type))
+    this.saveConfig('type', boolArray2IntStr(type))
   }
 
   handleLockFilter = () => {
