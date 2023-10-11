@@ -15,11 +15,15 @@ import { int2BoolArray, boolArray2Int } from './utils'
 const { config } = window
 
 @translate(['poi-plugin-item-info'])
-@connect((state) => {
+@connect(state => {
   const iconEquipMap = iconEquipMapSelector(state)
-  let type = int2BoolArray(get(state, 'config.plugin.ItemInfo.type'))
+  let type = get(
+    state,
+    'config.plugin.ItemInfo.typeV2',
+    int2BoolArray(get(state, 'config.plugin.ItemInfo.type')),
+  )
 
-  const expectedLength = max(map(keys(iconEquipMap), (id) => +id)) + 1
+  const expectedLength = max(map(keys(iconEquipMap), id => +id)) + 1
   if (type.length !== expectedLength) {
     type = Array.from({ length: expectedLength }).fill(true)
   }
@@ -42,33 +46,33 @@ class ItemInfoCheckboxArea extends PureComponent {
     config.set(`plugin.ItemInfo.${name}`, value)
   }
 
-  handleClickCheck = (index) => () => {
+  handleClickCheck = index => () => {
     const type = this.props.type.slice()
     type[index] = !type[index]
 
-    this.saveConfig('type', boolArray2Int(type))
+    this.saveConfig('typeV2', type)
   }
 
-  handleClickCheckContext = (index) => () => {
+  handleClickCheckContext = index => () => {
     const type = this.props.type.slice()
     type.fill(false)
     type[index] = true
 
-    this.saveConfig('type', boolArray2Int(type))
+    this.saveConfig('typeV2', type)
   }
 
   handleClickCheckAll = () => {
     const type = this.props.type.slice()
     type.fill(true)
 
-    this.saveConfig('type', boolArray2Int(type))
+    this.saveConfig('typeV2', type)
   }
 
   handleClickCheckboxNone = () => {
     const type = this.props.type.slice()
     type.fill(false)
 
-    this.saveConfig('type', boolArray2Int(type))
+    this.saveConfig('typeV2', type)
   }
 
   handleLockFilter = () => {
